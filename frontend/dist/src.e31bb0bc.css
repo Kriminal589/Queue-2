@@ -10,6 +10,20 @@ body {
   min-height: 100vh;
   background-color: #F4F6FA;
 }
+body footer {
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 5px;
+  z-index: 1000;
+}
+body footer .session {
+  color: rgba(0, 0, 0, 0.5);
+}
 body .modal {
   position: fixed;
   top: 0;
@@ -20,6 +34,41 @@ body .modal {
 }
 body .modal .auth {
   display: none;
+}
+body .modal .gooey {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 142px;
+  height: 40px;
+  margin: -20px 0 0 -71px;
+  filter: contrast(20);
+}
+body .modal .gooey .dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 12px;
+  left: 15px;
+  background: #279493;
+  border-radius: 50%;
+  transform: translateX(0);
+  animation: dot 2.8s infinite;
+}
+body .modal .gooey .dots {
+  transform: translateX(0);
+  margin-top: 12px;
+  margin-left: 31px;
+  animation: dots 2.8s infinite;
+}
+body .modal .gooey .dots span {
+  display: block;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-left: 16px;
+  background: #279493;
+  border-radius: 50%;
 }
 body .modal.vk {
   position: fixed;
@@ -153,7 +202,7 @@ body main .content .fluid-container {
   flex-direction: row;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 0 100px;
+  margin: 0 80px;
   top: 40px;
   height: calc(100% - 40px);
 }
@@ -217,7 +266,7 @@ body main .content .fluid-container .queue-list .name_of_subject .export_pdf_but
   align-items: center;
   width: 100%;
   height: 100%;
-  font-size: 20px;
+  font-size: 1em;
 }
 body main .content .fluid-container .queue-list .name_of_subject .export_pdf_button:hover {
   width: 22%;
@@ -252,7 +301,7 @@ body main .content .fluid-container .queue-list .queue-container .user > * {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  font-size: 20px;
+  font-size: 1em;
   height: 100%;
 }
 body main .content .fluid-container .queue-list .queue-container .user .position {
@@ -260,12 +309,13 @@ body main .content .fluid-container .queue-list .queue-container .user .position
   background-color: orange;
 }
 body main .content .fluid-container .queue-list .queue-container .user .fullname_container {
-  width: 60%;
+  width: 55%;
   background-color: #71E7E1;
 }
 body main .content .fluid-container .queue-list .queue-container .user .vk-link {
-  width: 10%;
+  width: 15%;
   background-color: #58B2F3;
+  color: #fff;
   cursor: pointer;
 }
 body main .content .fluid-container .queue-list .queue-container .user .swap-button {
@@ -284,7 +334,7 @@ body main .content .fluid-container .queue-list .queue-container .u > * {
   align-items: center;
   justify-content: center;
   border-radius: 12px;
-  font-size: 20px;
+  font-size: 1em;
   height: 100%;
 }
 body main .content .fluid-container .queue-list .queue-container .u .position {
@@ -355,6 +405,16 @@ body main .content .fluid-container .queue-item .info .position {
   }
   to {
     opacity: 1;
+  }
+}
+@keyframes dot {
+  50% {
+    transform: translateX(96px);
+  }
+}
+@keyframes dots {
+  50% {
+    transform: translateX(-31px);
   }
 }
 

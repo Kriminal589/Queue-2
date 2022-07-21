@@ -1,6 +1,6 @@
-import './styles/style.scss'
-import {App} from './classes/App'
+import "./styles/style.scss";
+import { App } from "./classes/App";
 
 window.onload = () => {
-    const app = new App('body')
-}
+  const app = new App("body");
+};
