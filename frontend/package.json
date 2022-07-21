@@ -4,8 +4,8 @@
   "description": "java-javaScript",
   "main": "index.js",
   "scripts": {
-    "serve": "parcel ./frontend/src/index.html --open --host=25.85.15.23",
-    "build": "parcel build ./frontend/src/index.html --no-source-maps"
+    "serve": "parcel ./src/index.html --open --host=25.85.15.23",
+    "build": "parcel build ./src/index.html --no-source-maps"
   },
   "repository": {
     "type": "git",
