@@ -16,7 +16,7 @@ public class ListOfQueues {
     private Long idStudent, idQueue;
     private int positionStudent = 0;
     private int numberOfAppStudent;
-    private int currentApp = 1;
+    private int currentApp;
 
     public int getNumberOfAppStudent() {
         return numberOfAppStudent;

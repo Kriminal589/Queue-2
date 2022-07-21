@@ -1,5 +1,6 @@
 package com.webserver.webserver.controllers;
 
+import com.webserver.webserver.jsonResponse.JsonUtil;
 import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.models.Student;
@@ -8,14 +9,12 @@ import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @Controller
+@CrossOrigin
 @RequestMapping(path = "/listOfQueues")
 public class ListOfQueuesController {
 
@@ -32,6 +31,8 @@ public class ListOfQueuesController {
     @GetMapping("/add/{idQueue}/{idStudent}/{numberOfAppStudent}")
     public @ResponseBody String add(@PathVariable Long idQueue, @PathVariable Long idStudent,
                                     @PathVariable int numberOfAppStudent){
+
+        JsonUtil util = new JsonUtil();
 
         Optional<Queue> tryQueue = queueRepository.findById(idQueue);
         Optional<Student> tryStudent = studentRepository.findById(idStudent);
@@ -59,9 +60,9 @@ public class ListOfQueuesController {
 //                queueOfStudentOnOneGroup = listOfQueues.sortByNumberOfApp(queueOfStudentOnOneGroup);
 //            }
         }else{
-            return "Not find student or queue.";
+            return util.response("Not found", 404);
         }
-        return "Add new student to queue.";
+        return util.response("Add new student to queue", 200);
     }
 
     @GetMapping("/all")
@@ -69,4 +70,11 @@ public class ListOfQueuesController {
     Iterable<ListOfQueues> getAllListOfQueues(){
         return listOfQueueRepository.findAll();
     }
+
+    @GetMapping("/get/{idStudent}")
+    public @ResponseBody
+    Iterable<ListOfQueues> getAllListOfQueuesByIdStudent(@PathVariable Long idStudent){
+        return listOfQueueRepository.findAllByIdStudent(idStudent);
+    }
+
 }
