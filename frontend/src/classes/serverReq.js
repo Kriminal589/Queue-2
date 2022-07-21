@@ -3,9 +3,7 @@ const port = "8080";
 
 export class serverRequest {
   static async addStudent(idS, name, domen) {
-    return await sendRequestAsync(
-      `student/add/${idS}/${name.replace(" ", "_")}/${domen}`
-    );
+    return await sendRequestAsync(`student/add/${idS}/${name.replace(" ", "_")}/${domen}`);
   }
   static async getQueuesById(idS) {
     return await sendRequestAsync(`listOfQueues/getByIdStudent/${idS}`);
