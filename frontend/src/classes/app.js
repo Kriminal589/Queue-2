@@ -2,12 +2,15 @@ import { Auth } from "./autorization";
 import { QList } from "./Qlist";
 import { serverRequest } from "./serverReq";
 import { LoadBarToHtml } from "./loadBar";
+import { popup_window } from "./Popup";
+
+//const modal = new popup_window('pop')
 
 export class App {
   #qList = new QList();
   constructor(selector) {
     this.$el = document.querySelector(selector);
-    this.overlayOn = true;
+    this.overlayOn = false;
 
     VK.init({ apiId: 8210632 }, function () {}, this.error);
     this.#setup();
@@ -19,26 +22,26 @@ export class App {
   }
 
   async #setup() {
-    this.#modalAdd();
+    //this.#modalAdd()
     try {
       var data = JSON.parse(localStorage.getItem("auth-data"));
-      if (data && getTimeUnix() < data.expire && !data.error) {
-        await serverRequest.addStudent(
-          data.user.id,
-          `${data.user.first_name} ${data.user.last_name}`,
-          data.user.domain
-        );
-        this.#modalRemove();
-      } else {
-        Auth.init().then((res) => {
-          this.#modalRemove();
-        });
-      }
+      if (data && getTimeUnix() < data.expire && !data.error) {} 
+      else {Auth.init()}
+      await serverRequest.addStudent(
+        data.user.id,
+        `${data.user.first_name} ${data.user.last_name}`,
+        data.user.domain
+      ).catch(function(error) {
+        console.log('data error')
+        data.error = true
+        LocalStorage.setItem("auth-data", data)
+      })
+      //this.#modalRemove()
       this.#qList.addRenderHandler(this.render.bind(this));
       await this.render();
       this.addSessionId()
     } catch (error) {
-      console.error(error);
+      console.log(error)
       this.error();
     }
   }
@@ -57,6 +60,7 @@ export class App {
   }
 
   #modalRemove() {
+    console.log('modal remove')
     this.overlayOn = false;
     const h = document.getElementById("modal__");
     h.remove();
@@ -112,7 +116,6 @@ export class App {
 
     if (data.error) {
       this.error();
-      this.#modalRemove();
     } else {
       if (this.overlayOn) {
         // login

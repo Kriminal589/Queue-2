@@ -334,6 +334,19 @@ var template_list = function template_list(content, index, vk_link) {
 var template_u = function template_u(index) {
   return div("<div class=\"position\">".concat(index + 1, "</div><div class=\"fullname\"><span class=\"fullname-span\">\u0412\u044B</span></div>"), "u");
 };
+},{}],"classes/loadBar.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LoadBarToHtml = void 0;
+
+var LoadBarToHtml = function LoadBarToHtml() {
+  return "\n    <div class=\"gooey\">\n    <span class=\"dot\"></span>\n    <div class=\"dots\">\n        <span></span>\n        <span></span>\n        <span></span>\n    </div>\n    </div>\n    ";
+};
+
+exports.LoadBarToHtml = LoadBarToHtml;
 },{}],"classes/serverReq.js":[function(require,module,exports) {
 "use strict";
 
@@ -341,6 +354,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.serverRequest = void 0;
+
+var _loadBar = require("./loadBar");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -373,7 +388,7 @@ var serverRequest = /*#__PURE__*/function () {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return sendRequestAsync("student/add/".concat(idS, "/").concat(name.replace(" ", "_"), "/").concat(domen));
+                return sendRequestAsync("student/add?id=".concat(idS, "&NameOfStudent=").concat(name.replace(" ", "_"), "&domain=").concat(domen));
 
               case 2:
                 return _context.abrupt("return", _context.sent);
@@ -532,6 +547,62 @@ var serverRequest = /*#__PURE__*/function () {
 
       return getAllStudent;
     }()
+  }, {
+    key: "getCRC32hash",
+    value: function () {
+      var _getCRC32hash = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(idQ, expire) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _context7.next = 2;
+                return sendRequestAsync("hash/".concat(idQ, "^").concat(expire));
+
+              case 2:
+                return _context7.abrupt("return", _context7.sent);
+
+              case 3:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7);
+      }));
+
+      function getCRC32hash(_x9, _x10) {
+        return _getCRC32hash.apply(this, arguments);
+      }
+
+      return getCRC32hash;
+    }()
+  }, {
+    key: "decrytptHash",
+    value: function () {
+      var _decrytptHash = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(hash) {
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.next = 2;
+                return sendRequestAsync("dehash/".concat(hash));
+
+              case 2:
+                return _context8.abrupt("return", _context8.sent);
+
+              case 3:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }));
+
+      function decrytptHash(_x11) {
+        return _decrytptHash.apply(this, arguments);
+      }
+
+      return decrytptHash;
+    }()
   }]);
 
   return serverRequest;
@@ -539,20 +610,24 @@ var serverRequest = /*#__PURE__*/function () {
 
 exports.serverRequest = serverRequest;
 
-function sendRequestAsync(_x9) {
+function sendRequestAsync(_x12) {
   return _sendRequestAsync.apply(this, arguments);
 }
 
 function _sendRequestAsync() {
-  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(url_to) {
-    var url, response;
-    return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(url_to) {
+    var url, $modal, response;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context7.prev = _context7.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             url = "http://".concat(ip, ":").concat(port, "/").concat(url_to);
-            _context7.prev = 1;
-            _context7.next = 4;
+            $modal = document.createElement('div');
+            $modal.classList.add('modal');
+            $modal.innerHTML = (0, _loadBar.LoadBarToHtml)();
+            document.body.appendChild($modal);
+            _context9.prev = 5;
+            _context9.next = 8;
             return fetch(url, {
               method: "GET",
               headers: {
@@ -560,25 +635,27 @@ function _sendRequestAsync() {
               }
             });
 
-          case 4:
-            response = _context7.sent;
-            return _context7.abrupt("return", response.json());
-
           case 8:
-            _context7.prev = 8;
-            _context7.t0 = _context7["catch"](1);
-            return _context7.abrupt("return", -1);
+            response = _context9.sent;
+            document.body.removeChild($modal);
+            return _context9.abrupt("return", response.json());
 
-          case 11:
+          case 13:
+            _context9.prev = 13;
+            _context9.t0 = _context9["catch"](5);
+            document.body.removeChild($modal);
+            return _context9.abrupt("return", -1);
+
+          case 17:
           case "end":
-            return _context7.stop();
+            return _context9.stop();
         }
       }
-    }, _callee7, null, [[1, 8]]);
+    }, _callee9, null, [[5, 13]]);
   }));
   return _sendRequestAsync.apply(this, arguments);
 }
-},{}],"classes/Qlist.js":[function(require,module,exports) {
+},{"./loadBar":"classes/loadBar.js"}],"classes/Qlist.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -837,19 +914,88 @@ var QList = /*#__PURE__*/function () {
 }();
 
 exports.QList = QList;
-},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js"}],"classes/loadBar.js":[function(require,module,exports) {
+},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js"}],"classes/Popup.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.LoadBarToHtml = void 0;
+exports.popup_window = void 0;
 
-var LoadBarToHtml = function LoadBarToHtml() {
-  return "\n    <div class=\"gooey\">\n    <span class=\"dot\"></span>\n    <div class=\"dots\">\n        <span></span>\n        <span></span>\n        <span></span>\n    </div>\n    </div>\n    ";
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-exports.LoadBarToHtml = LoadBarToHtml;
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+function _classPrivateMethodInitSpec(obj, privateSet) { _checkPrivateRedeclaration(obj, privateSet); privateSet.add(obj); }
+
+function _checkPrivateRedeclaration(obj, privateCollection) { if (privateCollection.has(obj)) { throw new TypeError("Cannot initialize the same private elements twice on an object"); } }
+
+function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
+
+var _setup = /*#__PURE__*/new WeakSet();
+
+var popup_window = /*#__PURE__*/function () {
+  function popup_window(name) {
+    _classCallCheck(this, popup_window);
+
+    _classPrivateMethodInitSpec(this, _setup);
+
+    console.log(documnet);
+    this.body = document.querySelector('body');
+    this.unlock = true;
+    this.name = name;
+
+    _classPrivateMethodGet(this, _setup, _setup2).call(this);
+  }
+
+  _createClass(popup_window, [{
+    key: "addContent",
+    value: function addContent(content, load) {
+      this.content = content;
+
+      _classPrivateMethodGet(this, _setup, _setup2).call(this, load);
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      var canClose = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      this.unlock = true;
+      document.getElementById("popup__".concat(this.name)).classList.add("active");
+      if (canClose) document.querySelector('.popup__close').addEventListener('click', this.eventListenerForClose.bind(this));
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.unlock = false;
+      document.getElementById("popup__".concat(this.name)).classList.remove("active");
+      var $btncls = document.querySelector('.popup__close');
+      if ($btncls) $btncls.removeEventListener('click', this.eventListenerForClose.bind(this));
+    }
+  }, {
+    key: "eventListenerForClose",
+    value: function eventListenerForClose() {
+      this.unlock = false;
+      document.getElementById("popup__".concat(this.name)).classList.remove("active");
+      var $btncls = document.querySelector('.popup__close');
+      if ($btncls) $btncls.removeEventListener('click', this.eventListenerForClose.bind(this));
+    }
+  }]);
+
+  return popup_window;
+}();
+
+exports.popup_window = popup_window;
+
+function _setup2(load) {
+  console.log(this.body);
+  this.body.insertAdjacentHTML('beforeend', patternPopup(this.name, this.content, load));
+}
+
+var patternPopup = function patternPopup(name, content, load) {
+  return "\n    <div id=\"popup__".concat(name, "\" class=\"popup\">\n        <div class=\"popup__body\">\n            ").concat(load ? '' : "<div class=\"popup__content\">\n                <div class=\"popup__title\">".concat(name, "</div>\n                <div class=\"popup__contanier\">").concat(content || '', "</div>\n                <div class=\"popup__close\">X</div>\n            </div>"), "\n        </div>\n    </div>\n");
+}; //document.getElementById(`popup__${this.name}`).remove()
 },{}],"classes/App.js":[function(require,module,exports) {
 "use strict";
 
@@ -865,6 +1011,8 @@ var _Qlist = require("./Qlist");
 var _serverReq = require("./serverReq");
 
 var _loadBar = require("./loadBar");
+
+var _Popup = require("./Popup");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -902,6 +1050,7 @@ var _modalAdd = /*#__PURE__*/new WeakSet();
 
 var _modalRemove = /*#__PURE__*/new WeakSet();
 
+//const modal = new popup_window('pop')
 var App = /*#__PURE__*/function () {
   function App(selector) {
     _classCallCheck(this, App);
@@ -918,7 +1067,7 @@ var App = /*#__PURE__*/function () {
     });
 
     this.$el = document.querySelector(selector);
-    this.overlayOn = true;
+    this.overlayOn = false;
     VK.init({
       apiId: 8210632
     }, function () {}, this.error);
@@ -1037,41 +1186,38 @@ var App = /*#__PURE__*/function () {
                 console.log("render...");
 
                 if (!data.error) {
-                  _context3.next = 7;
+                  _context3.next = 6;
                   break;
                 }
 
                 this.error();
-
-                _classPrivateMethodGet(this, _modalRemove, _modalRemove2).call(this);
-
-                _context3.next = 22;
+                _context3.next = 21;
                 break;
 
-              case 7:
+              case 6:
                 if (!this.overlayOn) {
-                  _context3.next = 12;
+                  _context3.next = 11;
                   break;
                 }
 
                 // login
                 this.addLoginHandler();
                 this.deleteLogoutHandler();
-                _context3.next = 22;
+                _context3.next = 21;
                 break;
 
-              case 12:
+              case 11:
                 // logout
                 this.addLogoutHandler(); // qList
 
-                _context3.next = 15;
+                _context3.next = 14;
                 return _classPrivateFieldGet(this, _qList).parseListOfQueues(data.user.id);
 
-              case 15:
-                _context3.next = 17;
+              case 14:
+                _context3.next = 16;
                 return _classPrivateFieldGet(this, _qList).toHtml();
 
-              case 17:
+              case 16:
                 document.getElementById("fl_co").innerHTML = _context3.sent;
 
                 _classPrivateFieldGet(this, _qList).addEventListeners(); // profile
@@ -1081,7 +1227,7 @@ var App = /*#__PURE__*/function () {
                 name = "".concat(data.user["first_name"], " ").concat(data.user["last_name"]);
                 if ($name.innerHTML !== name) $name.innerHTML = name;
 
-              case 22:
+              case 21:
               case "end":
                 return _context3.stop();
             }
@@ -1108,60 +1254,49 @@ function _setup2() {
 
 function _setup3() {
   _setup3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-    var _this2 = this;
-
     var data;
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
-            _classPrivateMethodGet(this, _modalAdd, _modalAdd2).call(this);
-
-            _context4.prev = 1;
+            _context4.prev = 0;
             data = JSON.parse(localStorage.getItem("auth-data"));
 
-            if (!(data && getTimeUnix() < data.expire && !data.error)) {
-              _context4.next = 9;
-              break;
+            if (data && getTimeUnix() < data.expire && !data.error) {} else {
+              _autorization.Auth.init();
             }
 
-            _context4.next = 6;
-            return _serverReq.serverRequest.addStudent(data.user.id, "".concat(data.user.first_name, " ").concat(data.user.last_name), data.user.domain);
-
-          case 6:
-            _classPrivateMethodGet(this, _modalRemove, _modalRemove2).call(this);
-
-            _context4.next = 10;
-            break;
-
-          case 9:
-            _autorization.Auth.init().then(function (res) {
-              _classPrivateMethodGet(_this2, _modalRemove, _modalRemove2).call(_this2);
+            _context4.next = 5;
+            return _serverReq.serverRequest.addStudent(data.user.id, "".concat(data.user.first_name, " ").concat(data.user.last_name), data.user.domain).catch(function (error) {
+              console.log('data error');
+              data.error = true;
+              LocalStorage.setItem("auth-data", data);
             });
 
-          case 10:
+          case 5:
+            //this.#modalRemove()
             _classPrivateFieldGet(this, _qList).addRenderHandler(this.render.bind(this));
 
-            _context4.next = 13;
+            _context4.next = 8;
             return this.render();
 
-          case 13:
+          case 8:
             this.addSessionId();
-            _context4.next = 20;
+            _context4.next = 15;
             break;
 
-          case 16:
-            _context4.prev = 16;
-            _context4.t0 = _context4["catch"](1);
-            console.error(_context4.t0);
+          case 11:
+            _context4.prev = 11;
+            _context4.t0 = _context4["catch"](0);
+            console.log(_context4.t0);
             this.error();
 
-          case 20:
+          case 15:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, this, [[1, 16]]);
+    }, _callee4, this, [[0, 11]]);
   }));
   return _setup3.apply(this, arguments);
 }
@@ -1178,6 +1313,7 @@ function _modalAdd2() {
 }
 
 function _modalRemove2() {
+  console.log('modal remove');
   this.overlayOn = false;
   var h = document.getElementById("modal__");
   h.remove();
@@ -1186,7 +1322,7 @@ function _modalRemove2() {
 function getTimeUnix() {
   return Math.floor(Date.now() / 1000);
 }
-},{"./autorization":"classes/autorization.js","./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","./loadBar":"classes/loadBar.js"}],"index.js":[function(require,module,exports) {
+},{"./autorization":"classes/autorization.js","./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","./loadBar":"classes/loadBar.js","./Popup":"classes/Popup.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./styles/style.scss");
@@ -1224,7 +1360,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "25.85.15.23" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54391" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52741" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

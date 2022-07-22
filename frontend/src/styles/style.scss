@@ -7,9 +7,99 @@
     font-family: 'JetBrains Mono', monospace;
 }
 
+.gooey {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 142px;
+    height: 40px;
+    margin: -20px 0 0 -71px;
+    filter: contrast(20);
+
+    .dot {
+        position: absolute;
+        width: 16px; 
+        height: 16px; 
+        top: 12px;
+        left: 15px;  
+        background: #279493;
+        border-radius: 50%;
+        transform: translateX(0);
+        animation: dot 2.8s infinite;
+    }
+
+    .dots {
+        transform: translateX(0);
+        margin-top: 12px;
+        margin-left: 31px;
+        animation: dots 2.8s infinite;
+
+        span {
+            display: block;
+            float: left;
+            width: 16px;
+            height: 16px;
+            margin-left: 16px;
+            background: #279493;
+            border-radius: 50%;
+        }
+    }
+}
+
 body {
     min-height: 100vh;
     background-color: #F4F6FA;
+
+    .popup {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: -100px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all .5s ease 0s;
+    }
+
+    .popup.active {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1002;
+        opacity: 1;
+        visibility: visible;
+        transition: all .5s ease 0s;
+
+        .popup__body {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 10px;
+
+            .popup__content {
+                position: relative;
+                background-color: #fff;
+                color: #000;
+                max-width: 800px;
+                padding: 30px;
+                transition: all .5s ease 0s;
+
+                .popup__title {
+                    font-size: 40px;
+                    margin: 0 0 1em 0;
+                }
+
+                .popup__close {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
 
     footer {
         width: calc(100% - 20px);
@@ -23,7 +113,11 @@ body {
         z-index: 1000;
 
         .session {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
             color: rgba(0, 0, 0, 0.5);
+            transition: all 0.5s;
         }
     }
 
@@ -37,45 +131,6 @@ body {
 
         .auth {
             display: none;
-        }
-
-        .gooey {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 142px;
-            height: 40px;
-            margin: -20px 0 0 -71px;
-            filter: contrast(20);
-
-            .dot {
-                position: absolute;
-                width: 16px; 
-                height: 16px; 
-                top: 12px;
-                left: 15px;  
-                background: #279493;
-                border-radius: 50%;
-                transform: translateX(0);
-                animation: dot 2.8s infinite;
-            }
-
-            .dots {
-                transform: translateX(0);
-                margin-top: 12px;
-                margin-left: 31px;
-                animation: dots 2.8s infinite;
-
-                span {
-                    display: block;
-                    float: left;
-                    width: 16px;
-                    height: 16px;
-                    margin-left: 16px;
-                    background: #279493;
-                    border-radius: 50%;
-                }
-            }
         }
     }
 
