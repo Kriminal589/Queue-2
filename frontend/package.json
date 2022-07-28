@@ -4,7 +4,7 @@
   "description": "java-javaScript",
   "main": "index.js",
   "scripts": {
-    "serve": "parcel ./src/index.html --open --host=25.85.15.23",
+    "serve": "parcel ./src/index.html --open --port 80",
     "build": "parcel build ./src/index.html --no-source-maps"
   },
   "repository": {

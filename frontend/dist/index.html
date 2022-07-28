@@ -3,43 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
     <title>queue</title>
-    <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
     <script src="/src.e31bb0bc.js"></script>
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?168" charset="windows-1251"></script>
 <link rel="stylesheet" href="/src.e31bb0bc.css"></head>
 <body>
-    <header>
-        <div class="up-header">
-            <div class="circles">
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
-            </div>
+    <script>VK.init({
+  apiId: 8229660
+});</script>
+    <header class="center-items-inline padding-content">
+        <div class="container center-items-inline">
+            <div class="logo border-2px"></div>
+            <span class="title">Удобная очередь</span>
         </div>
-        <div class="middle-header">
-            <div class="logo">
-                <img src="/logo.b37d81ec.svg" alt="error" class="logo_">
-            </div>
-            <div class="profile">
-                <span class="fullname" id="name"></span>
-                <div class="logout" id="logout_btn">
-                    X
-                    <div class="quit">Выход из аккаунта</div>
-                </div>
-            </div>
+
+        <div class="profile center-items-inline border-2px">
+            <div class="name" id="name_holder">{name}</div>
+            <div class="logout"></div>
         </div>
     </header>
 
-    <main>
-        <div class="content">
-            <div class="fluid-container" id="fl_co"></div>
+    <main class="padding-content flex-space-center-wrap" id="content-main">
+        <div class="qItem border-2px" id="">
+            <div class="qName">История</div>
+            <div class="qPos">Ваша позиция: 5</div>
+            <div class="btn apply">
+                <span class="btn-text">Сдал задание</span>
+            </div>
         </div>
     </main>
-
-    <footer id="footer">
-        <div class="devs">
-            <span>Разработчики: kriminal589, viltskaa</span>
-        </div>
-    </footer>
+    <div class="modal center-items visible" id="modal-vk">
+        <div id="vk_auth"></div>
+    </div>
 </body>
 </html>

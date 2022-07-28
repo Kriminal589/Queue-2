@@ -30,19 +30,27 @@ export class QList {
     this.min = true;
     this.allMin();
   }
-  addRenderHandler(renderHandler) {
-    if (typeof renderHandler === "function") this.renderHandler = renderHandler;
-  }
   setup() {
     this.ClickHandler = this.ClickHandler.bind(this);
     this.backButtonClick = this.backButtonClick.bind(this);
   }
   async toHtml() {
-    return this.min
-      ? this.#list.map((item) => item.toHtml()).join("")
-      : this.selected.toListHtml(
-          await serverRequest.getListOfStudentInQueueById(this.selected.ID)
-        );
+    var html = this.min
+    ? this.#list.map((item) => item.toHtml()).join("")
+    : this.selected.toListHtml(
+        await serverRequest.getListOfStudentInQueueById(this.selected.ID)
+    );
+    html += `
+    <div class="QmakerContainer border-2px center-items">
+      <div class="Qmaker" id="Qmaker">
+          <div class="btn about">Создать очередь</div>
+      </div>
+    </div>
+    `
+    return html
+  }
+  async render() {
+    document.getElementById('content-main').insertAdjacentHTML('beforeend', await this.toHtml())
   }
   addEventListeners() {
     if (this.#list.length > 0) {
@@ -67,6 +75,7 @@ export class QList {
           .getElementById(item.values.idQueue)
           .removeEventListener("click", this.ClickHandler);
       });
+      document.getElementById('Qmaker').addEventListener("click", this.ClickHandler);
     } else {
       document
         .getElementById("btn__")
@@ -81,7 +90,7 @@ export class QList {
       this.selected.min = false;
       this.min = false;
       this.deleteEventListeners();
-      this.renderHandler();
+      this.render()
     }
   }
 
@@ -91,7 +100,7 @@ export class QList {
     this.min = true;
     this.selected = null;
     this.deleteEventListeners();
-    this.renderHandler();
+    this.render()
   }
 
   allMin() {
