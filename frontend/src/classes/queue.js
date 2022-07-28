@@ -22,13 +22,12 @@ export class QueueBlock {
 
 const template = (content) => {
   return `
-    <div class="queue-item">
-    <div class="btn_mask" id="${content.idQueue}"></div>
-    <div class="mask"></div>
-    <div class="info" id="${content.idQueue}">
-        <span class="name_subject">${content.name}</span>
-        <span class="position">Ваша позиция: ${content.positionStudent}</span>
-    </div>
+    <div class="qItem border-2px" id="${content.idQueue}">
+      <div class="qName">${content.name}</div>
+      <div class="qPos">Ваша позиция: ${content.positionStudent}</div>
+      <div class="btn apply" data-action="passed">
+          <span class="btn-text" data-app="0">Сдал задание</span>
+      </div>
     </div>
     `;
 };
@@ -39,8 +38,8 @@ function div(content, class_ = "", id = "") {
 
 const templateList = (content, list, idStudent) => {
   let HTML = div(
-    `<div class="back-btn" id="btn__"><div class="btn" id="btn__"></div></div><span class="name">${content.name}</span><div class="export_pdf_button" id="export"><span>Экспорт в pdf</span></div>`,
-    "name_of_subject"
+    `<span>${content.name}</span><div class="btn back"></div>`,
+    "subject-name border-2px center-items"
   );
   HTML += div(
     list.responseAboutStudentList
@@ -54,26 +53,28 @@ const templateList = (content, list, idStudent) => {
             )
       )
       .join(""),
-    "queue-container"
+    "contanier custom-scrollbar"
   );
-  return div(HTML, "queue-list", "");
+  return div(HTML, "qList", "");
 };
 
 const template_list = (content, index, vk_link) => {
   return div(
-    `<div class="position">${
+    `<div class="position border-2px center-items">${
       index + 1
-    }</div><div class="fullname_container"><span class="fullname">${content}</span></div><div class="vk-link"><span>${vk_link}</span></div><div class="swap-button"><span>Поменяться</span></div>`,
-    "user",
-    ""
+    }</div>
+    <div class="nameStudent border-2px center-items">${content}</div>
+    <a class="vklink border-2px center-items" href="${vk_link}">vk</a>
+    <div class="swap border-2px center-items" data-action="swap" data-target="id">Поменяться местами</div>`,
+    "qList-item flex-row"
   );
 };
 
 const template_u = (index) => {
   return div(
-    `<div class="position">${
+    `<div class="position border-2px center-items">${
       index + 1
-    }</div><div class="fullname"><span class="fullname-span">Вы</span></div>`,
-    "u"
+    }</div><div class="u border-2px center-items">Вы</div>`,
+    "qList-item uitem flex-row"
   );
 };

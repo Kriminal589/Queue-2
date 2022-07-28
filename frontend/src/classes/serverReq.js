@@ -1,6 +1,6 @@
-import { LoadBarToHtml } from "./loadBar";
+import { $LoadBar } from "./loadBar";
 
-const ip = "25.84.228.15";
+const ip = "25.73.21.44";
 const port = "8080";
 
 export class serverRequest {
@@ -22,20 +22,17 @@ export class serverRequest {
   static async getAllStudent() {
     return await sendRequestAsync(`student/all`);
   }
-  static async getCRC32hash(idQ, expire) {
-    return await sendRequestAsync(`hash/${idQ}^${expire}`);
+  static async appendQ(idS) {
+    return await sendRequestAsync(`listOfQueues/add/{idQueue}/{idStudent}/{numberOfAppStudent}`);
   }
-  static async decrytptHash(hash) {
-    return await sendRequestAsync(`dehash/${hash}`)
+  static async request(url) {
+    return await sendRequestAsyncURL(url)
   }
 }
 
 async function sendRequestAsync(url_to) {
   const url = `http://${ip}:${port}/${url_to}`;
-  var $modal = document.createElement('div')
-  $modal.classList.add('modal')
-  $modal.innerHTML = LoadBarToHtml()
-  document.body.appendChild($modal)
+  $LoadBar.load()
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -43,10 +40,27 @@ async function sendRequestAsync(url_to) {
         "Content-Type": "application/json",
       },
     });
-    document.body.removeChild($modal)
+    $LoadBar.destroy()
     return response.json();
   } catch (err) {
-    document.body.removeChild($modal)
+    $LoadBar.destroy()
+    return -1;
+  }
+}
+
+async function sendRequestAsyncURL(url_to) {
+  $LoadBar.load()
+  try {
+    const response = await fetch(url_to, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    $LoadBar.destroy()
+    return response.json();
+  } catch (err) {
+    $LoadBar.destroy()
     return -1;
   }
 }
