@@ -24,8 +24,8 @@ public class JsonResponse {
     }
 
     public void response(String response, int code){
-        this.response = new StringBuilder(response);
-        this.code = code;
+        setResponse(new StringBuilder(response));
+        setCode(code);
     }
 
 }

@@ -11,4 +11,6 @@ public interface ListOfQueueRepository extends CrudRepository<ListOfQueues, Long
     List<ListOfQueues> findAllByIdStudent(Long idStudent);
 
     List<ListOfQueues> findByIdStudentAndIdQueue(Long idStudent, Long idQueue);
+
+    Optional<ListOfQueues> findByHexCodeAndIdStudent(String hexCode, Long idStudent);
 }

@@ -33,26 +33,31 @@ public class ListOfQueuesController {
     }
 
 
-    @GetMapping("/add/{idQueue}/{idStudent}/{numberOfAppStudent}")
-    public @ResponseBody String add(@PathVariable Long idQueue, @PathVariable Long idStudent,
+    @GetMapping("/add/{hexCode}/{idStudent}/{numberOfAppStudent}")
+    public @ResponseBody String add(@PathVariable String hexCode, @PathVariable Long idStudent,
                                     @PathVariable int numberOfAppStudent){
 
         JsonUtil util = new JsonUtil();
 
-        Optional<Queue> tryQueue = queueRepository.findById(idQueue);
+        Optional<Queue> tryQueue = queueRepository.findByHEXCode(hexCode);
         Optional<Student> tryStudent = studentRepository.findById(idStudent);
         ListOfQueues listOfQueues = new ListOfQueues();
 
-        listOfQueues.setIdQueue(idQueue);
         listOfQueues.setIdStudent(idStudent);
         listOfQueues.setNumberOfAppStudent(numberOfAppStudent);
 
         if (tryQueue.isPresent() && tryStudent.isPresent()){
+
             Queue queue = tryQueue.get();
+
+            Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByHexCodeAndIdStudent(queue.getHEXCode(), idStudent);
+            pastConnection.ifPresent(listOfQueueRepository::delete);
+
+            listOfQueues.setIdQueue(queue.getId());
             listOfQueues.setCurrentApp(queue.getCurrentApp());
             listOfQueues.setNameOfSubject(queue.getSubjectName());
 
-            int position = listOfQueueRepository.findAllByIdQueue(idQueue).size() + 1;
+            int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
             listOfQueues.setPositionStudent(position);
             listOfQueueRepository.save(listOfQueues);
 

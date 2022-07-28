@@ -11,20 +11,28 @@ public class Queue {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    private String type, SubjectName, dateToPass;
-    private int countApps;
+    private String SubjectName, HEXCode;
+    private int countApps, dateToPass;
     private int currentApp = 1;
-    private short dependOnApps, dependOnDate;
+    private short dependOnApps, dependOnDate, type;
+
+    public String getHEXCode() {
+        return HEXCode;
+    }
+
+    public void setHEXCode(String HEXCode) {
+        this.HEXCode = HEXCode;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getType() {
+    public short getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(short type) {
         this.type = type;
     }
 
@@ -60,11 +68,11 @@ public class Queue {
         this.dependOnDate = dependOnDate;
     }
 
-    public String getDateToPass() {
+    public int getDateToPass() {
         return dateToPass;
     }
 
-    public void setDateToPass(String dateToPass) {
+    public void setDateToPass(int dateToPass) {
         this.dateToPass = dateToPass;
     }
 
