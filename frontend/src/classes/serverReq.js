@@ -1,6 +1,6 @@
 import { $LoadBar } from "./loadBar";
 
-const ip = "25.73.21.44";
+const ip = "25.84.228.15";
 const port = "8080";
 
 export class serverRequest {
@@ -9,9 +9,6 @@ export class serverRequest {
   }
   static async getQueuesById(idS) {
     return await sendRequestAsync(`listOfQueues/getByIdStudent/${idS}`);
-  }
-  static async request(url_to, type) {
-    return await sendRequestAsync(url_to, type);
   }
   static async getQueuePropertyById(idQ) {
     return await sendRequestAsync(`queue/get/${idQ}`);
@@ -32,7 +29,8 @@ export class serverRequest {
 
 async function sendRequestAsync(url_to) {
   const url = `http://${ip}:${port}/${url_to}`;
-  $LoadBar.load()
+  const loadbar = new $LoadBar
+  loadbar.load(url_to)
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -40,10 +38,10 @@ async function sendRequestAsync(url_to) {
         "Content-Type": "application/json",
       },
     });
-    $LoadBar.destroy()
+    loadbar.destroy(url_to)
     return response.json();
   } catch (err) {
-    $LoadBar.destroy()
+    loadbar.destroy(url_to)
     return -1;
   }
 }

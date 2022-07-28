@@ -15,7 +15,7 @@ export class QueueBlock {
     return templateList(
       this.values,
       list,
-      JSON.parse(localStorage.getItem("auth-data")).user.id
+      JSON.parse(localStorage.getItem("vk_auth")).uid
     );
   }
 }
@@ -38,7 +38,7 @@ function div(content, class_ = "", id = "") {
 
 const templateList = (content, list, idStudent) => {
   let HTML = div(
-    `<span>${content.name}</span><div class="btn back"></div>`,
+    `<span>${content.name}</span><div class="btn back" id="btn__back"></div>`,
     "subject-name border-2px center-items"
   );
   HTML += div(
@@ -49,7 +49,7 @@ const templateList = (content, list, idStudent) => {
           : template_list(
               item.nameOfStudent.replace("_", " "),
               index,
-              `vk.com/${item.domain}`
+              `vk.com/id${item.id}`
             )
       )
       .join(""),

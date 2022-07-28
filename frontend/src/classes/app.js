@@ -12,8 +12,11 @@ export class App {
       '<div class="error">Сайт не работает. Звоните фиксикам или попробуйте обновить страницу :)</div>';
   }
 
-  #setup() {
-    //this.#qList.parseListOfQueues()
+  async #setup() {
+    const {uid, first_name, last_name, domain} = JSON.parse(localStorage.getItem("vk_auth"))
+    const response = await serverRequest.addStudent(uid, `${first_name} ${last_name}`, domain)
+    console.log(response)
+    await this.#qList.parseListOfQueues(uid)
     this.render()
   }
 
