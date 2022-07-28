@@ -1,16 +1,18 @@
 package com.webserver.webserver.controllers;
 
 import com.webserver.webserver.jsonResponse.JsonUtil;
+import com.webserver.webserver.jsonResponse.ListResponseStudent;
+import com.webserver.webserver.jsonResponse.ResponseAboutStudent;
 import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.models.Student;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -18,14 +20,17 @@ import java.util.Optional;
 @RequestMapping(path = "/listOfQueues")
 public class ListOfQueuesController {
 
-    @Autowired
-    private ListOfQueueRepository listOfQueueRepository;
+    private final ListOfQueueRepository listOfQueueRepository;
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
-    @Autowired
-    private QueueRepository queueRepository;
+    private final QueueRepository queueRepository;
+
+    public ListOfQueuesController(ListOfQueueRepository listOfQueueRepository, StudentRepository studentRepository, QueueRepository queueRepository) {
+        this.listOfQueueRepository = listOfQueueRepository;
+        this.studentRepository = studentRepository;
+        this.queueRepository = queueRepository;
+    }
 
 
     @GetMapping("/add/{idQueue}/{idStudent}/{numberOfAppStudent}")
@@ -45,6 +50,7 @@ public class ListOfQueuesController {
         if (tryQueue.isPresent() && tryStudent.isPresent()){
             Queue queue = tryQueue.get();
             listOfQueues.setCurrentApp(queue.getCurrentApp());
+            listOfQueues.setNameOfSubject(queue.getSubjectName());
 
             int position = listOfQueueRepository.findAllByIdQueue(idQueue).size() + 1;
             listOfQueues.setPositionStudent(position);
@@ -60,9 +66,9 @@ public class ListOfQueuesController {
 //                queueOfStudentOnOneGroup = listOfQueues.sortByNumberOfApp(queueOfStudentOnOneGroup);
 //            }
         }else{
-            return util.response("Not found", 404);
+            return util.responseOfFindAndAdd("Not found", 404);
         }
-        return util.response("Add new student to queue", 200);
+        return util.responseOfFindAndAdd("Add new student to queue", 200);
     }
 
     @GetMapping("/all")
@@ -71,10 +77,56 @@ public class ListOfQueuesController {
         return listOfQueueRepository.findAll();
     }
 
-    @GetMapping("/get/{idStudent}")
+    @GetMapping("/getByIdStudent/{idStudent}")
     public @ResponseBody
     Iterable<ListOfQueues> getAllListOfQueuesByIdStudent(@PathVariable Long idStudent){
         return listOfQueueRepository.findAllByIdStudent(idStudent);
     }
+
+    @GetMapping("/getByIdQueue/{idQueue}")
+    public @ResponseBody
+    String getAllListOfQueuesByIdQueue(@PathVariable Long idQueue){
+
+        JsonUtil util = new JsonUtil();
+
+        List<ListOfQueues> listOfQueues = listOfQueueRepository.findAllByIdQueue(idQueue);
+        if (!listOfQueues.isEmpty()){
+            ListResponseStudent listResponseStudent = new ListResponseStudent();
+            for (ListOfQueues queue:listOfQueues){
+                ResponseAboutStudent responseAboutStudent = new ResponseAboutStudent();
+                responseAboutStudent.setIdStudent(queue.getIdStudent());
+
+                Optional<Student> s = studentRepository.findById(queue.getIdStudent());
+                if (s.isPresent()) {
+                    Student student = s.get();
+                    responseAboutStudent.setNameOfStudent(student.getNameOfStudent());
+                    responseAboutStudent.setDomain(student.getDomain());
+                }
+
+                listResponseStudent.add(responseAboutStudent);
+            }
+            return util.responseStudent(listResponseStudent);
+        }
+        else{
+            return util.responseOfFindAndAdd("Not found", 404);
+        }
+    }
+
+    @DeleteMapping("/delete/ByIdStudentAndQueue/{idStudent}/{idQueue}")
+    public @ResponseBody String deleteByIdStudent(@PathVariable Long idStudent, @PathVariable Long idQueue){
+
+        JsonUtil util = new JsonUtil();
+
+        List<ListOfQueues> queues = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, idQueue);
+        if (!queues.isEmpty()){
+            listOfQueueRepository.deleteAll(queues);
+
+            return util.responseOfFindAndAdd("Deleted", 200);
+        }else{
+            return util.responseOfFindAndAdd("Not found", 404);
+        }
+    }
+
+
 
 }

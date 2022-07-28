@@ -13,6 +13,8 @@ public class ListOfQueues {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private String nameOfSubject;
+
     private Long idStudent, idQueue;
     private int positionStudent = 0;
     private int numberOfAppStudent;
@@ -28,6 +30,14 @@ public class ListOfQueues {
 
     public Long getIdStudent() {
         return idStudent;
+    }
+
+    public String getNameOfSubject() {
+        return nameOfSubject;
+    }
+
+    public void setNameOfSubject(String nameOfSubject) {
+        this.nameOfSubject = nameOfSubject;
     }
 
     public void setIdStudent(Long idStudent) {
