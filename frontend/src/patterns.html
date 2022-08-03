@@ -32,5 +32,36 @@
         </div>
     </div>
 </div>
-
+// notice
+<div class="modal visible center-items flex-column" data-action="close">
+    <div class="notice Ntitle padding-content center-items border-2px">
+        Ваши уведомления
+        <div class="btn back" data-action="close"></div>
+    </div>
+    <div class="notice padding-content center-items border-2px">Тут пусто :)</div>
+    <div class="notice invite padding-content center-items border-2px flex-column" id="">
+        Приглашение в очередь {Qname}
+        <div class="btn-container flex-row">
+            <div class="btn apply" data-action="apply" data-content="{Qhash}">Принять</div>
+            <div class="btn close" data-action="delete" data-content="{Nid}">Удалить</div>
+        </div>
+    </div>
+    <div class="notice swap padding-content center-items border-2px flex-column" id="">
+        Студент {Sname} предлагает вам поменяться с ним местами
+        <div class="swap-state">
+            {Qname} :
+            <span class="rP">{rP}</span> -> <span class="sP">{sP}</span>
+        </div>
+        <div class="btn-container flex-row">
+            <div class="btn apply" data-action="swap" data-content="{SenderID, RecepientID, Qhash}">Принять</div>
+            <div class="btn close" data-action="delete" data-content="{Nid}">Удалить</div>
+        </div>
+    </div>
+    <div class="notice update padding-content center-items border-2px flex-row">
+        Обновление 0.3.1 {Кодовое Название}
+        <div class="btn readMore" data-action="readMore" data-content="{link}">
+            <a href="#">Узнать об изменениях</a>
+        </div>
+    </div>
+</div>
 https://oauth.vk.com/authorize?client_id=8210632&display=popup&redirect_uri=close.html&response_type=token&openapi=1

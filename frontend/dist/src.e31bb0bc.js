@@ -189,7 +189,76 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./..\\assets\\logout.png":[["logout.8f74ff45.png","assets/logout.png"],"assets/logout.png"],"./..\\assets\\back.png":[["back.e6f29605.png","assets/back.png"],"assets/back.png"],"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"classes/loadBar.js":[function(require,module,exports) {
+},{"./..\\assets\\back.png":[["back.e6f29605.png","assets/back.png"],"assets/back.png"],"./..\\assets\\notification.png":[["notification.8f1ad31f.png","assets/notification.png"],"assets/notification.png"],"./..\\assets\\logout.png":[["logout.8f74ff45.png","assets/logout.png"],"assets/logout.png"],"_css_loader":"../../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"classes/queue.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.QueueBlock = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var QueueBlock = /*#__PURE__*/function () {
+  function QueueBlock(values) {
+    _classCallCheck(this, QueueBlock);
+
+    this.values = values;
+    this.min = true;
+  }
+
+  _createClass(QueueBlock, [{
+    key: "ID",
+    get: function get() {
+      return this.values.idQueue;
+    }
+  }, {
+    key: "toHtml",
+    value: function toHtml() {
+      return template(this.values);
+    }
+  }, {
+    key: "toListHtml",
+    value: function toListHtml(list) {
+      return templateList(this.values, list, JSON.parse(localStorage.getItem("vk_auth")).uid);
+    }
+  }]);
+
+  return QueueBlock;
+}();
+
+exports.QueueBlock = QueueBlock;
+
+var template = function template(content) {
+  return "\n    <div class=\"qItem border-2px\" id=\"".concat(content.idQueue, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\">\n          <span class=\"btn-text\" data-app=\"0\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
+};
+
+function div(content) {
+  var class_ = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+  var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+  return "<div class=\"".concat(class_, "\" id=\"").concat(id, "\">").concat(content, "</div>");
+}
+
+var templateList = function templateList(content, list, idStudent) {
+  var HTML = div("<span>".concat(content.name, "</span><div class=\"btn back\" id=\"btn__back\"></div>"), "subject-name border-2px center-items");
+  HTML += div(list.responseAboutStudentList.map(function (item, index) {
+    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "vk.com/id".concat(item.id));
+  }).join(""), "contanier custom-scrollbar");
+  return div(HTML, "qList", "");
+};
+
+var template_list = function template_list(content, index, vk_link) {
+  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div>\n    <div class=\"nameStudent border-2px center-items\">").concat(content, "</div>\n    <a class=\"vklink border-2px center-items\" href=\"").concat(vk_link, "\">vk</a>\n    <div class=\"swap border-2px center-items\" data-action=\"swap\" data-target=\"id\">\u041F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438</div>"), "qList-item flex-row");
+};
+
+var template_u = function template_u(index) {
+  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div><div class=\"u border-2px center-items\">\u0412\u044B</div>"), "qList-item uitem flex-row");
+};
+},{}],"classes/loadBar.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -450,20 +519,16 @@ var serverRequest = /*#__PURE__*/function () {
       return appendQ;
     }()
   }, {
-    key: "request",
+    key: "getListNotice",
     value: function () {
-      var _request = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(url) {
+      var _getListNotice = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(id) {
         return _regeneratorRuntime().wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                _context7.next = 2;
-                return sendRequestAsyncURL(url);
+                return _context7.abrupt("return", []);
 
-              case 2:
-                return _context7.abrupt("return", _context7.sent);
-
-              case 3:
+              case 1:
               case "end":
                 return _context7.stop();
             }
@@ -471,7 +536,35 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee7);
       }));
 
-      function request(_x8) {
+      function getListNotice(_x8) {
+        return _getListNotice.apply(this, arguments);
+      }
+
+      return getListNotice;
+    }()
+  }, {
+    key: "request",
+    value: function () {
+      var _request = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(url) {
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.next = 2;
+                return sendRequestAsyncURL(url);
+
+              case 2:
+                return _context8.abrupt("return", _context8.sent);
+
+              case 3:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8);
+      }));
+
+      function request(_x9) {
         return _request.apply(this, arguments);
       }
 
@@ -484,22 +577,22 @@ var serverRequest = /*#__PURE__*/function () {
 
 exports.serverRequest = serverRequest;
 
-function sendRequestAsync(_x9) {
+function sendRequestAsync(_x10) {
   return _sendRequestAsync.apply(this, arguments);
 }
 
 function _sendRequestAsync() {
-  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(url_to) {
+  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(url_to) {
     var url, loadbar, response;
-    return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             url = "http://".concat(ip, ":").concat(port, "/").concat(url_to);
             loadbar = new _loadBar.$LoadBar();
             loadbar.load(url_to);
-            _context8.prev = 3;
-            _context8.next = 6;
+            _context9.prev = 3;
+            _context9.next = 6;
             return fetch(url, {
               method: "GET",
               headers: {
@@ -508,41 +601,41 @@ function _sendRequestAsync() {
             });
 
           case 6:
-            response = _context8.sent;
+            response = _context9.sent;
             loadbar.destroy(url_to);
-            return _context8.abrupt("return", response.json());
+            return _context9.abrupt("return", response.json());
 
           case 11:
-            _context8.prev = 11;
-            _context8.t0 = _context8["catch"](3);
+            _context9.prev = 11;
+            _context9.t0 = _context9["catch"](3);
             loadbar.destroy(url_to);
-            return _context8.abrupt("return", -1);
+            return _context9.abrupt("return", -1);
 
           case 15:
           case "end":
-            return _context8.stop();
+            return _context9.stop();
         }
       }
-    }, _callee8, null, [[3, 11]]);
+    }, _callee9, null, [[3, 11]]);
   }));
   return _sendRequestAsync.apply(this, arguments);
 }
 
-function sendRequestAsyncURL(_x10) {
+function sendRequestAsyncURL(_x11) {
   return _sendRequestAsyncURL.apply(this, arguments);
 }
 
 function _sendRequestAsyncURL() {
-  _sendRequestAsyncURL = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(url_to) {
+  _sendRequestAsyncURL = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(url_to) {
     var response;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
       while (1) {
-        switch (_context9.prev = _context9.next) {
+        switch (_context10.prev = _context10.next) {
           case 0:
             _loadBar.$LoadBar.load();
 
-            _context9.prev = 1;
-            _context9.next = 4;
+            _context10.prev = 1;
+            _context10.next = 4;
             return fetch(url_to, {
               method: "GET",
               headers: {
@@ -551,97 +644,167 @@ function _sendRequestAsyncURL() {
             });
 
           case 4:
-            response = _context9.sent;
+            response = _context10.sent;
 
             _loadBar.$LoadBar.destroy();
 
-            return _context9.abrupt("return", response.json());
+            return _context10.abrupt("return", response.json());
 
           case 9:
-            _context9.prev = 9;
-            _context9.t0 = _context9["catch"](1);
+            _context10.prev = 9;
+            _context10.t0 = _context10["catch"](1);
 
             _loadBar.$LoadBar.destroy();
 
-            return _context9.abrupt("return", -1);
+            return _context10.abrupt("return", -1);
 
           case 13:
           case "end":
-            return _context9.stop();
+            return _context10.stop();
         }
       }
-    }, _callee9, null, [[1, 9]]);
+    }, _callee10, null, [[1, 9]]);
   }));
   return _sendRequestAsyncURL.apply(this, arguments);
 }
-},{"./loadBar":"classes/loadBar.js"}],"classes/queue.js":[function(require,module,exports) {
+},{"./loadBar":"classes/loadBar.js"}],"classes/Qmaker.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.QueueBlock = void 0;
+exports.$Qmaker = void 0;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-var QueueBlock = /*#__PURE__*/function () {
-  function QueueBlock(values) {
-    _classCallCheck(this, QueueBlock);
-
-    this.values = values;
-    this.min = true;
+String.prototype.trimSlash = function (arg) {
+  if (this.slice(-1) === '/') {
+    return this.slice(0, this.length - 1);
   }
 
-  _createClass(QueueBlock, [{
-    key: "ID",
-    get: function get() {
-      return this.values.idQueue;
-    }
-  }, {
-    key: "toHtml",
-    value: function toHtml() {
-      return template(this.values);
-    }
-  }, {
-    key: "toListHtml",
-    value: function toListHtml(list) {
-      return templateList(this.values, list, JSON.parse(localStorage.getItem("vk_auth")).uid);
-    }
-  }]);
-
-  return QueueBlock;
-}();
-
-exports.QueueBlock = QueueBlock;
-
-var template = function template(content) {
-  return "\n    <div class=\"qItem border-2px\" id=\"".concat(content.idQueue, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\">\n          <span class=\"btn-text\" data-app=\"0\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
+  return this;
 };
 
-function div(content) {
-  var class_ = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
-  var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
-  return "<div class=\"".concat(class_, "\" id=\"").concat(id, "\">").concat(content, "</div>");
-}
+var $Qmaker = function $Qmaker() {
+  function open() {
+    var $f = document.createElement('div');
+    $f.classList.add('modal');
+    $f.innerHTML = pattern();
+    return $f;
+  }
 
-var templateList = function templateList(content, list, idStudent) {
-  var HTML = div("<span>".concat(content.name, "</span><div class=\"btn back\" id=\"btn__back\"></div>"), "subject-name border-2px center-items");
-  HTML += div(list.responseAboutStudentList.map(function (item, index) {
-    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "vk.com/id".concat(item.id));
-  }).join(""), "contanier custom-scrollbar");
-  return div(HTML, "qList", "");
+  function addEventListeners() {
+    var $sq = document.getElementById('sq'),
+        $ca = document.getElementById('ca'),
+        $date = document.getElementById('date'),
+        $input = document.getElementById('count_apps'),
+        $add = document.getElementById('add'),
+        $cancel = document.getElementById('cancel'),
+        $dateToPass = document.getElementById('dateToPass'),
+        $name = document.getElementById('name_input');
+    $input.disabled = true;
+    $dateToPass.disabled = true;
+    $ca.classList.add('off');
+    $date.classList.add('off');
+    $add.classList.add('off');
+
+    $name.oninput = function () {
+      if ($name.value) $add.classList.remove('off');else $add.classList.add('off');
+    };
+
+    $input.oninput = function () {
+      if (($input.value || $dateToPass.value) && $date.classList.contains('on')) $add.classList.remove('off');else $add.classList.add('off');
+    };
+
+    $dateToPass.oninput = function () {
+      if (($input.value || $dateToPass.value) && $ca.classList.contains('on')) $add.classList.remove('off');else $add.classList.add('off');
+    };
+
+    $sq.onclick = function () {
+      $sq.innerHTML = $sq.classList.contains('on') ? 'off' : 'on';
+      $sq.classList.toggle('on');
+
+      if ($sq.classList.contains('on')) {
+        $input.disabled = !$ca.classList.contains('on');
+        $ca.classList.remove('off');
+        $date.classList.remove('off');
+        $add.classList.add('off');
+      } else {
+        $input.value = "";
+        $input.disabled = !($ca.classList.contains('on') && $sq.classList.contains('on'));
+        $ca.classList.add('off');
+        $date.classList.add('off');
+        $add.classList.remove('off');
+      }
+    };
+
+    $ca.onclick = function () {
+      if (!$ca.classList.contains('off')) {
+        $ca.innerHTML = $ca.classList.contains('on') ? 'off' : 'on';
+        $ca.classList.toggle('on');
+        $input.disabled = !$ca.classList.contains('on');
+        $input.value = !$ca.classList.contains('on') ? "" : $input.value;
+
+        if ($input.value || $dateToPass.value) {
+          $add.classList.remove('off');
+        } else {
+          $add.classList.add('off');
+        }
+      }
+    };
+
+    $date.onclick = function () {
+      if (!$date.classList.contains('off')) {
+        $date.innerHTML = $date.classList.contains('on') ? 'off' : 'on';
+        $date.classList.toggle('on');
+        $dateToPass.disabled = !$date.classList.contains('on');
+        $dateToPass.value = !$date.classList.contains('on') ? "" : $dateToPass.value;
+
+        if ($input.value || $dateToPass.value) {
+          $add.classList.remove('off');
+        } else {
+          $add.classList.add('off');
+        }
+      }
+    };
+
+    $add.onclick = function () {
+      if (!$add.classList.contains('off')) {
+        var request = "queue/add/".concat($name.value.trim(), "/").concat($sq.classList.contains('on') ? 'smart' : 'simple', "/");
+        request += $ca.classList.contains('on') ? "t".concat($input.value ? "/".concat($input.value) : '') : '';
+        request += $date.classList.contains('on') ? "/t".concat($dateToPass.value ? "/".concat($dateToPass.value) : '') : '';
+        console.log(request.trimSlash()); //close()
+      }
+    };
+
+    $cancel.onclick = function () {
+      close();
+    };
+  }
+
+  function deleteEventListeners() {
+    document.getElementById('sq').onclick = "";
+    document.getElementById('ca').onclick = "";
+    document.getElementById('date').onclick = "";
+    document.getElementById('count_apps').onclick = "";
+    document.getElementById('add').onclick = "";
+    document.getElementById('cancel').onclick = "";
+    document.getElementById('dateToPass').onclick = "";
+  }
+
+  function close() {
+    deleteEventListeners();
+    document.body.removeChild(__popup__);
+  }
+
+  var __popup__ = open();
+
+  document.body.appendChild(__popup__);
+  addEventListeners();
 };
 
-var template_list = function template_list(content, index, vk_link) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div>\n    <div class=\"nameStudent border-2px center-items\">").concat(content, "</div>\n    <a class=\"vklink border-2px center-items\" href=\"").concat(vk_link, "\">vk</a>\n    <div class=\"swap border-2px center-items\" data-action=\"swap\" data-target=\"id\">\u041F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438</div>"), "qList-item flex-row");
-};
+exports.$Qmaker = $Qmaker;
 
-var template_u = function template_u(index) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div><div class=\"u border-2px center-items\">\u0412\u044B</div>"), "qList-item uitem flex-row");
+var pattern = function pattern() {
+  return "\n<div class=\"form\">\n    <span class=\"title\">\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u041E\u0447\u0435\u0440\u0435\u0434\u0435\u0439</span>\n    <div class=\"input__\">\n        <input type=\"text\" class=\"input\" id=\"name_input\" maxlength=\"30\" required>\n        <span class=\"float\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span>\n    </div>\n    <div class=\"orange_line\"></div>\n    <div class=\"buttons\">\n        <div class=\"btn\">\n            <span class=\"text\">\u0423\u043C\u043D\u0430\u044F \u043E\u0447\u0435\u0440\u0435\u0434\u044C</span>\n            <div class=\"btn__sq\" id=\"sq\">off</div>\n        </div>\n        <div class=\"orange_line\"></div>\n        <div class=\"btn\">\n            <span class=\"text\">\u041F\u0440\u0438\u0432\u044F\u0437\u043A\u0430 \u043A \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u0443 \u0437\u0430\u0434\u0430\u0447</span>\n            <div class=\"btn__sq\" id=\"ca\">off</div>\n        </div>\n        <div class=\"input__\">\n            <input type=\"number\" class=\"input\" id=\"count_apps\" max=\"100\" min=\"1\" required>\n            <span class=\"float\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u0434\u0430\u0447 \u043E\u043F\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E</span>\n        </div>\n        <div class=\"orange_line\"></div>\n        <div class=\"btn\">\n            <span class=\"text\">\u041F\u0440\u0438\u0432\u044F\u0437\u043A\u0430 \u043A \u0434\u0430\u0442\u0435 \u0441\u0434\u0430\u0447\u0438 \u0440\u0430\u0431\u043E\u0442\u044B</span>\n            <div class=\"btn__sq\" id=\"date\">off</div>\n        </div>\n        <div class=\"input__\">\n            <input type=\"number\" class=\"input\" id=\"dateToPass\" max=\"100\" min=\"1\" required>\n            <span class=\"float\">\u041A\u043E\u043B-\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0434\u043B\u044F \u0441\u0434\u0430\u0447\u0438 \u043E\u043F\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E</span>\n        </div>\n        <div class=\"orange_line\"></div>\n    </div>\n    <div class=\"btns\">\n        <div class=\"add\" id=\"add\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n        <div class=\"cancel\" id=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0438\u0442\u044C</div>\n    </div>\n</div>\n";
 };
 },{}],"classes/Qlist.js":[function(require,module,exports) {
 "use strict";
@@ -654,6 +817,8 @@ exports.QList = void 0;
 var _queue = require("./queue");
 
 var _serverReq = require("./serverReq");
+
+var _Qmaker = require("./Qmaker");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -817,7 +982,7 @@ var QList = /*#__PURE__*/function () {
 
               case 9:
                 html = _context3.t0;
-                html += this.min ? "\n    <div class=\"QmakerContainer border-2px center-items\">\n      <div class=\"Qmaker\" id=\"Qmaker\">\n          <div class=\"btn about\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n      </div>\n    </div>\n    " : '';
+                html += this.min ? "\n    <div class=\"QmakerContainer border-2px center-items\">\n      <div class=\"Qmaker\" id=\"Qmaker\">\n          <div class=\"btn about\" id=\"QmakerAdd\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n      </div>\n    </div>\n    " : '';
                 return _context3.abrupt("return", html);
 
               case 12:
@@ -873,6 +1038,8 @@ var QList = /*#__PURE__*/function () {
           _classPrivateFieldGet(this, _list).map(function (item) {
             document.getElementById(item.values.idQueue).addEventListener("click", _this2.ClickHandler);
           });
+
+          document.getElementById('QmakerAdd').onclick = (0, _Qmaker.$Qmaker)();
         } else {
           document.getElementById("btn__back").addEventListener("click", this.backButtonClick);
         }
@@ -888,7 +1055,7 @@ var QList = /*#__PURE__*/function () {
           document.getElementById(item.values.idQueue).removeEventListener("click", _this3.ClickHandler);
         });
 
-        document.getElementById('Qmaker').addEventListener("click", this.ClickHandler);
+        document.getElementById('QmakerAdd').onclick = '';
       } else {
         document.getElementById("btn__back").removeEventListener("click", this.backButtonClick);
       }
@@ -898,7 +1065,7 @@ var QList = /*#__PURE__*/function () {
     value: function ClickHandler(event) {
       console.log("click on q with id >>>", event.target.id);
       this.selected = _classPrivateFieldGet(this, _list).find(function (item) {
-        return "".concat(item.ID) === event.target.id;
+        return item.ID === +event.target.id;
       });
 
       if (this.selected) {
@@ -931,7 +1098,332 @@ var QList = /*#__PURE__*/function () {
 }();
 
 exports.QList = QList;
-},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js"}],"classes/App.js":[function(require,module,exports) {
+},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js","./Qmaker":"classes/Qmaker.js"}],"util/util.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Auth = Auth;
+exports.ReloadName = ReloadName;
+exports.openModal = exports.getTimeUnix = exports.getStateModal = exports.getName = exports.getId = exports.closeModal = exports.applyInvite = void 0;
+
+var _serverReq = require("../classes/serverReq");
+
+var applyInvite = function applyInvite(href, id) {};
+
+exports.applyInvite = applyInvite;
+
+var closeModal = function closeModal() {
+  document.getElementById("modal").classList.remove("visible");
+};
+
+exports.closeModal = closeModal;
+
+var openModal = function openModal() {
+  document.getElementById("modal").classList.add("visible");
+};
+
+exports.openModal = openModal;
+
+var getStateModal = function getStateModal() {
+  return document.getElementById("modal").classList.contains("visible");
+};
+
+exports.getStateModal = getStateModal;
+
+var getTimeUnix = function getTimeUnix() {
+  return Date.now() / 1000 | 0;
+};
+
+exports.getTimeUnix = getTimeUnix;
+
+function ReloadName() {
+  var name = JSON.parse(localStorage.getItem("vk_auth")).name;
+  if (name) document.getElementById("name_holder").innerHTML = name;
+}
+
+var getName = function getName() {
+  return JSON.parse(localStorage.getItem("vk_auth")).name;
+};
+
+exports.getName = getName;
+
+var getId = function getId() {
+  return JSON.parse(localStorage.getItem("vk_auth")).id;
+};
+
+exports.getId = getId;
+
+function Auth(callback) {
+  var data = JSON.parse(localStorage.getItem("vk_auth"));
+
+  if (data && data.expire > getTimeUnix()) {
+    callback(false);
+  } else {
+    new Promise(function (resolve, reject) {
+      var $btn_auth = document.createElement("div");
+      $btn_auth.classList.add("modal", "center-items", "visible");
+      $btn_auth.id = "modal";
+      $btn_auth.innerHTML += "\n        <div class=\"btn auth\" id=\"btn_vk_auth\" data-action=\"login\">\u0410\u0432\u0442\u043E\u0440\u0438\u0437\u0430\u0446\u0438\u044F \u0447\u0435\u0440\u0435\u0437 \u0412\u041A</div>\n      ";
+      document.body.appendChild($btn_auth);
+      $btn_auth.addEventListener("click", function (e) {
+        var action = e.target.dataset.action;
+
+        if (action === "login") {
+          VK.Auth.login(function (data) {
+            if (data.session) {
+              console.log("auth | success");
+              var _data$session = data.session,
+                  expire = _data$session.expire,
+                  user = _data$session.user;
+              var id = user.id,
+                  first_name = user.first_name,
+                  last_name = user.last_name;
+              localStorage.setItem("vk_auth", JSON.stringify({
+                expire: expire,
+                id: id,
+                name: "".concat(first_name, " ").concat(last_name)
+              }));
+              document.body.removeChild($btn_auth);
+              resolve(false);
+            } else {
+              resolve(true);
+            }
+          });
+        }
+      });
+    }).then(callback);
+  }
+}
+},{"../classes/serverReq":"classes/serverReq.js"}],"classes/notice.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Notice = exports.InviteApply = void 0;
+
+var _serverReq = require("./serverReq");
+
+var _util = require("../util/util");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+var Notice = /*#__PURE__*/function () {
+  function Notice(id) {
+    _classCallCheck(this, Notice);
+
+    this.id = id;
+    this.setup();
+  }
+
+  _createClass(Notice, [{
+    key: "setup",
+    value: function setup() {
+      //this.noticeList = await getListNotice(this.id);
+      this.noticeList = [{
+        type: "invite",
+        id: 0,
+        Qname: "История",
+        Qhash: "hAY90La"
+      }, {
+        type: "swap",
+        id: 1,
+        Q: {
+          hash: "lAWDuo31",
+          name: "Английский"
+        },
+        sender: {
+          id: 25,
+          name: "Андрей Новиков",
+          position: 5
+        },
+        recipient: {
+          id: 89,
+          position: 9
+        }
+      }, {
+        type: "update",
+        update: {
+          version: "0.4.13",
+          codeName: "Круто все",
+          vkLink: "vk.com"
+        }
+      }];
+    }
+  }, {
+    key: "renderNotice",
+    value: function renderNotice() {
+      document.getElementById("modal-notice").innerHTML = "\n\t\t<div class=\"notice Ntitle padding-content center-items border-2px\">\u0412\u0430\u0448\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F<div class=\"btn back\" data-action=\"close\"></div></div>\n\t\t\t".concat(this.listToHtml(), "\n\t\t");
+    }
+  }, {
+    key: "open",
+    value: function open() {
+      this.$notice = document.createElement("div");
+      this.$notice.classList.add("modal", "visible", "center-items", "flex-column");
+      this.$notice.id = "modal-notice";
+      this.$notice.dataset.action = "close";
+      document.body.appendChild(this.$notice);
+      this.renderNotice();
+      this.$notice.addEventListener("click", this.clickHandler.bind(this));
+    }
+  }, {
+    key: "close",
+    value: function close() {
+      this.$notice.removeEventListener("click", this.clickHandler);
+      document.body.removeChild(this.$notice);
+    }
+  }, {
+    key: "clickHandler",
+    value: function clickHandler(e) {
+      var _this = this;
+
+      var action = e.target.dataset.action;
+      var content = e.target.dataset.content;
+
+      if (action) {
+        console.log("Clicked on notice {id:".concat(e.target.id, ", action:").concat(action, ", content:").concat(content, "}"));
+
+        switch (action) {
+          case "close":
+            {
+              this.close();
+              break;
+            }
+
+          case "apply":
+            {
+              apply('Введите номер задания', input()).then(function (data) {
+                if (data) {
+                  _this.noticeList = _this.noticeList.filter(function (item) {
+                    return item.id !== +content;
+                  }); // !serverReq
+
+                  _this.renderNotice();
+                }
+              });
+              break;
+            }
+
+          case "swap":
+            {
+              this.noticeList = this.noticeList.filter(function (item) {
+                return item.id !== +content;
+              });
+              this.renderNotice();
+              console.log(content);
+              break;
+            }
+
+          case "delete":
+            {
+              apply('Вы точно хотите удалить это уведомление?').then(function (data) {
+                if (data) {
+                  _this.noticeList = _this.noticeList.filter(function (item) {
+                    return item.id !== +content;
+                  }); // !serverReq
+
+                  _this.renderNotice();
+                }
+              });
+              console.log("notice ".concat(content, " is deleted.")); // !serverReq
+
+              break;
+            }
+
+          case "readMore":
+            {
+              console.log(content);
+              break;
+            }
+        }
+      }
+    }
+  }, {
+    key: "listToHtml",
+    value: function listToHtml() {
+      return this.noticeList.length > 0 ? this.noticeList.map(function (item) {
+        switch (item.type) {
+          case "invite":
+            {
+              return "\n\t\t\t\t\t\t\t<div class=\"notice invite padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u041F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u0435 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u044C ").concat(item.Qname, "\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"apply\" data-content=").concat(item.id, " data-src=").concat(item.Qhash, ">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+            }
+
+          case "swap":
+            {
+              return "\n\t\t\t\t\t\t\t<div class=\"notice swap padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u0421\u0442\u0443\u0434\u0435\u043D\u0442 ").concat(item.sender.name, " \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0432\u0430\u043C \u043F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C \u043C\u0435\u0441\u0442\u0430\u043C\u0438\n\t\t\t\t\t\t\t\t<div class=\"swap-state\">\n\t\t\t\t\t\t\t\t\t\t").concat(item.Q.name, " :\n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "red" : "green", ">").concat(item.recipient.position, "</span> \n\t\t\t\t\t\t\t\t\t\t-> \n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "green" : "red", ">").concat(item.sender.position, "</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"swap\" data-content=").concat(item.id, " data-src=\"").concat(item.sender.id, "|").concat(item.recipient.id, "|").concat(item.Q.hash, "\">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+            }
+
+          case "update":
+            {
+              return "\n\t\t\t\t\t\t\t<div class=\"notice update padding-content center-items border-2px flex-row\">\n\t\t\t\t\t\t\t\t\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 ".concat(item.update.version, " ").concat(item.update.codeName, "\n\t\t\t\t\t\t\t\t<div class=\"btn readMore\" data-action=\"readMore\" data-content=").concat(item.update.vkLink, ">\n\t\t\t\t\t\t\t\t\t<a href=\"#\">\u0423\u0437\u043D\u0430\u0442\u044C \u043E\u0431 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F\u0445</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+            }
+        }
+      }).join("") : "<div class=\"notice padding-content center-items border-2px\">\u0422\u0443\u0442 \u043F\u0443\u0441\u0442\u043E :)</div>";
+    }
+  }]);
+
+  return Notice;
+}();
+
+exports.Notice = Notice;
+
+var InviteApply = function InviteApply(hash) {
+  apply('Введите номер задания', input()).then(function (data) {
+    if (data) {
+      // ! serverReq
+      var id = (0, _util.getId)();
+      window.location.hash = '';
+      window.location.reload();
+      console.log("student ".concat(id, " with app ").concat(data, " added to Q hash:").concat(hash));
+    }
+  });
+};
+
+exports.InviteApply = InviteApply;
+
+var input = function input() {
+  return "\n\t\t<input type=\"number\" id=\"appNumber\" class=\"padding-content border-2px\" required>\n\t";
+};
+
+var apply = function apply(text, content) {
+  return new Promise(function (resolve, reject) {
+    var $apply = document.createElement('div');
+    $apply.classList.add('modal', 'visible', 'center-items', 'flex-column');
+    $apply.id = 'modal-apply';
+    $apply.dataset.action = 'close';
+    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items border-2px flex-column\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content || '', "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
+    document.body.appendChild($apply);
+    $apply.addEventListener('click', function (e) {
+      var action = e.target.dataset.action;
+
+      if (action) {
+        console.log("clicked on btn ".concat(action));
+
+        if (action === 'ok') {
+          if (content) {
+            var value = document.getElementById('appNumber').value;
+
+            if (value) {
+              resolve(value);
+            }
+          } else {
+            resolve(true);
+          }
+        }
+
+        resolve(false);
+        document.body.removeChild($apply);
+      }
+    });
+  });
+};
+},{"./serverReq":"classes/serverReq.js","../util/util":"util/util.js"}],"classes/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -942,6 +1434,10 @@ exports.App = void 0;
 var _Qlist = require("./Qlist");
 
 var _serverReq = require("./serverReq");
+
+var _util = require("../util/util");
+
+var _notice2 = require("./notice");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -973,6 +1469,8 @@ function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(
 
 var _qList = /*#__PURE__*/new WeakMap();
 
+var _notice = /*#__PURE__*/new WeakMap();
+
 var _setup = /*#__PURE__*/new WeakSet();
 
 var App = /*#__PURE__*/function () {
@@ -986,22 +1484,40 @@ var App = /*#__PURE__*/function () {
       value: new _Qlist.QList()
     });
 
+    _classPrivateFieldInitSpec(this, _notice, {
+      writable: true,
+      value: new _notice2.Notice(45)
+    });
+
+    this.error = false;
+
     _classPrivateMethodGet(this, _setup, _setup2).call(this);
   }
 
   _createClass(App, [{
-    key: "error",
-    value: function error() {
-      document.getElementById("fl_co").innerHTML = '<div class="error">Сайт не работает. Звоните фиксикам или попробуйте обновить страницу :)</div>';
+    key: "show_error",
+    value: function show_error() {
+      document.getElementById("content-main").innerHTML = '<div class="error">Сайт не работает. Звоните фиксикам или попробуйте обновить страницу :)</div>';
+    }
+  }, {
+    key: "openNotice",
+    value: function openNotice() {
+      _classPrivateFieldGet(this, _notice).open();
+
+      console.log('notifications list open.');
     }
   }, {
     key: "render",
     value: function render() {
-      var data = JSON.parse(localStorage.getItem("auth-data"));
+      (0, _util.ReloadName)();
 
-      _classPrivateFieldGet(this, _qList).render();
-
-      console.log("render...");
+      if (this.error) {
+        this.show_error();
+      } else {
+        //const data = JSON.parse(localStorage.getItem("vk_auth")).name
+        //this.#qList.render();
+        console.log("render...");
+      }
     }
   }]);
 
@@ -1016,26 +1532,38 @@ function _setup2() {
 
 function _setup3() {
   _setup3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var _JSON$parse, uid, first_name, last_name, domain, response;
+    var _JSON$parse, id, name, response;
 
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _JSON$parse = JSON.parse(localStorage.getItem("vk_auth")), uid = _JSON$parse.uid, first_name = _JSON$parse.first_name, last_name = _JSON$parse.last_name, domain = _JSON$parse.domain;
-            _context.next = 3;
-            return _serverReq.serverRequest.addStudent(uid, "".concat(first_name, " ").concat(last_name), domain);
+            document.getElementById("logout").onclick = function () {
+              console.log('logout init');
+              VK.Auth.getLoginStatus(function (response) {
+                if (response) {
+                  VK.Auth.logout(function (data) {
+                    console.log(data);
+                    localStorage.removeItem('vk_auth');
+                    window.location.reload();
+                  });
+                }
+              });
+            };
 
-          case 3:
-            response = _context.sent;
-            console.log(response);
-            _context.next = 7;
-            return _classPrivateFieldGet(this, _qList).parseListOfQueues(uid);
+            document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
+            _JSON$parse = JSON.parse(localStorage.getItem("vk_auth")), id = _JSON$parse.id, name = _JSON$parse.name; // const response = await serverRequest.addStudent(id, name);
 
-          case 7:
+            response = true;
+
+            if (response === -1) {
+              this.error = true;
+            } else {//await this.#qList.parseListOfQueues(id);
+            }
+
             this.render();
 
-          case 8:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -1044,62 +1572,16 @@ function _setup3() {
   }));
   return _setup3.apply(this, arguments);
 }
-},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js"}],"util/util.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.openModal = exports.getStateModal = exports.closeModal = exports.applyInvite = void 0;
-
-var _serverReq = require("../classes/serverReq");
-
-var applyInvite = function applyInvite(href, id) {};
-
-exports.applyInvite = applyInvite;
-
-var closeModal = function closeModal() {
-  document.getElementById("modal").classList.remove("visible");
-};
-
-exports.closeModal = closeModal;
-
-var openModal = function openModal() {
-  document.getElementById("modal").classList.add("visible");
-};
-
-exports.openModal = openModal;
-
-var getStateModal = function getStateModal() {
-  return document.getElementById("modal").classList.contains("visible");
-};
-
-exports.getStateModal = getStateModal;
-
-String.prototype.hashCode = function () {
-  var hash = 0,
-      i,
-      chr;
-  if (this.length === 0) return hash;
-
-  for (i = 0; i < this.length; i++) {
-    chr = this.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-
-  return hash;
-};
-},{"../classes/serverReq":"classes/serverReq.js"}],"index.js":[function(require,module,exports) {
+},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","../util/util":"util/util.js","./notice":"classes/notice.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./styles/main.scss");
 
-var _serverReq = require("./classes/serverReq");
-
 var _App = require("./classes/App");
 
 var _util = require("./util/util");
+
+var _notice = require("./classes/notice");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -1109,41 +1591,34 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//import { $LoadBar } from "./classes/loadBar";
 window.onload = function () {
   VK.init({
     apiId: 8229660
-  }); //document.getElementById('logout').onclick = VK.Auth.logout();
-  // if (localstorage.getItem('vk_auth')) {
-  //   closeModal()
-  //   main()
-  // }
-
-  VK.Widgets.Auth("vk_auth", {
-    onAuth: function onAuth(data) {
-      localStorage.setItem("vk_auth", JSON.stringify(data));
-      (0, _util.closeModal)();
-      var $name = document.getElementById('name_holder');
-      $name.innerHTML = "".concat(data['first_name'], " ").concat(data['last_name']);
-      $name.dataset.uid = data['uid'];
-      main();
-    }
-  });
+  }); //Auth(main);
 };
 
 var main = /*#__PURE__*/function () {
-  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(error) {
+    var hash, app;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            if (document.location.hash) {
-              console.log('');
+            console.log(error);
+            hash = document.location.hash;
+
+            if (hash) {
+              (0, _notice.InviteApply)(hash.replace('#', ''));
             } else {
-              new _App.App();
+              app = new _App.App();
+
+              if (error) {
+                app.error = true;
+                app.render();
+              }
             }
 
-          case 1:
+          case 3:
           case "end":
             return _context.stop();
         }
@@ -1151,11 +1626,11 @@ var main = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function main() {
+  return function main(_x) {
     return _ref.apply(this, arguments);
   };
-}();
-},{"./styles/main.scss":"styles/main.scss","./classes/serverReq":"classes/serverReq.js","./classes/App":"classes/App.js","./util/util":"util/util.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+}(); // http://localhost/#523
+},{"./styles/main.scss":"styles/main.scss","./classes/App":"classes/App.js","./util/util":"util/util.js","./classes/notice":"classes/notice.js"}],"../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1183,7 +1658,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60225" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52062" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

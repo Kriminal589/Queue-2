@@ -22,6 +22,9 @@ export class serverRequest {
   static async appendQ(idS) {
     return await sendRequestAsync(`listOfQueues/add/{idQueue}/{idStudent}/{numberOfAppStudent}`);
   }
+  static async getListNotice(id) {
+    return []
+  }
   static async request(url) {
     return await sendRequestAsyncURL(url)
   }

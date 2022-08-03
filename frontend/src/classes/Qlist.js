@@ -1,5 +1,6 @@
 import { QueueBlock } from "./queue";
 import { serverRequest } from "./serverReq";
+import { $Qmaker } from "./Qmaker";
 
 export class QList {
   #list = [];
@@ -43,7 +44,7 @@ export class QList {
     html += this.min ? `
     <div class="QmakerContainer border-2px center-items">
       <div class="Qmaker" id="Qmaker">
-          <div class="btn about">Создать очередь</div>
+          <div class="btn about" id="QmakerAdd">Создать очередь</div>
       </div>
     </div>
     ` : '';
@@ -62,6 +63,7 @@ export class QList {
             .getElementById(item.values.idQueue)
             .addEventListener("click", this.ClickHandler);
         });
+        document.getElementById('QmakerAdd').onclick = $Qmaker()
       } else {
         document
           .getElementById("btn__back")
@@ -77,7 +79,7 @@ export class QList {
           .getElementById(item.values.idQueue)
           .removeEventListener("click", this.ClickHandler);
       });
-      document.getElementById('Qmaker').addEventListener("click", this.ClickHandler);
+      document.getElementById('QmakerAdd').onclick = ''
     } else {
       document
         .getElementById("btn__back")
@@ -87,7 +89,7 @@ export class QList {
 
   ClickHandler(event) {
     console.log("click on q with id >>>", event.target.id);
-    this.selected = this.#list.find((item) => `${item.ID}` === event.target.id);
+    this.selected = this.#list.find((item) => item.ID === +event.target.id);
     if (this.selected) {
       this.selected.min = false;
       this.min = false;
