@@ -53,6 +53,12 @@ html, body
     }
 }
 
+.shadow {
+    -webkit-box-shadow: 0px 7px 10px 4px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0px 7px 10px 4px rgba(0,0,0,0.3);
+    box-shadow: 0px 7px 10px 4px rgba(0,0,0,0.3);
+}
+
 .flex-space-center-wrap {
     display: flex;
     flex-direction: row;
@@ -70,16 +76,24 @@ html, body
 }
 
 .btn {
-    border: 2px solid #000;
     text-align: center;
-    padding: 0.3vh 1vw;
+    //padding: 0.3vh 1vw;
+    padding: 1vh 0.5vh;
     box-sizing: border-box;
     width: 100%;
     cursor: pointer;
-    transition: all 0.3s;
+    background: rgba(0, 0, 0, .2);
+    font-size: 1.5vh;
+    transition: all 0.3s ease;
 
-    &:hover {
-        animation: rotation 0.3s linear;
+    &:not(.disabled):hover {
+        //animation: rotation 0.3s linear;
+        background: rgba(0, 0, 0, .4);
+        transform: scaleY(1.1);
+    }
+
+    &.disabled {
+        background: rgba(0, 0, 0, .2);
     }
     
     &.apply {
@@ -110,6 +124,9 @@ html, body
     .qItem, .QmakerContainer {
         min-width: 30vw;
     }
+    .input_group {
+        min-width: 75vw;
+    }
 }
 @media (max-width:700px) {
     .title {
@@ -131,10 +148,13 @@ html, body
             min-width: 94%;
         }
         .vklink {
-            min-width: 49%;
+            min-width: 35%;
         }
         .swap {
             min-width: 50%;
+        }
+        .btn.delete {
+            min-width: 12%;
         }
     }
 }
@@ -147,10 +167,39 @@ html, body
     }
 }
 // breakpoints end
+@keyframes countdown {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0;
+    }
+}
 
 body {
     min-height: 100vh;
     background: #E8FFFC;
+
+    .notification {
+        position: absolute;
+        bottom: 2vh;
+        width: 100%;
+        animation: fold 0.5s;
+        z-index: 1000;
+
+        .notification-content {
+            position: relative;
+            .countdown {
+                position: absolute;
+                bottom: 5%;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: #000;
+                animation: countdown 5s ease-in-out;
+            }
+        }
+    }
 
     .load {
         position: fixed;
@@ -187,85 +236,125 @@ body {
 
         .form {
             flex-direction: column;
-            background: #fff;
+            background-color: #fff;
 
-            .Qtitle {
-                margin-bottom: 2vh;
+            > * {
+                margin-top: 1vh;
             }
 
-            .input__ {
-                margin-top: 1.5vh;
-                width: 100%;
+            .input_group {
                 position: relative;
+                width: 30vw;
 
-                .float {
-                    position: absolute;
-                    top: 0.8em;
-                    left: 0;
-                    font-size: 0.8em;
-                    pointer-events: none;
-                    transition: 0.2s ease all;
-                }
-
-                input,
-                input:focus
-                {
-                    padding: 1vh 1vw;
-                    box-sizing: border-box;
+                input {
                     width: 100%;
-                    border: none;
-                    outline: none !important;
-                    border-bottom: 2px solid #000;
+                    height: auto;
+                    padding: 1vh 0.5vh;
+                    box-sizing: border-box;
+                    border: 1px solid #000;
                 }
 
-                input:focus ~ .float,
-                input:not(:focus):valid ~ .float{
-                    top: -1em;
-                    font-size: 0.7em;
-                    opacity: 1;
+                input:focus + .field_name, input:valid + .field_name {
+                    font-size: .8em;
+                    color: #afbdcf;
+                    top: -0.75vh;
+                    left:2vh;
+                    background: #ffffff;
+                    padding: 0px 5px 0px 5px;
+                }
+
+                .field_name {
+                    position: absolute;
+                    font-size: 1em;
+                    top: 1vh;
+                    left: 0.5vh;
+                    pointer-events: none;
+                    transition:0.2s ease all;
+                }
+
+                input:focus {
+                    outline:none;
                 }
             }
 
-            .btn.switch {
-                width: 6vh;
-                height: 6vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: rgba(0, 0, 0, .4);
-                transition: all 0.5s;
+            .type_selector {
+                width: 100%;
+                > * {
+                    width: 100%;
+                    background-color: rgba(0,0,0,0.2);
+                    transition: all 0.2s;
+                }
 
-                &.on {
-                    background-color: rgba(0, 240, 0, 0.5);
+                *.active {
+                    background-color: rgba(0,0,0,0.4);
+                }
+                *:hover {
+                    background-color: rgba(0,0,0,0.6);
+                    transform: scaleY(1.1);
+                }
+            }
+
+            .smart_options {
+                position: relative;
+                height: 0;
+                overflow-y: hidden;
+                transition: all 0.6s;
+
+                &.active {
+                    margin: 1vh 0;
+                    border-bottom: 2px solid #000;
+                    height: auto;
+
+                    .qm_title {
+                        width: 100%;
+                        position: relative;
+                        z-index: 5;
+                        overflow: hidden;
+                        text-align: center;
+                        background-color: #fff;
+
+                        &::after,
+                        &::before {
+                            content: '';
+                            display: inline-block;
+                            width: 100%;
+                            height: 2px;
+                            background: #000;
+                            z-index: -1;
+                            position: relative;
+                            vertical-align: middle;
+                        }
+                        &::after {
+                            right: -0.2vh;
+                            margin-right: -100%;
+                        }
+                        &::before {
+                            left: -0.2vh;
+                            margin-left: -100%;
+                        }
+
+                        .span {
+                            pointer-events: none;
+                        }
+
+                        .info {
+                            width: 2vh;
+                            height: 2vh;
+                            margin-left: 0.5vw;
+                            background-color: gray;
+                            border-radius: 50%;
+                            color: white;
+                        }
+                    }
+                }
+                
+                > * {
+                    margin: 1vh 0;
                 }
             }
 
             .btn_container {
                 width: 100%;
-                margin-top: 1vh;
-                justify-content: space-between;
-
-                .text {
-                    font-size: 1em;
-                    margin-right: 4vw;
-                }
-
-                .btn.apply, .btn.cancel {
-                    height: 5vh;
-                    width: 49%;
-                    font-size: 0.8em;
-                }
-            }
-
-            .orange_line {
-                margin-top: 2vh;
-                width: 100%;
-                height: 2px;
-                background:rgba(245, 191, 66, 1);
-            }
-
-            > * {
-                margin-top: 1vh;
             }
         }
 
@@ -307,8 +396,8 @@ body {
                     background: url('../assets/back.png') no-repeat;
                     background-size: contain;
                     left: 1%;
-                    width: 3vh;
-                    height: 3vh;
+                    width: 2.5vw;
+                    height: 2.5vw;
                 }
             }
 
@@ -438,6 +527,7 @@ body {
         animation: fold 0.5s;
         animation-timing-function: ease;
 
+
         .qItem, .QmakerContainer {
             position: relative;
             padding: 1vh 1vw;
@@ -493,12 +583,32 @@ body {
 
                 .btn.back {
                     position: absolute;
-                    background: url('../assets/back.png') no-repeat;
+                    background: url('../assets/back.png') no-repeat center;
                     background-size: contain;
                     left: 1%;
                     width: 4vh;
                     height: 4vh;
                     background-color: rgba(200, 10, 0, 0.3);
+                }
+
+                .btn_container {
+                    position: absolute;
+                    justify-content: space-between;
+                    width: 7vh;
+                    right: 1%;
+                    .btn.copy {
+                        background: url('../assets/copy.png') no-repeat center;
+                        background-size: contain;
+                        width: 3vh;
+                        height: 3vh;
+                    }
+    
+                    .btn.exit {
+                        background: url('../assets/logout.png') no-repeat center;
+                        background-size: contain;
+                        width: 3vh;
+                        height: 3vh;
+                    }
                 }
             }
 
@@ -523,7 +633,7 @@ body {
                         width: 5%;
                     }
                     .nameStudent {
-                        width: 40%;
+                        width: 45%;
                     }
                     .vklink {
                         width: 20%;
@@ -531,11 +641,15 @@ body {
                         background-color: rgba(0, 30, 200, .3);
                     }
                     .swap {
-                        width: 30%;
+                        width: 20%;
                         cursor: pointer;
                     }
+                    .btn.delete {
+                        width: 5%;
+                        background:rgba(255, 0, 0, 0.5);
+                    }
                     .u {
-                        width: 93.35%;
+                        width: 93.7%;
                         background-color: rgba(0, 200, 200, .3);
                     }
                 }

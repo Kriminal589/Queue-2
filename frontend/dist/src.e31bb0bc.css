@@ -49,6 +49,12 @@ html, body {
   display: none;
 }
 
+.shadow {
+  -webkit-box-shadow: 0px 7px 10px 4px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0px 7px 10px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 7px 10px 4px rgba(0, 0, 0, 0.3);
+}
+
 .flex-space-center-wrap {
   display: flex;
   flex-direction: row;
@@ -66,16 +72,21 @@ html, body {
 }
 
 .btn {
-  border: 2px solid #000;
   text-align: center;
-  padding: 0.3vh 1vw;
+  padding: 1vh 0.5vh;
   box-sizing: border-box;
   width: 100%;
   cursor: pointer;
-  transition: all 0.3s;
+  background: rgba(0, 0, 0, 0.2);
+  font-size: 1.5vh;
+  transition: all 0.3s ease;
 }
-.btn:hover {
-  animation: rotation 0.3s linear;
+.btn:not(.disabled):hover {
+  background: rgba(0, 0, 0, 0.4);
+  transform: scaleY(1.1);
+}
+.btn.disabled {
+  background: rgba(0, 0, 0, 0.2);
 }
 .btn.apply {
   background: rgba(111, 240, 108, 0.8);
@@ -101,6 +112,9 @@ html, body {
   .qItem, .QmakerContainer {
     min-width: 30vw;
   }
+  .input_group {
+    min-width: 75vw;
+  }
 }
 @media (max-width: 700px) {
   .title {
@@ -123,10 +137,13 @@ html, body {
     min-width: 94%;
   }
   .qList-item .vklink {
-    min-width: 49%;
+    min-width: 35%;
   }
   .qList-item .swap {
     min-width: 50%;
+  }
+  .qList-item .btn.delete {
+    min-width: 12%;
   }
 }
 @media (max-width: 400px) {
@@ -137,9 +154,36 @@ html, body {
     font-size: 0.8em;
   }
 }
+@keyframes countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
 body {
   min-height: 100vh;
   background: #E8FFFC;
+}
+body .notification {
+  position: absolute;
+  bottom: 2vh;
+  width: 100%;
+  animation: fold 0.5s;
+  z-index: 1000;
+}
+body .notification .notification-content {
+  position: relative;
+}
+body .notification .notification-content .countdown {
+  position: absolute;
+  bottom: 5%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  animation: countdown 5s ease-in-out;
 }
 body .load {
   position: fixed;
@@ -172,73 +216,109 @@ body .modal.visible {
 }
 body .modal .form {
   flex-direction: column;
-  background: #fff;
-}
-body .modal .form .Qtitle {
-  margin-bottom: 2vh;
-}
-body .modal .form .input__ {
-  margin-top: 1.5vh;
-  width: 100%;
-  position: relative;
-}
-body .modal .form .input__ .float {
-  position: absolute;
-  top: 0.8em;
-  left: 0;
-  font-size: 0.8em;
-  pointer-events: none;
-  transition: 0.2s ease all;
-}
-body .modal .form .input__ input,
-body .modal .form .input__ input:focus {
-  padding: 1vh 1vw;
-  box-sizing: border-box;
-  width: 100%;
-  border: none;
-  outline: none !important;
-  border-bottom: 2px solid #000;
-}
-body .modal .form .input__ input:focus ~ .float,
-body .modal .form .input__ input:not(:focus):valid ~ .float {
-  top: -1em;
-  font-size: 0.7em;
-  opacity: 1;
-}
-body .modal .form .btn.switch {
-  width: 6vh;
-  height: 6vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.4);
-  transition: all 0.5s;
-}
-body .modal .form .btn.switch.on {
-  background-color: rgba(0, 240, 0, 0.5);
-}
-body .modal .form .btn_container {
-  width: 100%;
-  margin-top: 1vh;
-  justify-content: space-between;
-}
-body .modal .form .btn_container .text {
-  font-size: 1em;
-  margin-right: 4vw;
-}
-body .modal .form .btn_container .btn.apply, body .modal .form .btn_container .btn.cancel {
-  height: 5vh;
-  width: 49%;
-  font-size: 0.8em;
-}
-body .modal .form .orange_line {
-  margin-top: 2vh;
-  width: 100%;
-  height: 2px;
-  background: rgb(245, 191, 66);
+  background-color: #fff;
 }
 body .modal .form > * {
   margin-top: 1vh;
+}
+body .modal .form .input_group {
+  position: relative;
+  width: 30vw;
+}
+body .modal .form .input_group input {
+  width: 100%;
+  height: auto;
+  padding: 1vh 0.5vh;
+  box-sizing: border-box;
+  border: 1px solid #000;
+}
+body .modal .form .input_group input:focus + .field_name, body .modal .form .input_group input:valid + .field_name {
+  font-size: 0.8em;
+  color: #afbdcf;
+  top: -0.75vh;
+  left: 2vh;
+  background: #ffffff;
+  padding: 0px 5px 0px 5px;
+}
+body .modal .form .input_group .field_name {
+  position: absolute;
+  font-size: 1em;
+  top: 1vh;
+  left: 0.5vh;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+body .modal .form .input_group input:focus {
+  outline: none;
+}
+body .modal .form .type_selector {
+  width: 100%;
+}
+body .modal .form .type_selector > * {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+body .modal .form .type_selector *.active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+body .modal .form .type_selector *:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  transform: scaleY(1.1);
+}
+body .modal .form .smart_options {
+  position: relative;
+  height: 0;
+  overflow-y: hidden;
+  transition: all 0.6s;
+}
+body .modal .form .smart_options.active {
+  margin: 1vh 0;
+  border-bottom: 2px solid #000;
+  height: auto;
+}
+body .modal .form .smart_options.active .qm_title {
+  width: 100%;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  text-align: center;
+  background-color: #fff;
+}
+body .modal .form .smart_options.active .qm_title::after, body .modal .form .smart_options.active .qm_title::before {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  z-index: -1;
+  position: relative;
+  vertical-align: middle;
+}
+body .modal .form .smart_options.active .qm_title::after {
+  right: -0.2vh;
+  margin-right: -100%;
+}
+body .modal .form .smart_options.active .qm_title::before {
+  left: -0.2vh;
+  margin-left: -100%;
+}
+body .modal .form .smart_options.active .qm_title .span {
+  pointer-events: none;
+}
+body .modal .form .smart_options.active .qm_title .info {
+  width: 2vh;
+  height: 2vh;
+  margin-left: 0.5vw;
+  background-color: gray;
+  border-radius: 50%;
+  color: white;
+}
+body .modal .form .smart_options > * {
+  margin: 1vh 0;
+}
+body .modal .form .btn_container {
+  width: 100%;
 }
 body .modal .content {
   background-color: #fff;
@@ -271,8 +351,8 @@ body .modal .notice.Ntitle .btn.back {
   background: url("/back.e6f29605.png") no-repeat;
   background-size: contain;
   left: 1%;
-  width: 3vh;
-  height: 3vh;
+  width: 2.5vw;
+  height: 2.5vw;
 }
 body .modal .notice .swap-state .red {
   color: green;
@@ -430,12 +510,30 @@ body main .qList .subject-name {
 }
 body main .qList .subject-name .btn.back {
   position: absolute;
-  background: url("/back.e6f29605.png") no-repeat;
+  background: url("/back.e6f29605.png") no-repeat center;
   background-size: contain;
   left: 1%;
   width: 4vh;
   height: 4vh;
   background-color: rgba(200, 10, 0, 0.3);
+}
+body main .qList .subject-name .btn_container {
+  position: absolute;
+  justify-content: space-between;
+  width: 7vh;
+  right: 1%;
+}
+body main .qList .subject-name .btn_container .btn.copy {
+  background: url("/copy.77129a08.png") no-repeat center;
+  background-size: contain;
+  width: 3vh;
+  height: 3vh;
+}
+body main .qList .subject-name .btn_container .btn.exit {
+  background: url("/logout.8f74ff45.png") no-repeat center;
+  background-size: contain;
+  width: 3vh;
+  height: 3vh;
 }
 body main .qList .contanier {
   margin-top: 2vh;
@@ -459,7 +557,7 @@ body main .qList .contanier .qList-item .position {
   width: 5%;
 }
 body main .qList .contanier .qList-item .nameStudent {
-  width: 40%;
+  width: 45%;
 }
 body main .qList .contanier .qList-item .vklink {
   width: 20%;
@@ -467,11 +565,15 @@ body main .qList .contanier .qList-item .vklink {
   background-color: rgba(0, 30, 200, 0.3);
 }
 body main .qList .contanier .qList-item .swap {
-  width: 30%;
+  width: 20%;
   cursor: pointer;
 }
+body main .qList .contanier .qList-item .btn.delete {
+  width: 5%;
+  background: rgba(255, 0, 0, 0.5);
+}
 body main .qList .contanier .qList-item .u {
-  width: 93.35%;
+  width: 93.7%;
   background-color: rgba(0, 200, 200, 0.3);
 }
 

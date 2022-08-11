@@ -22,11 +22,11 @@ export class QueueBlock {
 
 const template = (content) => {
   return `
-    <div class="qItem border-2px" id="${content.idQueue}">
+    <div class="qItem border-2px" id="${content.idQueue}" data-action="open" data-id="${content.idQueue}">
       <div class="qName">${content.name}</div>
       <div class="qPos">Ваша позиция: ${content.positionStudent}</div>
-      <div class="btn apply" data-action="passed">
-          <span class="btn-text" data-app="0">Сдал задание</span>
+      <div class="btn apply" data-action="passed" data-app="0">
+        <span class="btn-text">Сдал задание</span>
       </div>
     </div>
     `;
@@ -38,7 +38,12 @@ function div(content, class_ = "", id = "") {
 
 const templateList = (content, list, idStudent) => {
   let HTML = div(
-    `<span>${content.name}</span><div class="btn back" id="btn__back"></div>`,
+    `<span>${content.name}</span>
+    <div class="btn_container flex-row">
+        <div class="btn copy off_border" data-action="copy" data-target="${content.idQueue}"></div>
+        <div class="btn exit off_border" data-action="exit"></div>
+    </div>
+    <div class="btn back" data-action="back"></div>`,
     "subject-name border-2px center-items"
   );
   HTML += div(
@@ -55,7 +60,7 @@ const templateList = (content, list, idStudent) => {
       .join(""),
     "contanier custom-scrollbar"
   );
-  return div(HTML, "qList", "");
+  return div(HTML, "qList", "queueBody");
 };
 
 const template_list = (content, index, vk_link) => {

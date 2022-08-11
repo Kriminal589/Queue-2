@@ -65,3 +65,5 @@ export function Auth(callback) {
       .then(callback)
   }
 }
+
+export const createQueueText = list => list.map((item, index) => `${index+1} ${item}`).join('\n')

@@ -32,12 +32,12 @@ export class App {
     document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
     
     const { id, name } = JSON.parse(localStorage.getItem("vk_auth"));
-    // const response = await serverRequest.addStudent(id, name);
-    const response = true
+    const response = await serverRequest.addStudent(id, name);
+    //const response = true
     if (response === -1) {
       this.error = true;
     } else {
-      //await this.#qList.parseListOfQueues(id);
+      await this.#qList.parseListOfQueues(id);
     }
     this.render();
   }
@@ -53,7 +53,7 @@ export class App {
       this.show_error();
     } else {
       //const data = JSON.parse(localStorage.getItem("vk_auth")).name
-      //this.#qList.render();
+      this.#qList.render();
       console.log("render...");
     }
   }
