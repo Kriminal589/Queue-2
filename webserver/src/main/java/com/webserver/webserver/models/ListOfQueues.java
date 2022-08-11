@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -19,6 +21,15 @@ public class ListOfQueues {
     private int positionStudent = 0;
     private int numberOfAppStudent;
     private int currentApp;
+    private Long queueEntryDate;
+
+    public Long getQueueEntryDate() {
+        return queueEntryDate;
+    }
+
+    public void setQueueEntryDate(Long queueEntryDate) {
+        this.queueEntryDate = queueEntryDate;
+    }
 
     public String getHexCode() {
         return hexCode;
@@ -83,28 +94,9 @@ public class ListOfQueues {
     public ListOfQueues() {
     }
 
-    public List<ListOfQueues> sortByNumberOfApp(List<ListOfQueues> list){
-        try {
-            ListOfQueues[] listForSort = (ListOfQueues[]) list.toArray();
-            for (int i = 0; i < listForSort.length - 1; i++) {
-                for (int j = 0; j < listForSort.length; j++) {
-                    if (listForSort[j].numberOfAppStudent > currentApp && listForSort[j].numberOfAppStudent > listForSort[j+1].numberOfAppStudent){
-                        ListOfQueues listOfQueues = listForSort[j+1];
-                        listForSort[j+1] = listForSort[j];
-                        listForSort[j] = listOfQueues;
-                    }
-                    else if (listForSort[j].numberOfAppStudent < currentApp && listForSort[j+1].numberOfAppStudent == currentApp){
-                        ListOfQueues listOfQueues = listForSort[j+1];
-                        listForSort[j+1] = listForSort[j];
-                        listForSort[j] = listOfQueues;
-                    }
-                }
-            }
-            list = Arrays.stream(listForSort).toList();
-            return list;
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new NullPointerException();
-        }
-    }
+
+//    {"id":4,"nameOfSubject":"History","hexCode":null,"idStudent":236673313,"idQueue":1,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1},
+//    {"id":5,"nameOfSubject":"OAIP","hexCode":null,"idStudent":236673313,"idQueue":2,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1},
+//    {"id":6,"nameOfSubject":"СИАОД","hexCode":null,"idStudent":236673313,"idQueue":3,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1}
+
 }

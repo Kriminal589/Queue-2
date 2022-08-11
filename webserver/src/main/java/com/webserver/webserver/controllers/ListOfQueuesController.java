@@ -12,6 +12,9 @@ import com.webserver.webserver.repos.StudentRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +62,7 @@ public class ListOfQueuesController {
 
             int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
             listOfQueues.setPositionStudent(position);
+            listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
             listOfQueueRepository.save(listOfQueues);
 
             //Наработка для сортировки при отправлении списка группы в очереди
@@ -78,8 +82,11 @@ public class ListOfQueuesController {
 
     @GetMapping("/all")
     public @ResponseBody
-    Iterable<ListOfQueues> getAllListOfQueues(){
-        return listOfQueueRepository.findAll();
+    List<ListOfQueues> getAllListOfQueues(){
+        Iterable<ListOfQueues> l = listOfQueueRepository.findAll();
+        List<ListOfQueues> list = (List<ListOfQueues>) l;
+        list = sort(list);
+        return list;
     }
 
     @GetMapping("/getByIdStudent/{idStudent}")
@@ -132,6 +139,40 @@ public class ListOfQueuesController {
         }
     }
 
+    public List<ListOfQueues> sort(List<ListOfQueues> list){
+        List<ListOfQueues> current = new ArrayList<>();
+        List<ListOfQueues> late = new ArrayList<>();
+        List<ListOfQueues> hurrying = new ArrayList<>();
 
+        for (ListOfQueues item:list){
+            if (item.getQueueEntryDate() == 3)
+                current.add(0,item);
+            else if (item.getNumberOfAppStudent() == item.getCurrentApp())
+                current.add(item);
+            else if (item.getNumberOfAppStudent() < item.getCurrentApp())
+                late.add(item);
+            else if (item.getNumberOfAppStudent() > item.getCurrentApp())
+                hurrying.add(item);
+        }
+
+        sortByEntryDate(current);
+        sortByEntryDate(late);
+        sortByEntryDate(hurrying);
+
+        current.addAll(late);
+        current.addAll(hurrying);
+
+        return current;
+    }
+
+    public void sortByEntryDate(List<ListOfQueues> list){
+        for (int i = 0; i < list.size()-1; i++){
+            for (int j = 0; j < list.size(); j++){
+                if (list.get(i).getQueueEntryDate() > list.get(j).getQueueEntryDate()){
+                    Collections.swap(list, i, j);
+                }
+            }
+        }
+    }
 
 }

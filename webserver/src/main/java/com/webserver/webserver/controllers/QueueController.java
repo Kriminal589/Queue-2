@@ -6,6 +6,10 @@ import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +73,11 @@ public class QueueController {
         queueRepository.save(queue);
 
         return util.responseOfFindAndAdd("Saved queue", 200);
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test (@RequestHeader(value = "Authorization") String key){
+        return ResponseEntity.status(HttpStatus.OK).body(key);
     }
 
 //    @GetMapping("/add/{SubjectName}/{type}")
