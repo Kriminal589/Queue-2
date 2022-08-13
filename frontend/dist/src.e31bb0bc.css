@@ -40,6 +40,18 @@ html, body {
   align-items: center;
 }
 
+.sp_btw {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.w100 {
+  width: 100%;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 10px;
@@ -82,21 +94,22 @@ html, body {
   transition: all 0.3s ease;
 }
 .btn:not(.disabled):hover {
-  background: rgba(0, 0, 0, 0.4);
   transform: scaleY(1.1);
 }
 .btn.disabled {
   background: rgba(0, 0, 0, 0.2);
 }
 .btn.apply {
-  background: rgba(111, 240, 108, 0.8);
+  background: rgba(31, 233, 28, 0.8);
 }
 .btn.auth {
   width: 30vw;
   background: rgba(245, 191, 66, 0.7);
 }
-.btn.close {
-  background: aquamarine;
+
+.padding-lr {
+  padding: 1vh 2vh;
+  box-sizing: border-box;
 }
 
 .hide {
@@ -126,24 +139,18 @@ html, body {
   .qItem, .QmakerContainer {
     min-width: 45vw;
   }
-  .qList-item {
-    flex-wrap: wrap;
-    height: 7vh;
+  li.item {
+    overflow: hidden;
   }
-  .qList-item .position {
+  li.item .position {
     min-width: 5%;
   }
-  .qList-item .nameStudent {
-    min-width: 94%;
+  li.item .nameStudent {
+    min-width: 60%;
   }
-  .qList-item .vklink {
-    min-width: 35%;
-  }
-  .qList-item .swap {
-    min-width: 50%;
-  }
-  .qList-item .btn.delete {
-    min-width: 12%;
+  li.item .btn_container {
+    max-width: 30%;
+    height: 100%;
   }
 }
 @media (max-width: 400px) {
@@ -151,6 +158,12 @@ html, body {
     height: 5vh;
   }
   .qList-item > * {
+    font-size: 0.8em;
+  }
+  .notice {
+    min-width: 90vw;
+  }
+  .dev {
     font-size: 0.8em;
   }
 }
@@ -164,16 +177,41 @@ html, body {
 }
 body {
   min-height: 100vh;
-  background: #E8FFFC;
+  background: #494748;
+}
+body footer {
+  position: fixed;
+  padding: 0 3vw;
+  box-sizing: border-box;
+  height: 5vh;
+  width: 100%;
+  bottom: 0;
+  background-color: #E6195E;
+  color: white;
+}
+body footer .dev {
+  height: 100%;
+}
+body footer .dev > * {
+  margin-right: 1vw;
+}
+body footer .dev .link {
+  height: 100%;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+body footer .dev .link:hover {
+  background-color: rgba(255, 255, 255, 0.4);
 }
 body .notification {
   position: absolute;
-  bottom: 2vh;
+  bottom: 8vh;
   width: 100%;
   animation: fold 0.5s;
   z-index: 1000;
 }
 body .notification .notification-content {
+  color: white;
   position: relative;
 }
 body .notification .notification-content .countdown {
@@ -182,7 +220,7 @@ body .notification .notification-content .countdown {
   left: 0;
   width: 100%;
   height: 2px;
-  background: #000;
+  background: #fff;
   animation: countdown 5s ease-in-out;
 }
 body .load {
@@ -203,20 +241,23 @@ body .load .square {
   animation: loading 2s ease-in-out infinite;
 }
 body .modal {
-  visibility: hidden;
   position: fixed;
   width: 100%;
   height: 100%;
   animation: fold 0.5s;
   animation-timing-function: ease;
   background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.5s;
+}
+body .modal:focus {
+  outline: none;
 }
 body .modal.visible {
-  visibility: visible;
+  opacity: 1;
 }
 body .modal .form {
   flex-direction: column;
-  background-color: #fff;
+  background-color: #ffffff;
 }
 body .modal .form > * {
   margin-top: 1vh;
@@ -231,6 +272,43 @@ body .modal .form .input_group input {
   padding: 1vh 0.5vh;
   box-sizing: border-box;
   border: 1px solid #000;
+  background-color: #ffffff;
+}
+body .modal .form .input_group i {
+  width: 3vh;
+  height: 3vh;
+  position: absolute;
+  right: 0;
+  top: 1.2vh;
+  opacity: 0;
+  transition: all 0.2s;
+}
+body .modal .form .input_group.success input {
+  border-color: rgba(0, 240, 0, 0.5);
+}
+body .modal .form .input_group.success i.fi-rs-check {
+  opacity: 1;
+  color: rgba(0, 240, 0, 0.9);
+}
+body .modal .form .input_group.error input {
+  border-color: rgba(240, 0, 0, 0.9);
+}
+body .modal .form .input_group.error i.fi-rs-exclamation {
+  opacity: 1;
+  color: rgba(240, 0, 0, 0.9);
+}
+body .modal .form .input_group.error.message .error_message {
+  height: 100%;
+}
+body .modal .form .input_group.error.type_err .error_type {
+  height: 100%;
+}
+body .modal .form .input_group .error_message,
+body .modal .form .input_group .error_type {
+  font-size: 0.8em;
+  color: rgba(240, 0, 0, 0.9);
+  overflow: hidden;
+  height: 0;
 }
 body .modal .form .input_group input:focus + .field_name, body .modal .form .input_group input:valid + .field_name {
   font-size: 0.8em;
@@ -255,6 +333,7 @@ body .modal .form .type_selector {
   width: 100%;
 }
 body .modal .form .type_selector > * {
+  height: 4vh;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   transition: all 0.2s;
@@ -321,7 +400,28 @@ body .modal .form .btn_container {
   width: 100%;
 }
 body .modal .content {
-  background-color: #fff;
+  position: relative;
+  background-color: #363636;
+  color: #fff;
+  width: 20vh;
+  overflow-y: hidden;
+}
+body .modal .content .btn.close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 3vh;
+  height: 3vh;
+}
+body .modal .content .modal_title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4vh;
+}
+body .modal .content .dev-item {
+  margin: 2.5vh 0;
 }
 body .modal .content .info {
   margin-bottom: 2vh;
@@ -332,12 +432,18 @@ body .modal .content .btn.invite {
 body .modal .notice {
   position: relative;
   margin-top: 1vh;
-  width: 90vw;
-  background-color: #fff;
+  width: 60vw;
+  background-color: #363636;
+  font-size: 1em;
+  color: white;
+}
+body .modal .notice .options div {
+  margin-top: 1vh;
+  border-bottom: 1px solid #000;
 }
 body .modal .notice.update .btn.readMore a {
   text-decoration: none;
-  color: #000;
+  color: white;
 }
 body .modal .notice.apply {
   background: #fff;
@@ -346,16 +452,23 @@ body .modal .notice.apply input {
   margin-top: 1vh;
   width: 95%;
 }
+body .modal .notice.Ntitle {
+  overflow-y: hidden;
+}
 body .modal .notice.Ntitle .btn.back {
   position: absolute;
-  background: url("/back.e6f29605.png") no-repeat;
+  background: url("/back.e6f29605.png") no-repeat center center;
+  filter: brightness(0) invert(1);
   background-size: contain;
   left: 1%;
   width: 2.5vw;
-  height: 2.5vw;
+  height: 100%;
+}
+body .modal .notice.Ntitle .btn.back:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 body .modal .notice .swap-state .red {
-  color: green;
+  color: rgb(0, 255, 30);
 }
 body .modal .notice .swap-state .green {
   color: red;
@@ -370,10 +483,10 @@ body .modal .notice.update .btn.readMore {
 body .modal .notice .btn-container {
   margin-top: 1vh;
   justify-content: space-between;
-  width: 95%;
+  width: 100%;
 }
 body .modal .notice .btn-container .btn {
-  width: 49%;
+  width: 100%;
 }
 body header {
   position: absolute;
@@ -381,17 +494,20 @@ body header {
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
-  height: 8vh;
-  background: #D9D9D9;
+  padding: 0 3vw;
+  box-sizing: border-box;
+  height: 6.5vh;
+  background: #E6195E;
+  color: white;
 }
 body header .container {
   box-sizing: border-box;
-  height: 5vh;
+  height: 4vh;
 }
 body header .container .logo {
   box-sizing: border-box;
-  height: 5vh;
-  width: 5vh;
+  height: 4vh;
+  width: 4vh;
   margin-right: 1vw;
   transition: all 0.5s;
 }
@@ -402,68 +518,45 @@ body header .profile {
   box-sizing: border-box;
   justify-content: center;
   position: relative;
-  height: 5vh;
-  min-width: 30vw;
+  height: 100%;
+  min-width: 20vw;
+}
+body header .profile > * {
+  height: 100%;
 }
 body header .profile .name {
   padding: 0 2vw;
 }
-body header .profile .notice {
-  position: absolute;
-  left: 1vw;
-  height: 3vh;
-  width: 3vh;
-  background: url("/notification.8f1ad31f.png") no-repeat;
-  background-size: contain;
+body header .profile .p_btn {
+  width: 2vh;
+  transition: all 0.3s ease;
+  filter: brightness(0) invert(1);
   cursor: pointer;
 }
-body header .profile .notice::after {
-  content: "";
-  opacity: 0;
-  transition: opacity 0.5s;
+body header .profile .p_btn:last-child {
+  margin-right: 0;
 }
-body header .profile .notice:hover::after {
-  position: absolute;
-  opacity: 1;
-  content: "Уведомления";
-  font-size: 0.8em;
-  top: 5vh;
-  right: -3vw;
-  padding: 1vh 1vw;
-  background: rgba(0, 240, 0, 0.5);
-  border: 1px solid #000;
+body header .profile .p_btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+body header .profile .notice_btn {
+  background: url("/notification.8f1ad31f.png") no-repeat center center;
+  background-size: 2.5vh 2.5vh;
 }
 body header .profile .logout {
-  position: absolute;
-  right: 1vw;
-  height: 3vh;
-  width: 3vh;
-  background: url("/logout.8f74ff45.png") no-repeat;
-  background-size: contain;
-  cursor: pointer;
+  background: url("/logout.8f74ff45.png") no-repeat center center;
+  background-size: 2.5vh 2.5vh;
 }
-body header .profile .logout::after {
-  content: "";
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-body header .profile .logout:hover::after {
-  position: absolute;
-  opacity: 1;
-  content: "Выход";
-  font-size: 0.8em;
-  top: 5vh;
-  right: -1.2vw;
-  padding: 1vh 1vw;
-  background: rgba(255, 0, 0, 0.5);
-  border: 1px solid #000;
+body header .profile .home {
+  background: url("/home.5b2e3f82.png") no-repeat center center;
+  background-size: 2.5vh 2.5vh;
 }
 body main {
+  padding: 2vh 3vw;
+  box-sizing: border-box;
   position: absolute;
-  top: 8vh;
+  top: 6vh;
   width: 100%;
-  animation: fold 0.5s;
-  animation-timing-function: ease;
 }
 body main .qItem, body main .QmakerContainer {
   position: relative;
@@ -476,6 +569,31 @@ body main .qItem, body main .QmakerContainer {
   align-items: center;
   width: 15vw;
   height: 40vh;
+  color: white;
+  animation: fold 0.5s;
+  animation-timing-function: ease;
+}
+body main .qItem .quicklook, body main .QmakerContainer .quicklook {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #484848;
+  color: white;
+  font-weight: 400;
+  z-index: 1;
+  animation: fold 0.5s;
+}
+body main .qItem .quicklook .quicklook__item.u, body main .QmakerContainer .quicklook .quicklook__item.u {
+  color: rgba(0, 240, 0, 0.9);
+}
+body main .qItem .quicklook .quicklook__title, body main .QmakerContainer .quicklook .quicklook__title {
+  position: absolute;
+  top: 0.5vh;
+}
+body main .qItem .quicklook span, body main .QmakerContainer .quicklook span {
+  font-size: 1.1em;
 }
 body main .qItem::after,
 body main .QmakerContainer::after {
@@ -503,78 +621,89 @@ body main .QmakerContainer .btn.about {
 }
 body main .qList {
   width: 100%;
+  animation: fold 0.5s;
+  animation-timing-function: ease;
 }
 body main .qList .subject-name {
   position: relative;
   height: 5vh;
+  color: #fff;
+  font-weight: bold;
+  background-color: #E6195E;
 }
-body main .qList .subject-name .btn.back {
+body main .qList .subject-name .back {
   position: absolute;
   background: url("/back.e6f29605.png") no-repeat center;
-  background-size: contain;
+  filter: brightness(0) invert(1);
+  background-size: 2.5vh 2.5vh;
   left: 1%;
-  width: 4vh;
-  height: 4vh;
-  background-color: rgba(200, 10, 0, 0.3);
 }
 body main .qList .subject-name .btn_container {
   position: absolute;
   justify-content: space-between;
-  width: 7vh;
+  height: 100%;
+  top: 0;
   right: 1%;
 }
-body main .qList .subject-name .btn_container .btn.copy {
+body main .qList .subject-name .btn_container .copy {
   background: url("/copy.77129a08.png") no-repeat center;
-  background-size: contain;
-  width: 3vh;
-  height: 3vh;
+  filter: brightness(0) invert(1);
+  background-size: 2.5vh 2.5vh;
 }
-body main .qList .subject-name .btn_container .btn.exit {
+body main .qList .subject-name .btn_container .exit {
   background: url("/logout.8f74ff45.png") no-repeat center;
-  background-size: contain;
-  width: 3vh;
-  height: 3vh;
+  filter: brightness(0) invert(1);
+  background-size: 2.5vh 2.5vh;
 }
-body main .qList .contanier {
-  margin-top: 2vh;
+body main .qList .subject-name .p_btn {
+  height: 100%;
+  width: 4vh;
+  transition: all 0.2s;
+}
+body main .qList .subject-name .p_btn:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+body main .qList ul {
+  margin-top: 1vh;
   width: 100%;
   height: 81vh;
   overflow-y: overlay;
 }
-body main .qList .contanier .qList-item {
+body main .qList ul li.item {
+  position: relative;
   width: 100%;
-  margin-bottom: 1vh;
-  justify-content: space-between;
-}
-body main .qList .contanier .qList-item.uitem {
-  height: 3vh;
-}
-body main .qList .contanier .qList-item > * {
+  height: 4vh;
+  padding: 0 1.7vw;
   box-sizing: border-box;
-  padding: 0.3vw;
+  margin-bottom: 1vh;
+  background-color: #CE517B;
+  overflow-y: hidden;
 }
-body main .qList .contanier .qList-item .position {
-  width: 5%;
+body main .qList ul li.item > * {
+  box-sizing: border-box;
+  color: white;
+  height: 100%;
 }
-body main .qList .contanier .qList-item .nameStudent {
-  width: 45%;
+body main .qList ul li.item.u {
+  background-color: #ee4b82;
 }
-body main .qList .contanier .qList-item .vklink {
-  width: 20%;
+body main .qList ul li.item .position {
+  position: absolute;
+  left: 1%;
+  width: 4vh;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+body main .qList ul li.item .btn_container {
+  position: absolute;
+  top: 0;
+  right: 1%;
+  width: 8vh;
+  font-weight: bold;
+}
+body main .qList ul li.item .btn.vk {
   text-decoration: none;
-  background-color: rgba(0, 30, 200, 0.3);
-}
-body main .qList .contanier .qList-item .swap {
-  width: 20%;
-  cursor: pointer;
-}
-body main .qList .contanier .qList-item .btn.delete {
-  width: 5%;
-  background: rgba(255, 0, 0, 0.5);
-}
-body main .qList .contanier .qList-item .u {
-  width: 93.7%;
-  background-color: rgba(0, 200, 200, 0.3);
+  color: #fff;
+  width: 50%;
 }
 
 @keyframes rotation {

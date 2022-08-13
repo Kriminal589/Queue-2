@@ -1,0 +1,34 @@
+{
+    "responseAboutStudentList" : [
+        {
+            "idStudent" : 236673313,
+            "nameOfStudent" : "Андрей Базунов",
+            "vk_link" : "-"
+        },
+        {
+            "idStudent" : 1,
+            "nameOfStudent" : "Андрей Новиков",
+            "vk_link" : "-"
+        },
+        {
+            "idStudent" : 2,
+            "nameOfStudent" : "Андрей Базунов",
+            "vk_link" : "-"
+        },
+        {   
+            "idStudent" : 3,
+            "nameOfStudent" : "Андрей Новиков",
+            "vk_link" : "-"
+        },
+        {
+            "idStudent" : 4,
+            "nameOfStudent" : "Андрей Базунов",
+            "vk_link" : "-"
+        },
+        {
+            "idStudent" : 5,
+            "nameOfStudent" : "Андрей Новиков",
+            "vk_link" : "-"
+        }
+    ]
+}

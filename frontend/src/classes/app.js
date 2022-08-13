@@ -2,6 +2,7 @@ import { QList } from "./Qlist";
 import { serverRequest } from "./serverReq";
 import { ReloadName } from "../util/util";
 import { Notice } from "./notice";
+import { $modalWindow } from "../plugins/modal"
 
 export class App {
   #qList = new QList();
@@ -30,10 +31,30 @@ export class App {
       })
     }
     document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
+    document.querySelectorAll('.link').forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault()
+        $modalWindow({
+          title : item.dataset.target,
+          elements : [
+            {
+              type : 'div',
+              innerHTML : 'vk',
+              class : 'dev-item center-items'
+            },
+            {
+              type : 'div',
+              innerHTML : 'github',
+              class : 'dev-item center-items'
+            }
+          ]
+        })
+      })
+    })
     
     const { id, name } = JSON.parse(localStorage.getItem("vk_auth"));
-    const response = await serverRequest.addStudent(id, name);
-    //const response = true
+    //const response = await serverRequest.addStudent(id, name);
+    const response = true
     if (response === -1) {
       this.error = true;
     } else {

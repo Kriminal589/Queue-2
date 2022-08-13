@@ -1,0 +1,22 @@
+[
+    {
+        "idQueue" : 1,
+        "name" : "OAIP",
+        "positionStudent" : 1
+    },
+    {
+        "idQueue" : 2,
+        "name" : "История",
+        "positionStudent" : 1
+    },
+    {
+        "idQueue" : 3,
+        "name" : "Английский",
+        "positionStudent" : 1
+    },
+    {
+        "idQueue" : 4,
+        "name" : "В рот ебал учебу",
+        "positionStudent" : 1
+    }
+]

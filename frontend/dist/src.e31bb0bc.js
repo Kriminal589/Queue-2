@@ -189,7 +189,35 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./..\\assets\\back.png":[["back.e6f29605.png","assets/back.png"],"assets/back.png"],"./..\\assets\\notification.png":[["notification.8f1ad31f.png","assets/notification.png"],"assets/notification.png"],"./..\\assets\\logout.png":[["logout.8f74ff45.png","assets/logout.png"],"assets/logout.png"],"./..\\assets\\copy.png":[["copy.77129a08.png","assets/copy.png"],"assets/copy.png"],"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"classes/queue.js":[function(require,module,exports) {
+},{"./..\\assets\\back.png":[["back.e6f29605.png","assets/back.png"],"assets/back.png"],"./..\\assets\\notification.png":[["notification.8f1ad31f.png","assets/notification.png"],"assets/notification.png"],"./..\\assets\\logout.png":[["logout.8f74ff45.png","assets/logout.png"],"assets/logout.png"],"./..\\assets\\home.png":[["home.5b2e3f82.png","assets/home.png"],"assets/home.png"],"./..\\assets\\copy.png":[["copy.77129a08.png","assets/copy.png"],"assets/copy.png"],"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"test/queueList.json":[function(require,module,exports) {
+module.exports = {
+  "responseAboutStudentList": [{
+    "idStudent": 236673313,
+    "nameOfStudent": "Андрей Базунов",
+    "vk_link": "-"
+  }, {
+    "idStudent": 1,
+    "nameOfStudent": "Андрей Новиков",
+    "vk_link": "-"
+  }, {
+    "idStudent": 2,
+    "nameOfStudent": "Андрей Базунов",
+    "vk_link": "-"
+  }, {
+    "idStudent": 3,
+    "nameOfStudent": "Андрей Новиков",
+    "vk_link": "-"
+  }, {
+    "idStudent": 4,
+    "nameOfStudent": "Андрей Базунов",
+    "vk_link": "-"
+  }, {
+    "idStudent": 5,
+    "nameOfStudent": "Андрей Новиков",
+    "vk_link": "-"
+  }]
+};
+},{}],"classes/queue.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -234,7 +262,7 @@ var QueueBlock = /*#__PURE__*/function () {
 exports.QueueBlock = QueueBlock;
 
 var template = function template(content) {
-  return "\n    <div class=\"qItem border-2px\" id=\"".concat(content.idQueue, "\" data-action=\"open\" data-id=\"").concat(content.idQueue, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\" data-app=\"0\">\n        <span class=\"btn-text\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
+  return "\n    <div class=\"qItem border-2px\" id=\"".concat(content.idQueue, "\" data-action=\"open\" data-id=\"").concat(content.idQueue, "\" data-name=\"").concat(content.name, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\" data-app=\"0\">\n        <span class=\"btn-text\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
 };
 
 function div(content) {
@@ -243,22 +271,33 @@ function div(content) {
   return "<div class=\"".concat(class_, "\" id=\"").concat(id, "\">").concat(content, "</div>");
 }
 
-var templateList = function templateList(content, list, idStudent) {
-  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"btn copy off_border\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"btn exit off_border\" data-action=\"exit\"></div>\n    </div>\n    <div class=\"btn back\" data-action=\"back\"></div>"), "subject-name border-2px center-items");
-  HTML += div(list.responseAboutStudentList.map(function (item, index) {
+var templateList = function templateList(content, olist, idStudent) {
+  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"p_btn copy\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"p_btn exit\" data-action=\"exit\"></div>\n    </div>\n    <div class=\"p_btn back\" data-action=\"back\"></div>"), "subject-name center-items");
+
+  var list = require('../test/queueList.json');
+
+  HTML += ul(list.responseAboutStudentList.map(function (item, index) {
     return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "vk.com/id".concat(item.id));
-  }).join(""), "contanier custom-scrollbar");
+  }).join(""), "custom-scrollbar");
   return div(HTML, "qList", "queueBody");
 };
 
 var template_list = function template_list(content, index, vk_link) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div>\n    <div class=\"nameStudent border-2px center-items\">").concat(content, "</div>\n    <a class=\"vklink border-2px center-items\" href=\"").concat(vk_link, "\">vk</a>\n    <div class=\"swap border-2px center-items\" data-action=\"swap\" data-target=\"id\">\u041F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438</div>"), "qList-item flex-row");
+  return li("\n      <div class=\"position center-items\">".concat(index + 1, "</div>\n      <span class=\"name center-items\">").concat(content, "</span>\n      <div class=\"btn_container flex-row\">\n          <a class=\"btn vk\" href=").concat(vk_link, ">VK</a>\n          <div class=\"btn swap\" data-action=\"swap\" data-target=\"id\">SWAP</div>\n      </div>\n    "), 'item center-items');
+};
+
+var ul = function ul(content, class_, id) {
+  return "<ul class=".concat(class_, " id=\"").concat(id, "\">").concat(content, "</ul>");
+};
+
+var li = function li(content, class_, id) {
+  return "<li class=".concat(class_, " id=\"").concat(id, "\">").concat(content, "</li>");
 };
 
 var template_u = function template_u(index) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div><div class=\"u border-2px center-items\">\u0412\u044B</div>"), "qList-item uitem flex-row");
+  return li("<div class=\"position center-items\">".concat(index + 1, "</div><span class=\"center-items\">\u0412\u044B</span>"), 'item u center-items');
 };
-},{}],"classes/loadBar.js":[function(require,module,exports) {
+},{"../test/queueList.json":"test/queueList.json"}],"classes/loadBar.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -318,6 +357,26 @@ String.prototype.hashCode = function () {
 
   return hash;
 };
+},{}],"../node_modules/parcel-bundler/src/builtins/_empty.js":[function(require,module,exports) {
+
+},{}],"test/queue.json":[function(require,module,exports) {
+module.exports = [{
+  "idQueue": 1,
+  "name": "OAIP",
+  "positionStudent": 1
+}, {
+  "idQueue": 2,
+  "name": "История",
+  "positionStudent": 1
+}, {
+  "idQueue": 3,
+  "name": "Английский",
+  "positionStudent": 1
+}, {
+  "idQueue": 4,
+  "name": "В рот ебал учебу",
+  "positionStudent": 1
+}];
 },{}],"classes/serverReq.js":[function(require,module,exports) {
 "use strict";
 
@@ -341,6 +400,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+'use strict';
+
+require('fs');
 
 var ip = "25.84.228.15";
 var port = "8080";
@@ -386,13 +449,9 @@ var serverRequest = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return sendRequestAsync("listOfQueues/getByIdStudent/".concat(idS));
+                return _context2.abrupt("return", require('../test/queue.json'));
 
-              case 2:
-                return _context2.abrupt("return", _context2.sent);
-
-              case 3:
+              case 1:
               case "end":
                 return _context2.stop();
             }
@@ -442,13 +501,9 @@ var serverRequest = /*#__PURE__*/function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.next = 2;
-                return sendRequestAsync("listOfQueues/getByIdQueue/".concat(idQ));
+                return _context4.abrupt("return", require('../test/queueList.json'));
 
-              case 2:
-                return _context4.abrupt("return", _context4.sent);
-
-              case 3:
+              case 1:
               case "end":
                 return _context4.stop();
             }
@@ -667,7 +722,66 @@ function _sendRequestAsyncURL() {
   }));
   return _sendRequestAsyncURL.apply(this, arguments);
 }
-},{"./loadBar":"classes/loadBar.js"}],"util/util.js":[function(require,module,exports) {
+},{"./loadBar":"classes/loadBar.js","fs":"../node_modules/parcel-bundler/src/builtins/_empty.js","../test/queue.json":"test/queue.json","../test/queueList.json":"test/queueList.json"}],"classes/ApplyNotice.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.apply = void 0;
+
+var apply = function apply(text) {
+  var content = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+    id: 0,
+    html: "",
+    type: ""
+  };
+  return new Promise(function (resolve, reject) {
+    var $apply = document.createElement("div");
+    $apply.classList.add("modal", "visible", "center-items", "flex-column");
+    $apply.tabIndex = 0;
+    $apply.id = "modal-apply";
+    $apply.dataset.action = "close";
+    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items shadow flex-column\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content.html || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
+    document.body.appendChild($apply);
+
+    $apply.onkeydown = function (e) {
+      e.preventDefault();
+      console.log(e.key);
+
+      if (e.key === 'escape') {
+        resolve(false);
+        document.body.removeChild($apply);
+      }
+    };
+
+    $apply.addEventListener("click", function (e) {
+      var action = e.target.dataset.action;
+
+      if (action) {
+        console.log("clicked on btn ".concat(action));
+
+        if (action === "ok") {
+          if (content.type === 'input') {
+            var value = document.getElementById(content.id).value;
+
+            if (value) {
+              resolve(value);
+            }
+          } else {
+            resolve(true);
+          }
+        }
+
+        resolve(false);
+        document.body.removeChild($apply);
+      }
+    });
+  });
+};
+
+exports.apply = apply;
+},{}],"util/util.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -675,7 +789,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Auth = Auth;
 exports.ReloadName = ReloadName;
-exports.openModal = exports.getTimeUnix = exports.getStateModal = exports.getName = exports.getId = exports.createQueueText = exports.closeModal = exports.applyInvite = void 0;
+exports.openModal = exports.getTimeUnix = exports.getStateModal = exports.getName = exports.getId = exports.createQueueText = exports.copyToClipboard = exports.closeModal = exports.applyInvite = void 0;
 
 var _serverReq = require("../classes/serverReq");
 
@@ -768,11 +882,36 @@ function Auth(callback) {
 
 var createQueueText = function createQueueText(list) {
   return list.map(function (item, index) {
-    return "".concat(index + 1, " ").concat(item);
+    return "".concat(index + 1, " ").concat(item.nameOfStudent);
   }).join('\n');
 };
 
 exports.createQueueText = createQueueText;
+
+var copyToClipboard = function copyToClipboard(text) {
+  if (window.clipboardData && window.clipboardData.setData) {
+    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+    return window.clipboardData.setData("Text", text);
+  } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in Microsoft Edge.
+
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+      return document.execCommand("copy"); // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return prompt("Copy to clipboard: Ctrl+C, Enter", text);
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+};
+
+exports.copyToClipboard = copyToClipboard;
 },{"../classes/serverReq":"classes/serverReq.js"}],"classes/notice.js":[function(require,module,exports) {
 "use strict";
 
@@ -782,6 +921,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.Notice = exports.InviteApply = exports.$notice = void 0;
 
 var _serverReq = require("./serverReq");
+
+var _ApplyNotice = require("./ApplyNotice");
 
 var _util = require("../util/util");
 
@@ -836,7 +977,7 @@ var Notice = /*#__PURE__*/function () {
   }, {
     key: "renderNotice",
     value: function renderNotice() {
-      document.getElementById("modal-notice").innerHTML = "\n\t\t<div class=\"notice Ntitle padding-content center-items border-2px\">\u0412\u0430\u0448\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F<div class=\"btn back\" data-action=\"close\"></div></div>\n\t\t\t".concat(this.listToHtml(), "\n\t\t");
+      document.getElementById("modal-notice").innerHTML = "\n\t\t<div class=\"notice Ntitle padding-content center-items\">\u0412\u0430\u0448\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F<div class=\"btn back\" data-action=\"close\"></div></div>\n\t\t\t".concat(this.listToHtml(), "\n\t\t");
     }
   }, {
     key: "open",
@@ -875,7 +1016,7 @@ var Notice = /*#__PURE__*/function () {
 
           case "apply":
             {
-              apply("Введите номер задания", input()).then(function (data) {
+              (0, _ApplyNotice.apply)("Введите номер задания", input()).then(function (data) {
                 if (data) {
                   _this.noticeList = _this.noticeList.filter(function (item) {
                     return item.id !== +content;
@@ -899,7 +1040,7 @@ var Notice = /*#__PURE__*/function () {
 
           case "delete":
             {
-              apply("Вы точно хотите удалить это уведомление?").then(function (data) {
+              (0, _ApplyNotice.apply)("Вы точно хотите удалить это уведомление?").then(function (data) {
                 if (data) {
                   _this.noticeList = _this.noticeList.filter(function (item) {
                     return item.id !== +content;
@@ -928,17 +1069,17 @@ var Notice = /*#__PURE__*/function () {
         switch (item.type) {
           case "invite":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice invite padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u041F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u0435 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u044C ").concat(item.Qname, "\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"apply\" data-content=").concat(item.id, " data-src=").concat(item.Qhash, ">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice invite padding-content center-items flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u041F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u0435 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u044C ").concat(item.Qname, "\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"apply\" data-content=").concat(item.id, " data-src=").concat(item.Qhash, ">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u041E\u0442\u043A\u0430\u0437\u0430\u0442\u044C\u0441\u044F</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
 
           case "swap":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice swap padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u0421\u0442\u0443\u0434\u0435\u043D\u0442 ").concat(item.sender.name, " \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0432\u0430\u043C \u043F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C \u043C\u0435\u0441\u0442\u0430\u043C\u0438\n\t\t\t\t\t\t\t\t<div class=\"swap-state\">\n\t\t\t\t\t\t\t\t\t\t").concat(item.Q.name, " :\n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "red" : "green", ">").concat(item.recipient.position, "</span> \n\t\t\t\t\t\t\t\t\t\t-> \n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "green" : "red", ">").concat(item.sender.position, "</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"swap\" data-content=").concat(item.id, " data-src=\"").concat(item.sender.id, "|").concat(item.recipient.id, "|").concat(item.Q.hash, "\">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice swap padding-content center-items flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u0421\u0442\u0443\u0434\u0435\u043D\u0442 ").concat(item.sender.name, " \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0432\u0430\u043C \u043F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C \u043C\u0435\u0441\u0442\u0430\u043C\u0438\n\t\t\t\t\t\t\t\t<div class=\"swap-state\">\n\t\t\t\t\t\t\t\t\t\t").concat(item.Q.name, " :\n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "red" : "green", ">").concat(item.recipient.position, "</span> \n\t\t\t\t\t\t\t\t\t\t-> \n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "green" : "red", ">").concat(item.sender.position, "</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"swap\" data-content=").concat(item.id, " data-src=\"").concat(item.sender.id, "|").concat(item.recipient.id, "|").concat(item.Q.hash, "\">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u041E\u0442\u043A\u0430\u0437\u0430\u0442\u044C\u0441\u044F</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
 
           case "update":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice update padding-content center-items border-2px flex-row\">\n\t\t\t\t\t\t\t\t\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 ".concat(item.update.version, " ").concat(item.update.codeName, "\n\t\t\t\t\t\t\t\t<div class=\"btn readMore\" data-action=\"readMore\" data-content=").concat(item.update.vkLink, ">\n\t\t\t\t\t\t\t\t\t<a href=").concat(item.update.vkLink, ">\u0423\u0437\u043D\u0430\u0442\u044C \u043E\u0431 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F\u0445</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice update padding-content center-items flex-row\">\n\t\t\t\t\t\t\t\t\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 ".concat(item.update.version, " ").concat(item.update.codeName, "\n\t\t\t\t\t\t\t\t<div class=\"btn readMore\" data-action=\"readMore\" data-content=").concat(item.update.vkLink, ">\n\t\t\t\t\t\t\t\t\t<a href=").concat(item.update.vkLink, ">\u0423\u0437\u043D\u0430\u0442\u044C \u043E\u0431 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F\u0445</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
         }
       }).join("") : "<div class=\"notice padding-content center-items border-2px\">\u0422\u0443\u0442 \u043F\u0443\u0441\u0442\u043E :)</div>";
@@ -951,7 +1092,7 @@ var Notice = /*#__PURE__*/function () {
 exports.Notice = Notice;
 
 var InviteApply = function InviteApply(hash) {
-  apply("Введите номер задания", input()).then(function (data) {
+  (0, _ApplyNotice.apply)("Введите номер задания", input()).then(function (data) {
     if (data) {
       // ! serverReq
       var id = (0, _util.getId)();
@@ -968,39 +1109,6 @@ var input = function input() {
   return '<input type="number" id="appNumber" class="padding-content border-2px" required>';
 };
 
-var apply = function apply(text, content) {
-  return new Promise(function (resolve, reject) {
-    var $apply = document.createElement("div");
-    $apply.classList.add("modal", "visible", "center-items", "flex-column");
-    $apply.id = "modal-apply";
-    $apply.dataset.action = "close";
-    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items border-2px flex-column\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
-    document.body.appendChild($apply);
-    $apply.addEventListener("click", function (e) {
-      var action = e.target.dataset.action;
-
-      if (action) {
-        console.log("clicked on btn ".concat(action));
-
-        if (action === "ok") {
-          if (content) {
-            var value = document.getElementById("appNumber").value;
-
-            if (value) {
-              resolve(value);
-            }
-          } else {
-            resolve(true);
-          }
-        }
-
-        resolve(false);
-        document.body.removeChild($apply);
-      }
-    });
-  });
-};
-
 var $notice = function $notice(text) {
   var cooldown = 5000;
   var $nt = document.createElement("div");
@@ -1015,7 +1123,7 @@ var $notice = function $notice(text) {
 };
 
 exports.$notice = $notice;
-},{"./serverReq":"classes/serverReq.js","../util/util":"util/util.js"}],"classes/Qmaker.js":[function(require,module,exports) {
+},{"./serverReq":"classes/serverReq.js","./ApplyNotice":"classes/ApplyNotice.js","../util/util":"util/util.js"}],"classes/Qmaker.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1024,6 +1132,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.$Qmaker = void 0;
 
 var _notice = require("./notice");
+
+var _ApplyNotice = require("./ApplyNotice");
 
 var capitalize = function capitalize(s) {
   return s && s[0].toUpperCase() + s.slice(1) || "";
@@ -1035,58 +1145,116 @@ var $Qmaker = function $Qmaker(callback) {
     $f.classList.add("modal", "visible", "center-items");
     $f.dataset.action = "close";
     $f.innerHTML = pattern();
+    document.body.appendChild($f);
     return $f;
   }
 
+  var options = false;
+
+  var controlInput = function controlInput(e) {
+    e.preventDefault();
+    var number = e.target.valueAsNumber;
+
+    if (number > 100 || number <= 0 || !parseInt(e.data)) {
+      e.target.value = '';
+      options[e.target.dataset.to] = 1;
+      toggleStateById(e.target.parentNode.id, 0, 2);
+    } else {
+      toggleStateById(e.target.parentNode.id, 1);
+    }
+  };
+
+  var __popup__ = open();
+
   function _close() {
     document.body.removeChild(__popup__);
-  }
+  } //? inputs
 
-  var options = {
-    smart: false
+
+  var $name = document.getElementById('input_name');
+  var $apps = document.getElementById('input_apps');
+  var $date = document.getElementById('input_date'); //? buttons
+
+  var $cmnB = document.getElementById('C_btn');
+  var $smrB = document.getElementById('S_btn');
+
+  var toggleStateById = function toggleStateById(id, flag, message) {
+    var $elem = document.getElementById(id);
+
+    if (flag) {
+      $elem.classList.remove('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+      $elem.classList.add('success');
+    } else {
+      $elem.classList.add('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+      $elem.classList.remove('success');
+    }
+  };
+
+  var parseValues = function parseValues() {
+    return {
+      name: $name.value.trim(),
+      type: options,
+      dependOnApps: options ? $apps.value ? 1 : 0 : 0,
+      CountApps: options ? $apps.value || 0 : 0,
+      dependOnDate: options ? $date.value ? 1 : 0 : 0,
+      DateToPass: options ? $date.value || 0 : 0
+    };
+  };
+
+  var checkInputs = function checkInputs() {
+    if ($name.value) {
+      toggleStateById('name_input', 1);
+    } else {
+      toggleStateById('name_input', 0, 1);
+    }
+
+    if (options) {
+      if (!$apps.value && !$date.value) {
+        toggleStateById('apps_input', 0, 1);
+        toggleStateById('date_input', 0, 1);
+      } else {
+        if ($apps.value) toggleStateById('apps_input', 1);
+        if ($date.value) toggleStateById('date_input', 1);
+      }
+    }
+
+    return $name.value && (options ? $apps.value || $date.value : true);
   };
 
   function toggleState() {
-    document.getElementById('C_btn').classList.toggle('active');
-    var $smart_btn = document.getElementById('S_btn');
-    $smart_btn.classList.toggle('active');
-    options.smart = $smart_btn.classList.contains('active');
-  }
-
-  function checkInputs() {
-    return document.getElementById('input_name').value && (options.smart ? document.getElementById('input_apps').value || document.getElementById('input_date').value : true);
+    $cmnB.classList.toggle('active');
+    $smrB.classList.toggle('active');
+    options = $smrB.classList.contains('active');
   }
 
   var actions = {
-    common: function common(id) {
+    switch: function _switch(id) {
       var $btn = document.getElementById(id);
 
       if (!$btn.classList.contains('active')) {
         toggleState();
-        document.getElementById('smart_options').classList.remove('active');
-      }
-    },
-    smart: function smart(id) {
-      var $btn = document.getElementById(id);
-
-      if (!$btn.classList.contains('active')) {
-        toggleState();
-        document.getElementById('smart_options').classList.toggle('active');
+        if (id === 'C_btn') document.getElementById('smart_options').classList.remove('active');else document.getElementById('smart_options').classList.add('active');
       }
     },
     close: function close() {
-      apply('Вы точно хотите отменить создание очереди?').then(function (e) {
+      (0, _ApplyNotice.apply)('Вы точно хотите отменить создание очереди?').then(function (e) {
         if (e) _close();
       });
     },
     create: function create() {
       if (checkInputs()) {
-        apply('Подтвердите создание очереди с параметрами', "\n\t\t\t\t\t<div class=\"info\">\n\t\t\t\t\t\t".concat(JSON.stringify(parseValues()), "\n\t\t\t\t\t</div>\n\t\t\t\t")).then(function (e) {
+        var _options = parseValues();
+
+        (0, _ApplyNotice.apply)('Подтвердите создание очереди с параметрами', {
+          type: 'div',
+          html: "\n\t\t\t\t\t\t<div class=\"options center-items flex-column w100\">\n\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span> <i>".concat(_options.name, "</i></div>\n\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0422\u0438\u043F \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span> <i>").concat(!_options.type ? 'обычная' : 'умная', "</i></div>\n\t\t\t\t\t\t\t").concat(_options.dependOnApps ? "\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u043E\u0442 \u043A\u043E\u043B-\u0432\u0430 \u0437\u0430\u0434\u0430\u0447</span> <i>".concat(_options.dependOnApps ? '+' : '-', "</i></div>\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041A\u043E\u043B-\u0432\u043E \u0437\u0430\u0434\u0430\u0447</span> <i>").concat(_options.CountApps, "</i></div>\n\t\t\t\t\t\t\t\t") : '', "\n\t\t\t\t\t\t\t").concat(_options.dependOnDate ? "\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u043E\u0442 \u0434\u0430\u0442\u044B</span> <i>".concat(_options.dependOnDate ? '+' : '-', "</i></div>\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041A\u043E\u043B-\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u043D\u0430 \u0441\u0434\u0430\u0447\u0443</span> <i>").concat(_options.DateToPass, "</i></div>\n\t\t\t\t\t\t\t\t") : '', "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t"),
+          id: null
+        }).then(function (e) {
           if (e) {
             //callback(parseValues())
-            _close();
+            (0, _notice.$notice)("\u041E\u0447\u0435\u0440\u0435\u0434\u044C ".concat($name.value, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0437\u0434\u0430\u043D\u0430"));
 
-            (0, _notice.$notice)("Очередь успешно создана");
+            _close();
           }
         });
       } else {//! Добавить подсказки
@@ -1094,40 +1262,8 @@ var $Qmaker = function $Qmaker(callback) {
     }
   };
 
-  var parseValues = function parseValues() {
-    var name = document.getElementById('input_name').value;
-
-    if (options.smart) {
-      var apps = document.getElementById('input_apps').value;
-      var date = document.getElementById('input_date').value;
-      return {
-        name: name,
-        type: 'smart',
-        dependOnApps: apps ? true : false,
-        CountApps: apps || 0,
-        dependOnDate: date ? true : false,
-        DateToPass: date || 0
-      };
-    }
-
-    return {
-      name: name,
-      type: 'common'
-    };
-  };
-
-  var controlInput = function controlInput(e) {
-    var number = e.target.valueAsNumber;
-
-    if (number > 100 || number <= 0) {
-      e.target.value = 1;
-      options[e.target.dataset.to] = 1;
-    }
-  };
-
-  var __popup__ = open();
-
   __popup__.addEventListener("click", function (e) {
+    e.preventDefault();
     var action = e.target.dataset.action;
 
     if (action) {
@@ -1135,49 +1271,20 @@ var $Qmaker = function $Qmaker(callback) {
     }
   });
 
-  document.body.appendChild(__popup__);
-  document.getElementById('input_apps').oninput = controlInput;
-  document.getElementById('input_date').oninput = controlInput;
+  $name.oninput = function (e) {
+    return toggleStateById('name_input', e.target.value);
+  };
+
+  $apps.oninput = controlInput;
+  $date.oninput = controlInput;
 };
 
 exports.$Qmaker = $Qmaker;
 
 var pattern = function pattern() {
-  return "\n<div class=\"form padding-content center-items-inline shadow\">\n\t<span class=\"Qtitle\">\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u043E\u0447\u0435\u0440\u0435\u0434\u0435\u0439</span>\n\n\t<div class=\"input_group\">\n\t\t<input id=\"input_name\" type=\"text\" maxlength=\"32\" data-to=\"name\" required/>\n\t\t<label class=\"field_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</label>\n\t</div>\n\n\t<div class=\"type_selector flex-row\">\n\t\t<div class=\"common padding-content center-items active\" data-action=\"common\" id=\"C_btn\">\u041E\u0431\u044B\u0447\u043D\u0430\u044F</div>\n\t\t<div class=\"smart padding-content center-items\" data-action=\"smart\" id=\"S_btn\">\u0423\u043C\u043D\u0430\u044F</div>\n\t</div>\n\n\t<div class=\"smart_options flex-column\" id=\"smart_options\">\n\t\t<div class=\"qm_title flex-row center-items\">\n\t\t\t<span>\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u043C\u043D\u043E\u0439 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span>\n\t\t\t<div class=\"info center-items\">i</div>\n\t\t</div>\n\t\t<div class=\"input_group\">\n\t\t\t<input id=\"input_apps\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"CountApps\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u0434\u0430\u0447</label>\n\t\t</div>\n\t\t<div class=\"input_group\">\n\t\t\t<input id=\"input_date\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"DateToPass\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0434\u043B\u044F \u0441\u0434\u0430\u0447\u0438</label>\n\t\t</div>\n\t</div>\n\n\t<div class=\"btn_container flex-row\">\n\t\t<div class=\"btn\" data-action=\"create\" id=\"create\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n\t\t<div class=\"btn\" data-action=\"close\" id=\"close\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t</div>\n</div>\n";
+  return "\n<div class=\"form padding-content center-items-inline shadow\">\n\t<span class=\"Qtitle\">\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u043E\u0447\u0435\u0440\u0435\u0434\u0435\u0439</span>\n\n\t<div class=\"input_group\" id=\"name_input\">\n\t\t<input id=\"input_name\" type=\"text\" maxlength=\"32\" data-to=\"name\" required/>\n\t\t<label class=\"field_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</label>\n\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t<div class=\"error_message center-items\">\n\t\t\t\u041F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t</div>\n\t</div>\n\n\t<div class=\"type_selector flex-row\">\n\t\t<div class=\"common padding-content center-items active\" data-action=\"switch\" id=\"C_btn\">\u041E\u0431\u044B\u0447\u043D\u0430\u044F</div>\n\t\t<div class=\"smart padding-content center-items\" data-action=\"switch\" id=\"S_btn\">\u0423\u043C\u043D\u0430\u044F</div>\n\t</div>\n\n\t<div class=\"smart_options flex-column\" id=\"smart_options\">\n\t\t<div class=\"qm_title flex-row center-items\">\n\t\t\t<span>\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u043C\u043D\u043E\u0439 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span>\n\t\t\t<div class=\"info center-items\">i</div>\n\t\t</div>\n\t\t<div class=\"input_group\" id=\"apps_input\">\n\t\t\t<input id=\"input_apps\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"CountApps\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u0434\u0430\u0447</label>\n\t\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t\t<div class=\"error_message center-items\">\n\t\t\t\t\u0425\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u043F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t\t</div>\n\t\t\t<div class=\"error_type center-items\">\n\t\t\t\t\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B \u0438\u043B\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435!\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"input_group\" id=\"date_input\">\n\t\t\t<input id=\"input_date\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"DateToPass\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0434\u043B\u044F \u0441\u0434\u0430\u0447\u0438</label>\n\t\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t\t<div class=\"error_message center-items\">\n\t\t\t\t\u0425\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u043F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t\t</div>\n\t\t\t<div class=\"error_type center-items\">\n\t\t\t\t\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B \u0438\u043B\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435!\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div class=\"btn_container flex-row\">\n\t\t<div class=\"btn\" data-action=\"create\" id=\"create\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n\t\t<div class=\"btn\" data-action=\"close\" id=\"close\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t</div>\n</div>\n";
 };
-/**
- * Создает окно с запросом
- * @param {string} text 
- * @param {string} content 
- * @returns null
- */
-
-
-var apply = function apply(text, content) {
-  return new Promise(function (resolve, reject) {
-    var $apply = document.createElement("div");
-    $apply.classList.add("modal", "visible", "center-items", "flex-column");
-    $apply.id = "modal-apply";
-    $apply.dataset.action = "close";
-    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items flex-column shadow\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
-    document.body.appendChild($apply);
-    $apply.addEventListener("click", function (e) {
-      var action = e.target.dataset.action;
-
-      if (action) {
-        console.log("clicked on btn ".concat(action));
-
-        if (action === "ok") {
-          resolve(true);
-        }
-
-        resolve(false);
-        document.body.removeChild($apply);
-      }
-    });
-  });
-};
-},{"./notice":"classes/notice.js"}],"classes/Qlist.js":[function(require,module,exports) {
+},{"./notice":"classes/notice.js","./ApplyNotice":"classes/ApplyNotice.js"}],"classes/Qlist.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1239,6 +1346,8 @@ var QList = /*#__PURE__*/function () {
     this.selected = null;
     this.min = true;
     this.canAddQueue = canAddQueue;
+    this.eventListeners = false;
+    this.previewSelected = -1;
     this.setup();
   }
 
@@ -1274,11 +1383,10 @@ var QList = /*#__PURE__*/function () {
                       while (1) {
                         switch (_context.prev = _context.next) {
                           case 0:
-                            _context.next = 2;
-                            return _serverReq.serverRequest.getQueuePropertyById(item.idQueue);
-
-                          case 2:
-                            name = _context.sent.subjectName;
+                            // const name = (
+                            //     await serverRequest.getQueuePropertyById(item.idQueue)
+                            // ).subjectName;
+                            name = 'test';
                             idQueue = item.idQueue, positionStudent = item.positionStudent;
 
                             _classPrivateFieldGet(_this, _list).push(new _queue.QueueBlock({
@@ -1287,7 +1395,7 @@ var QList = /*#__PURE__*/function () {
                               positionStudent: positionStudent
                             }));
 
-                          case 5:
+                          case 3:
                           case "end":
                             return _context.stop();
                         }
@@ -1335,28 +1443,9 @@ var QList = /*#__PURE__*/function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                if (!this.min) {
-                  _context3.next = 4;
-                  break;
-                }
-
-                _context3.t0 = _classPrivateFieldGet(this, _list).map(function (item) {
+                html = this.min ? _classPrivateFieldGet(this, _list).map(function (item) {
                   return item.toHtml();
-                }).join("");
-                _context3.next = 9;
-                break;
-
-              case 4:
-                _context3.t1 = this.selected;
-                _context3.next = 7;
-                return _serverReq.serverRequest.getListOfStudentInQueueById(this.selected.ID);
-
-              case 7:
-                _context3.t2 = _context3.sent;
-                _context3.t0 = _context3.t1.toListHtml.call(_context3.t1, _context3.t2);
-
-              case 9:
-                html = _context3.t0;
+                }).join("") : this.selected.toListHtml(_serverReq.serverRequest.getListOfStudentInQueueById(this.selected.ID));
 
                 if (this.min && this.canAddQueue) {
                   html += "\n                <div class=\"QmakerContainer border-2px center-items\">\n                <div class=\"Qmaker\" id=\"Qmaker\" data-action=\"create\">\n                    <div class=\"btn about\" id=\"QmakerAdd\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n                </div>\n                </div>\n            ";
@@ -1364,7 +1453,7 @@ var QList = /*#__PURE__*/function () {
 
                 return _context3.abrupt("return", html);
 
-              case 12:
+              case 3:
               case "end":
                 return _context3.stop();
             }
@@ -1391,9 +1480,10 @@ var QList = /*#__PURE__*/function () {
 
               case 2:
                 document.getElementById("content-main").innerHTML = _context4.sent;
-                this.addEventListeners();
+                this.addQuicklook();
+                if (!this.eventListeners) this.addEventListeners();
 
-              case 4:
+              case 5:
               case "end":
                 return _context4.stop();
             }
@@ -1407,37 +1497,86 @@ var QList = /*#__PURE__*/function () {
 
       return render;
     }()
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "quicklook",
+    value: function quicklook(e) {
+      e.preventDefault();
+
+      if (e.target.dataset.action === 'open' && (e.ctrlKey || e.metaKey) && this.previewSelected === -1) {
+        this.previewSelected = e.target.id;
+        this.$__preview__ = document.createElement('div');
+        this.$__preview__.classList.add('quicklook', 'center-items', 'flex-column');
+        this.$__preview__.innerHTML = "<div class=\"quicklook__title\">QuickLook</div><span>".concat(e.target.dataset.name, ":</span>");
+        this.$__preview__.innerHTML += [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(function (e, index) {
+          return "\n                <div class=\"quicklook__item ".concat(index + 1 === 3 ? "u" : '', "\">").concat(index + 1, " \u0410\u043D\u0434\u0440\u0435\u0439 \u0411\u0430\u0437\u0443\u043D\u043E\u0432</div>\n            ");
+        }).join('\n');
+        e.currentTarget.appendChild(this.$__preview__);
+      }
+    }
+    /**
+     * 
+     * @param {MouseEvent} e 
+     */
+
+  }, {
+    key: "closeQuicklook",
+    value: function closeQuicklook(e) {
+      e.preventDefault();
+
+      if (this.previewSelected === e.target.id) {
+        this.previewSelected = -1;
+        e.currentTarget.removeChild(this.$__preview__);
+      }
+    }
+  }, {
+    key: "addQuicklook",
+    value: function addQuicklook() {
+      var _this2 = this;
+
+      document.querySelectorAll('.qItem').forEach(function (elem) {
+        elem.addEventListener('mouseover', _this2.quicklook.bind(_this2));
+        elem.addEventListener('mouseleave', _this2.closeQuicklook.bind(_this2));
+      });
+    }
   }, {
     key: "addEventListeners",
     value: function addEventListeners() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (_classPrivateFieldGet(this, _list).length > 0) {
-        document.getElementById('content-main').addEventListener('click', function (e) {
+        this.eventListeners = true;
+        document.getElementById("content-main").addEventListener("click", function (e) {
+          e.preventDefault();
           var action = e.target.dataset.action;
 
           if (action) {
             switch (action) {
               case "open":
                 {
-                  _this2.selected = _classPrivateFieldGet(_this2, _list).find(function (item) {
+                  console.log('open');
+                  _this3.selected = _classPrivateFieldGet(_this3, _list).find(function (item) {
                     return item.ID === +e.target.dataset.id;
                   });
-                  _this2.selected.min = false;
-                  _this2.min = false;
+                  _this3.selected.min = false;
+                  _this3.min = false;
 
-                  _this2.render();
+                  _this3.render();
 
                   break;
                 }
 
               case "back":
                 {
-                  _this2.allMin();
+                  _this3.allMin();
 
-                  _this2.selected = null;
+                  _this3.selected = null;
 
-                  _this2.render();
+                  _this3.render();
 
                   break;
                 }
@@ -1445,11 +1584,8 @@ var QList = /*#__PURE__*/function () {
               case "copy":
                 {
                   _serverReq.serverRequest.getListOfStudentInQueueById(+e.target.dataset.id).then(function (item) {
-                    navigator.clipboard.writeText((0, _util.createQueueText)(item)).then(function () {
-                      (0, _notice.$notice)('Очередь скопирована в буфер обмена');
-                    }).catch(function () {
-                      (0, _notice.$notice)('Произошла ошибка при копировании в буфер обмена');
-                    });
+                    (0, _util.copyToClipboard)((0, _util.createQueueText)(item.responseAboutStudentList));
+                    (0, _notice.$notice)('Очередь скопирована в буфер обмена');
                   });
 
                   break;
@@ -1464,7 +1600,7 @@ var QList = /*#__PURE__*/function () {
                           switch (_context5.prev = _context5.next) {
                             case 0:
                               _context5.next = 2;
-                              return _this2.render();
+                              return _this3.render();
 
                             case 2:
                             case "end":
@@ -1480,9 +1616,15 @@ var QList = /*#__PURE__*/function () {
                   }());
                   break;
                 }
+
+              case "delete":
+                {
+                  break;
+                }
             }
           }
-        });
+        }, true);
+        this.addQuicklook();
       }
     }
   }, {
@@ -1513,7 +1655,66 @@ var QList = /*#__PURE__*/function () {
 }();
 
 exports.QList = QList;
-},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js","./Qmaker":"classes/Qmaker.js","../classes/notice":"classes/notice.js","../util/util":"util/util.js"}],"classes/App.js":[function(require,module,exports) {
+},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js","./Qmaker":"classes/Qmaker.js","../classes/notice":"classes/notice.js","../util/util":"util/util.js"}],"plugins/modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.$modalWindow = void 0;
+
+var $modalWindow = function $modalWindow(content) {
+  var open = function open() {
+    var $modal = document.createElement('div');
+    $modal.classList.add('modal', 'visible', 'center-items');
+    $modal.dataset.action = 'close';
+    $modal.innerHTML += "\n      <div class=\"content flex-column center-items padding-content\">\n        <div class=\"btn close center-items\" data-action='close'>X</div>\n        <div class=\"modal_title center-items\">".concat(content.title, "</div>\n        ").concat(parseContent(content), "\n      </div>\n    ");
+    document.body.appendChild($modal);
+    return $modal;
+  };
+
+  var __popup__ = open();
+
+  __popup__.addEventListener('click', function (e) {
+    e.preventDefault();
+    var action = e.target.dataset.action;
+
+    if (action) {
+      document.body.removeChild(__popup__);
+    }
+  });
+};
+
+exports.$modalWindow = $modalWindow;
+
+var parseContent = function parseContent(content) {
+  return content.elements.map(function (el) {
+    return "<".concat(el.type, " class=").concat(el.class || '', " id=").concat(el.id || '', ">").concat(el.innerHTML || '', "</").concat(el.type, ">");
+  }).join('');
+};
+/*
+
+{
+  title : 'DOAPW',
+  elements : [
+    {
+      type : 'div',
+      innerHtml : "mdaw",
+      class : '',
+      id : ""
+    },
+    {
+
+    }
+  ],
+  buttons : [
+    'ok',
+    'close'
+  ]
+}
+
+*/
+},{}],"classes/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1528,6 +1729,8 @@ var _serverReq = require("./serverReq");
 var _util = require("../util/util");
 
 var _notice2 = require("./notice");
+
+var _modal = require("../plugins/modal");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -1643,30 +1846,44 @@ function _setup3() {
             };
 
             document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
-            _JSON$parse = JSON.parse(localStorage.getItem("vk_auth")), id = _JSON$parse.id, name = _JSON$parse.name;
-            _context.next = 5;
-            return _serverReq.serverRequest.addStudent(id, name);
+            document.querySelectorAll('.link').forEach(function (item) {
+              item.addEventListener('click', function (e) {
+                e.preventDefault();
+                (0, _modal.$modalWindow)({
+                  title: item.dataset.target,
+                  elements: [{
+                    type: 'div',
+                    innerHTML: 'vk',
+                    class: 'dev-item center-items'
+                  }, {
+                    type: 'div',
+                    innerHTML: 'github',
+                    class: 'dev-item center-items'
+                  }]
+                });
+              });
+            });
+            _JSON$parse = JSON.parse(localStorage.getItem("vk_auth")), id = _JSON$parse.id, name = _JSON$parse.name; //const response = await serverRequest.addStudent(id, name);
 
-          case 5:
-            response = _context.sent;
+            response = true;
 
             if (!(response === -1)) {
-              _context.next = 10;
+              _context.next = 9;
               break;
             }
 
             this.error = true;
-            _context.next = 12;
+            _context.next = 11;
             break;
 
-          case 10:
-            _context.next = 12;
+          case 9:
+            _context.next = 11;
             return _classPrivateFieldGet(this, _qList).parseListOfQueues(id);
 
-          case 12:
+          case 11:
             this.render();
 
-          case 13:
+          case 12:
           case "end":
             return _context.stop();
         }
@@ -1675,7 +1892,7 @@ function _setup3() {
   }));
   return _setup3.apply(this, arguments);
 }
-},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","../util/util":"util/util.js","./notice":"classes/notice.js"}],"index.js":[function(require,module,exports) {
+},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","../util/util":"util/util.js","./notice":"classes/notice.js","../plugins/modal":"plugins/modal.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./styles/main.scss");
@@ -1701,10 +1918,13 @@ window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          (0, _Qmaker.$Qmaker)(); //VK.init({ apiId: 8229660 });
-          //Auth(main);
+          //$Qmaker()
+          VK.init({
+            apiId: 8229660
+          });
+          (0, _util.Auth)(main);
 
-        case 1:
+        case 2:
         case "end":
           return _context.stop();
       }
@@ -1815,7 +2035,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "25.85.15.23" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54546" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55600" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

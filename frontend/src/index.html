@@ -13,18 +13,26 @@
     <script src="index.js"></script>
 </head>
 <body>
-    <header class="center-items-inline padding-content">
+    <header class="center-items-inline">
         <div class="container center-items-inline">
             <div class="logo border-2px"></div>
             <span class="title">Удобная очередь</span>
         </div>
 
-        <div class="profile center-items-inline border-2px">
-            <div class="notice" id="noticeList"></div>
-            <div class="name" id="name_holder">{name}</div>
-            <div class="logout" id="logout"></div>
+        <div class="profile center-items-inline">
+            <div class="name center-items" id="name_holder">Андрей Базунов</div>
+            <div class="p_btn notice_btn center-items padding-lr" id="noticeList"></div>
+            <div class="p_btn home center-items padding-lr" id="home"></div>
+            <div class="p_btn logout center-items padding-lr" id="logout"></div>
         </div>
     </header>
-    <main class="padding-content flex-space-center-wrap" id="content-main"></main>
+    <main class="flex-space-center-wrap" id="content-main"></main>
+    <footer class="center-items-inline">
+        <div class="dev flex-row">
+            <span>Разработчики:</span>
+            <div class="link center-items padding-lr" data-action="open_modal" data-target="kriminal589">@Kriminal589</div>
+            <div class="link center-items padding-lr" data-action="open_modal" data-target="viltskaa">@Viltskaa</div>
+        </div>
+    </footer>
 </body>
 </html>

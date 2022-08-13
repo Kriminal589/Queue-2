@@ -1,4 +1,5 @@
 import { getListNotice } from "./serverReq";
+import { apply } from "./ApplyNotice"
 import { getId } from "../util/util";
 
 export class Notice {
@@ -44,7 +45,7 @@ export class Notice {
     }
     renderNotice() {
         document.getElementById("modal-notice").innerHTML = `
-		<div class="notice Ntitle padding-content center-items border-2px">Ваши уведомления<div class="btn back" data-action="close"></div></div>
+		<div class="notice Ntitle padding-content center-items">Ваши уведомления<div class="btn back" data-action="close"></div></div>
 			${this.listToHtml()}
 		`;
     }
@@ -128,18 +129,18 @@ export class Notice {
                       switch (item.type) {
                           case "invite": {
                               return `
-							<div class="notice invite padding-content center-items border-2px flex-column" id=${item.id}>
+							<div class="notice invite padding-content center-items flex-column" id=${item.id}>
 								Приглашение в очередь ${item.Qname}
 								<div class="btn-container flex-row">
 										<div class="btn apply" data-action="apply" data-content=${item.id} data-src=${item.Qhash}>Принять</div>
-										<div class="btn close" data-action="delete" data-content=${item.id}>Удалить</div>
+										<div class="btn close" data-action="delete" data-content=${item.id}>Отказаться</div>
 								</div>
 							</div>
 						`;
                           }
                           case "swap": {
                               return `
-							<div class="notice swap padding-content center-items border-2px flex-column" id=${
+							<div class="notice swap padding-content center-items flex-column" id=${
                                 item.id
                             }>
 								Студент ${item.sender.name} предлагает вам поменяться с ним местами
@@ -167,14 +168,14 @@ export class Notice {
                               }">Принять</div>
 										<div class="btn close" data-action="delete" data-content=${
                                             item.id
-                                        }>Удалить</div>
+                                        }>Отказаться</div>
 								</div>
 							</div>
 						`;
                           }
                           case "update": {
                               return `
-							<div class="notice update padding-content center-items border-2px flex-row">
+							<div class="notice update padding-content center-items flex-row">
 								Обновление ${item.update.version} ${item.update.codeName}
 								<div class="btn readMore" data-action="readMore" data-content=${item.update.vkLink}>
 									<a href=${item.update.vkLink}>Узнать об изменениях</a>
@@ -205,46 +206,6 @@ export const InviteApply = (hash) => {
 
 const input = () =>
     '<input type="number" id="appNumber" class="padding-content border-2px" required>';
-
-const apply = (text, content) => {
-    return new Promise((resolve, reject) => {
-        const $apply = document.createElement("div");
-        $apply.classList.add("modal", "visible", "center-items", "flex-column");
-        $apply.id = "modal-apply";
-        $apply.dataset.action = "close";
-        $apply.innerHTML = `
-			<div class="notice apply padding-content center-items border-2px flex-column">
-			${text}
-			${content || ""}
-			<div class="btn-container flex-row">
-					<div class="btn apply" data-action="ok">Подтвердить</div>
-					<div class="btn close" data-action="cancel">Отмена</div>
-			</div>
-			</div>
-		`;
-        document.body.appendChild($apply);
-
-        $apply.addEventListener("click", (e) => {
-            const action = e.target.dataset.action;
-            if (action) {
-                console.log(`clicked on btn ${action}`);
-                if (action === "ok") {
-                    if (content) {
-                        const value =
-                            document.getElementById("appNumber").value;
-                        if (value) {
-                            resolve(value);
-                        }
-                    } else {
-                        resolve(true);
-                    }
-                }
-                resolve(false);
-                document.body.removeChild($apply);
-            }
-        });
-    });
-};
 
 export const $notice = (text) => {
     const cooldown = 5000;

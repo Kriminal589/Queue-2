@@ -5,10 +5,9 @@ import {$Qmaker} from "./classes/Qmaker"
 import { InviteApply } from "./classes/notice";
 
 window.onload = async () => {
-	$Qmaker()
-    //VK.init({ apiId: 8229660 });
-	
-    //Auth(main);
+	//$Qmaker()
+    VK.init({ apiId: 8229660 });
+    Auth(main);
 };
 
 const main = async (error) => {
