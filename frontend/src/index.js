@@ -24,21 +24,3 @@ const main = error => {
 		app.render();
 	}
 };
-
-async function send() {
-	try {
-		let request = new Request('http://25.84.228.15:8080/queue/test', {})
-		const res = await fetch(request, {
-		method: 'GET',
-		headers: {
-			"Content-Type" : "application/json",
-			"Authorization" : JSON.stringify("BEER_MONSTER_ENTERS_TO_SERVER!")
-		}
-		})
-		return res.json()
-	}
-	catch (error) {
-		console.error(error);
-		return error;
-	}
-}
