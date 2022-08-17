@@ -107,6 +107,76 @@ html, body {
   background: rgba(245, 191, 66, 0.7);
 }
 
+.input_group {
+  position: relative;
+  width: 30vw;
+}
+.input_group input {
+  width: 100%;
+  height: auto;
+  padding: 1vh 0.5vh;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background-color: #F3F1F5;
+  color: #7F7C82;
+}
+.input_group i {
+  width: 3vh;
+  height: 3vh;
+  position: absolute;
+  right: 0;
+  top: 1.2vh;
+  opacity: 0;
+  transition: all 0.2s;
+}
+.input_group.success input {
+  border-color: rgba(0, 240, 0, 0.5);
+}
+.input_group.success i.fi-rs-check {
+  opacity: 1;
+  color: rgba(0, 240, 0, 0.9);
+}
+.input_group.error input {
+  border-color: rgba(240, 0, 0, 0.9);
+}
+.input_group.error i.fi-rs-exclamation {
+  opacity: 1;
+  color: rgba(240, 0, 0, 0.9);
+}
+.input_group.error.message .error_message {
+  height: auto;
+}
+.input_group.error.type_err .error_type {
+  height: auto;
+}
+.input_group .error_message,
+.input_group .error_type {
+  font-size: 0.9em;
+  color: #EE3F3F;
+  font-weight: bold;
+  overflow: hidden;
+  height: 0;
+}
+.input_group input:focus + .field_name, .input_group input:valid + .field_name {
+  font-size: 0.8em;
+  color: #afbdcf;
+  top: -0.75vh;
+  left: 2vh;
+  background: #F3F1F5;
+  padding: 0px 5px 0px 5px;
+}
+.input_group .field_name {
+  position: absolute;
+  font-size: 1em;
+  top: 1vh;
+  left: 0.5vh;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+.input_group input:focus {
+  outline: none;
+}
+
 .padding-lr {
   padding: 1vh 2vh;
   box-sizing: border-box;
@@ -132,6 +202,13 @@ html, body {
 @media (max-width: 700px) {
   .title {
     display: none;
+  }
+  .right {
+    display: none;
+  }
+  .left .authbtn {
+    width: 100%;
+    box-sizing: border-box;
   }
   .profile {
     width: 100%;
@@ -177,7 +254,153 @@ html, body {
 }
 body {
   min-height: 100vh;
-  background: #494748;
+  background: #F3F1F5;
+}
+body .guide {
+  height: 100%;
+  align-items: start;
+}
+body .guide .leftBar {
+  height: 100%;
+  width: 15vw;
+  background-color: #363636;
+  position: relative;
+}
+body .guide .leftBar .title {
+  width: 100%;
+  height: 8vh;
+  font-size: 2vh;
+  color: #7F7C82;
+}
+body .guide .leftBar .item {
+  padding: 1vh;
+  box-sizing: border-box;
+  width: 100%;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+body .guide .leftBar .item:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+body .guide .content {
+  width: 85vw;
+  height: 100%;
+  padding: 2vw 2vh;
+  box-sizing: border-box;
+  overflow-y: overlay;
+}
+body .guide .content .content-title {
+  height: 5vh;
+  background-color: #E6195E;
+  font-size: 1.3em;
+  color: white;
+}
+body .guide .content .block {
+  margin-top: 1vh;
+  padding: 2vh 0.3vw;
+  background-color: #363636;
+  color: white;
+}
+body .guide .content .block.answer {
+  background-color: #30e45d;
+}
+body .homepage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #1E1E1E;
+  padding: 5vh 5vw;
+  box-sizing: border-box;
+  color: #fff;
+  animation: fold 0.5s;
+  overflow: hidden;
+}
+body .homepage .homepage_content {
+  position: relative;
+  background-color: #474748;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  padding: 8vh 6.5vw;
+  box-sizing: border-box;
+}
+body .homepage .homepage_content .left, body .homepage .homepage_content .right {
+  width: 100%;
+  height: 100%;
+}
+body .homepage .homepage_content .left {
+  position: relative;
+  justify-content: space-between;
+  align-items: start;
+}
+body .homepage .homepage_content .right .news_page {
+  width: 95%;
+  height: 100%;
+  overflow: overlay;
+}
+body .homepage .homepage_content .right .news_page .news_item {
+  background-color: #363636;
+  padding: 0.5vh 0.5vw;
+  margin-bottom: 1vh;
+  flex-direction: column;
+}
+body .homepage .homepage_content .right .news_page .news_item .news_title {
+  font-weight: bold;
+}
+body .homepage .homepage_content .homepage_title {
+  align-items: start;
+}
+body .homepage .homepage_content .homepage_title > span:not(:last-child) {
+  font-size: 6.5vh;
+}
+body .homepage .homepage_content .homepage_title span:last-child {
+  margin-top: 1.5vh;
+  font-size: 1.2em;
+  font-style: italic;
+}
+body .homepage .homepage_content .authbtn {
+  padding: 2vh 2vw;
+  background-color: #CB527B;
+  border-radius: 5px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+body .homepage .homepage_content .authbtn:hover {
+  transform: scaleY(1.2);
+}
+body .homepage .homepage_content .nav .h_btn {
+  font-size: 1.2rem;
+  margin-right: 2vw;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+body .homepage .homepage_content .nav .h_btn:hover {
+  opacity: 0.3;
+}
+body .homepage .circle {
+  border: 20px solid #E6195E;
+  border-radius: 50%;
+}
+body .homepage .square {
+  border: 15px solid #E6195E;
+}
+body .homepage #a {
+  position: absolute;
+  width: 30vh;
+  height: 30vh;
+  z-index: 1;
+  top: -11vh;
+  left: -8vw;
+}
+body .homepage #b {
+  position: absolute;
+  right: -10vh;
+  top: 50vh;
+  height: 30vh;
+  width: 30vh;
+  z-index: 3;
 }
 body footer {
   position: fixed;
@@ -186,14 +409,11 @@ body footer {
   height: 5vh;
   width: 100%;
   bottom: 0;
-  background-color: #E6195E;
-  color: white;
+  background-color: #F0D9FF;
+  color: #7F7C82;
 }
 body footer .dev {
   height: 100%;
-}
-body footer .dev > * {
-  margin-right: 1vw;
 }
 body footer .dev .link {
   height: 100%;
@@ -211,7 +431,7 @@ body .notification {
   z-index: 1000;
 }
 body .notification .notification-content {
-  color: white;
+  color: #7F7C82;
   position: relative;
 }
 body .notification .notification-content .countdown {
@@ -220,7 +440,7 @@ body .notification .notification-content .countdown {
   left: 0;
   width: 100%;
   height: 2px;
-  background: #fff;
+  background: #7F7C82;
   animation: countdown 5s ease-in-out;
 }
 body .load {
@@ -232,7 +452,7 @@ body .load {
 body .load::after {
   position: absolute;
   content: "Подождите";
-  color: #fff;
+  color: #7F7C82;
   font-weight: 800;
 }
 body .load .square {
@@ -248,6 +468,7 @@ body .modal {
   animation-timing-function: ease;
   background-color: rgba(0, 0, 0, 0.4);
   transition: opacity 0.5s;
+  z-index: 1000;
 }
 body .modal:focus {
   outline: none;
@@ -257,77 +478,11 @@ body .modal.visible {
 }
 body .modal .form {
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: #F3F1F5;
+  color: #7F7C82;
 }
 body .modal .form > * {
   margin-top: 1vh;
-}
-body .modal .form .input_group {
-  position: relative;
-  width: 30vw;
-}
-body .modal .form .input_group input {
-  width: 100%;
-  height: auto;
-  padding: 1vh 0.5vh;
-  box-sizing: border-box;
-  border: 1px solid #000;
-  background-color: #ffffff;
-}
-body .modal .form .input_group i {
-  width: 3vh;
-  height: 3vh;
-  position: absolute;
-  right: 0;
-  top: 1.2vh;
-  opacity: 0;
-  transition: all 0.2s;
-}
-body .modal .form .input_group.success input {
-  border-color: rgba(0, 240, 0, 0.5);
-}
-body .modal .form .input_group.success i.fi-rs-check {
-  opacity: 1;
-  color: rgba(0, 240, 0, 0.9);
-}
-body .modal .form .input_group.error input {
-  border-color: rgba(240, 0, 0, 0.9);
-}
-body .modal .form .input_group.error i.fi-rs-exclamation {
-  opacity: 1;
-  color: rgba(240, 0, 0, 0.9);
-}
-body .modal .form .input_group.error.message .error_message {
-  height: 100%;
-}
-body .modal .form .input_group.error.type_err .error_type {
-  height: 100%;
-}
-body .modal .form .input_group .error_message,
-body .modal .form .input_group .error_type {
-  font-size: 0.8em;
-  color: rgba(240, 0, 0, 0.9);
-  overflow: hidden;
-  height: 0;
-}
-body .modal .form .input_group input:focus + .field_name, body .modal .form .input_group input:valid + .field_name {
-  font-size: 0.8em;
-  color: #afbdcf;
-  top: -0.75vh;
-  left: 2vh;
-  background: #ffffff;
-  padding: 0px 5px 0px 5px;
-}
-body .modal .form .input_group .field_name {
-  position: absolute;
-  font-size: 1em;
-  top: 1vh;
-  left: 0.5vh;
-  pointer-events: none;
-  transition: 0.2s ease all;
-}
-body .modal .form .input_group input:focus {
-  outline: none;
 }
 body .modal .form .type_selector {
   width: 100%;
@@ -339,6 +494,7 @@ body .modal .form .type_selector > * {
   transition: all 0.2s;
 }
 body .modal .form .type_selector *.active {
+  color: white;
   background-color: rgba(0, 0, 0, 0.4);
 }
 body .modal .form .type_selector *:hover {
@@ -353,7 +509,7 @@ body .modal .form .smart_options {
 }
 body .modal .form .smart_options.active {
   margin: 1vh 0;
-  border-bottom: 2px solid #000;
+  border-bottom: 1px solid #000;
   height: auto;
 }
 body .modal .form .smart_options.active .qm_title {
@@ -362,13 +518,12 @@ body .modal .form .smart_options.active .qm_title {
   z-index: 5;
   overflow: hidden;
   text-align: center;
-  background-color: #fff;
 }
 body .modal .form .smart_options.active .qm_title::after, body .modal .form .smart_options.active .qm_title::before {
   content: "";
   display: inline-block;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #000;
   z-index: -1;
   position: relative;
@@ -401,7 +556,7 @@ body .modal .form .btn_container {
 }
 body .modal .content {
   position: relative;
-  background-color: #363636;
+  background-color: #F3F1F5;
   color: #fff;
   width: 20vh;
   overflow-y: hidden;
@@ -433,9 +588,9 @@ body .modal .notice {
   position: relative;
   margin-top: 1vh;
   width: 60vw;
-  background-color: #363636;
+  background-color: #EDFCF1;
   font-size: 1em;
-  color: white;
+  color: #7F7C82;
 }
 body .modal .notice .options div {
   margin-top: 1vh;
@@ -443,14 +598,18 @@ body .modal .notice .options div {
 }
 body .modal .notice.update .btn.readMore a {
   text-decoration: none;
-  color: white;
+  color: #7F7C82;
 }
 body .modal .notice.apply {
-  background: #fff;
+  background: #494748;
 }
-body .modal .notice.apply input {
+body .modal .notice.apply .input_group {
   margin-top: 1vh;
-  width: 95%;
+  width: 100%;
+}
+body .modal .notice.apply .input_group .error_type,
+body .modal .notice.apply .input_group .error_message {
+  margin-top: 0;
 }
 body .modal .notice.Ntitle {
   overflow-y: hidden;
@@ -459,7 +618,7 @@ body .modal .notice.Ntitle .btn.back {
   position: absolute;
   background: url("/back.e6f29605.png") no-repeat center center;
   filter: brightness(0) invert(1);
-  background-size: contain;
+  background-size: 2vw;
   left: 1%;
   width: 2.5vw;
   height: 100%;
@@ -497,7 +656,7 @@ body header {
   padding: 0 3vw;
   box-sizing: border-box;
   height: 6.5vh;
-  background: #E6195E;
+  background: #BFA2DB;
   color: white;
 }
 body header .container {
@@ -569,9 +728,13 @@ body main .qItem, body main .QmakerContainer {
   align-items: center;
   width: 15vw;
   height: 40vh;
-  color: white;
+  color: #7F7C82;
+  background-color: #ffffff;
   animation: fold 0.5s;
   animation-timing-function: ease;
+  -webkit-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
+  -moz-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
+  box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
 }
 body main .qItem .quicklook, body main .QmakerContainer .quicklook {
   position: absolute;
@@ -579,8 +742,8 @@ body main .qItem .quicklook, body main .QmakerContainer .quicklook {
   height: 100%;
   top: 0;
   left: 0;
-  background-color: #484848;
-  color: white;
+  background-color: #EDFCF1;
+  color: #7F7C82;
   font-weight: 400;
   z-index: 1;
   animation: fold 0.5s;
@@ -602,10 +765,10 @@ body main .QmakerContainer::after {
   position: absolute;
   width: 100%;
   height: 0;
-  background: rgba(245, 191, 66, 0.7);
+  background: rgba(10, 200, 200, 0.2);
   background-size: cover;
   transition: height 0.5s;
-  z-index: -1;
+  z-index: 1;
 }
 body main .qItem:hover::after,
 body main .QmakerContainer:hover::after {
@@ -629,7 +792,7 @@ body main .qList .subject-name {
   height: 5vh;
   color: #fff;
   font-weight: bold;
-  background-color: #E6195E;
+  background-color: #BFA2DB;
 }
 body main .qList .subject-name .back {
   position: absolute;
@@ -676,22 +839,22 @@ body main .qList ul li.item {
   padding: 0 1.7vw;
   box-sizing: border-box;
   margin-bottom: 1vh;
-  background-color: #CE517B;
+  background-color: #f7c5fd;
   overflow-y: hidden;
 }
 body main .qList ul li.item > * {
   box-sizing: border-box;
-  color: white;
+  color: #7F7C82;
   height: 100%;
 }
 body main .qList ul li.item.u {
-  background-color: #ee4b82;
+  background-color: #f7c5fd;
 }
 body main .qList ul li.item .position {
   position: absolute;
   left: 1%;
   width: 4vh;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 body main .qList ul li.item .btn_container {
   position: absolute;
@@ -700,9 +863,12 @@ body main .qList ul li.item .btn_container {
   width: 8vh;
   font-weight: bold;
 }
+body main .qList ul li.item .btn_container .btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #7F7C82;
+}
 body main .qList ul li.item .btn.vk {
   text-decoration: none;
-  color: #fff;
   width: 50%;
 }
 
