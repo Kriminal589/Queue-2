@@ -204,11 +204,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 var QueueBlock = /*#__PURE__*/function () {
-  function QueueBlock(values) {
+  function QueueBlock(values, canAddQueue) {
     _classCallCheck(this, QueueBlock);
 
     this.values = values;
     this.min = true;
+    this.canAddQueue = canAddQueue;
   }
 
   _createClass(QueueBlock, [{
@@ -244,16 +245,15 @@ function div(content) {
 }
 
 var templateList = function templateList(content, list, idStudent) {
-  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"p_btn copy\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"p_btn exit\" data-action=\"exit\"></div>\n    </div>\n    <div class=\"p_btn back\" data-action=\"back\"></div>"), "subject-name center-items"); //const list = require('../test/queueList.json');
-
+  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"p_btn copy\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"p_btn exit\" data-action=\"exit\" data-target=").concat(content.idQueue, "></div>\n    </div>\n    <div class=\"p_btn back\" data-action=\"back\"></div>"), "subject-name center-items");
   HTML += ul(list.responseAboutStudentList.map(function (item, index) {
-    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "vk.com/id".concat(item.id));
+    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "http://vk.com/id".concat(item.idStudent));
   }).join(""), "custom-scrollbar");
   return div(HTML, "qList", "queueBody");
 };
 
 var template_list = function template_list(content, index, vk_link) {
-  return li("\n      <div class=\"position center-items\">".concat(index + 1, "</div>\n      <span class=\"name center-items\">").concat(content, "</span>\n      <div class=\"btn_container flex-row\">\n          <a class=\"btn vk\" href=").concat(vk_link, ">VK</a>\n          <div class=\"btn swap\" data-action=\"swap\" data-target=\"id\">SWAP</div>\n      </div>\n    "), 'item center-items');
+  return li("\n      <div class=\"position center-items\">".concat(index + 1, "</div>\n      <span class=\"name center-items\">").concat(content, "</span>\n      <div class=\"btn_container flex-row\">\n          <a class=\"btn vk\" href=").concat(vk_link, " data-action='link'>VK</a>\n          <div class=\"btn swap\" data-action=\"swap\" data-target=\"id\">SWAP</div>\n      </div>\n    "), 'item center-items');
 };
 
 var ul = function ul(content, class_, id) {
@@ -353,9 +353,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-'use strict';
+"use strict";
 
-require('fs');
+require("fs");
 
 var ip = "25.84.228.15";
 var port = "8080";
@@ -556,18 +556,17 @@ var serverRequest = /*#__PURE__*/function () {
       }
 
       return getListNotice;
-    }() // queue/add?subjectName=OOP&type=0&dependOnApps=0&countApps=0&dependOnDate=0&dateToPass=0
-
+    }()
   }, {
-    key: "createQ",
+    key: "leaveFromQueue",
     value: function () {
-      var _createQ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(name, type, dependOnApps, CountApps, DependOnDate, DateToPass, idS) {
+      var _leaveFromQueue = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(idQueue, idStudent) {
         return _regeneratorRuntime().wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
                 _context8.next = 2;
-                return sendRequestAsync("queue/add?subjectName=".concat(name, "&type=").concat(boolToInt(type), "&dependOnApps=").concat(boolToInt(dependOnApps), "&countApps=").concat(CountApps, "&dependOnDate=").concat(boolToInt(DependOnDate), "&dateToPass=").concat(DateToPass, "idStudent=").concat(id));
+                return sendRequestAsync("listOfQueues/ByIdStudentAndQueue/".concat(idStudent, "/").concat(idQueue));
 
               case 2:
                 return _context8.abrupt("return", _context8.sent);
@@ -580,22 +579,22 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee8);
       }));
 
-      function createQ(_x10, _x11, _x12, _x13, _x14, _x15, _x16) {
-        return _createQ.apply(this, arguments);
+      function leaveFromQueue(_x10, _x11) {
+        return _leaveFromQueue.apply(this, arguments);
       }
 
-      return createQ;
+      return leaveFromQueue;
     }()
   }, {
-    key: "request",
+    key: "createQ",
     value: function () {
-      var _request = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(url) {
+      var _createQ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(name, type, dependOnApps, CountApps, DependOnDate, DateToPass, idS) {
         return _regeneratorRuntime().wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
                 _context9.next = 2;
-                return sendRequestAsyncURL(url);
+                return sendRequestAsync("queue/add?subjectName=".concat(name, "&type=").concat(boolToInt(type), "&dependOnApps=").concat(boolToInt(dependOnApps), "&countApps=").concat(CountApps, "&dependOnDate=").concat(boolToInt(DependOnDate), "&dateToPass=").concat(DateToPass, "&idStudent=").concat(idS));
 
               case 2:
                 return _context9.abrupt("return", _context9.sent);
@@ -608,11 +607,11 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee9);
       }));
 
-      function request(_x17) {
-        return _request.apply(this, arguments);
+      function createQ(_x12, _x13, _x14, _x15, _x16, _x17, _x18) {
+        return _createQ.apply(this, arguments);
       }
 
-      return request;
+      return createQ;
     }()
   }]);
 
@@ -625,7 +624,7 @@ var boolToInt = function boolToInt(int) {
   return int ? 1 : 0;
 };
 
-function sendRequestAsync(_x18) {
+function sendRequestAsync(_x19) {
   return _sendRequestAsync.apply(this, arguments);
 }
 
@@ -645,7 +644,7 @@ function _sendRequestAsync() {
               method: "GET",
               headers: {
                 "Content-Type": "application/json",
-                "Authorization": JSON.stringify("12345")
+                Authorization: JSON.stringify("12345")
               }
             });
 
@@ -668,53 +667,6 @@ function _sendRequestAsync() {
     }, _callee10, null, [[3, 11]]);
   }));
   return _sendRequestAsync.apply(this, arguments);
-}
-
-function sendRequestAsyncURL(_x19) {
-  return _sendRequestAsyncURL.apply(this, arguments);
-}
-
-function _sendRequestAsyncURL() {
-  _sendRequestAsyncURL = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(url_to) {
-    var response;
-    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
-      while (1) {
-        switch (_context11.prev = _context11.next) {
-          case 0:
-            _loadBar.$LoadBar.load();
-
-            _context11.prev = 1;
-            _context11.next = 4;
-            return fetch(url_to, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json"
-              }
-            });
-
-          case 4:
-            response = _context11.sent;
-
-            _loadBar.$LoadBar.destroy();
-
-            return _context11.abrupt("return", response.json());
-
-          case 9:
-            _context11.prev = 9;
-            _context11.t0 = _context11["catch"](1);
-
-            _loadBar.$LoadBar.destroy();
-
-            return _context11.abrupt("return", -1);
-
-          case 13:
-          case "end":
-            return _context11.stop();
-        }
-      }
-    }, _callee11, null, [[1, 9]]);
-  }));
-  return _sendRequestAsyncURL.apply(this, arguments);
 }
 },{"./loadBar":"classes/loadBar.js","fs":"../node_modules/parcel-bundler/src/builtins/_empty.js"}],"plugins/ApplyNotice.js":[function(require,module,exports) {
 "use strict";
@@ -908,6 +860,9 @@ function Auth(callback) {
                 name: "".concat(first_name, " ").concat(last_name)
               }));
               document.body.removeChild($btn_auth);
+
+              _serverReq.serverRequest.addStudent(id, "".concat(first_name, " ").concat(last_name));
+
               resolve(false);
             } else {
               resolve(true);
@@ -1143,11 +1098,16 @@ var InviteApply = function InviteApply(hash) {
     if (data) {
       var id = (0, _util.getId)();
 
-      _serverReq.serverRequest.appendQ(id, hash, data);
+      _serverReq.serverRequest.appendQ(id, hash, data).then(function (response) {
+        history.pushState('', document.title, window.location.pathname);
+        window.location.reload();
 
-      window.location.hash = "";
-      window.location.reload();
-      console.log("student ".concat(id, " with app ").concat(data, " added to Q hash:").concat(hash));
+        if (response !== -1) {
+          console.log("student ".concat(id, " with app ").concat(data, " added to Q hash:").concat(hash));
+        } else {
+          $notice('Данная ссылка не работает!');
+        }
+      });
     }
   });
 };
@@ -1320,7 +1280,11 @@ var $Qmaker = function $Qmaker(callback) {
   });
 
   $name.oninput = function (e) {
-    return toggleStateById('name_input', e.target.value);
+    toggleStateById('name_input', e.target.value);
+
+    if (e.data === ' ') {
+      e.target.value = e.target.value.replace(' ', '');
+    }
   };
 
   $apps.oninput = controlInput;
@@ -1440,7 +1404,7 @@ var QList = /*#__PURE__*/function () {
                               idQueue: idQueue,
                               name: name,
                               positionStudent: positionStudent
-                            }));
+                            }, _this.canAddQueue));
 
                           case 5:
                           case "end":
@@ -1546,10 +1510,10 @@ var QList = /*#__PURE__*/function () {
 
               case 2:
                 document.getElementById("content-main").innerHTML = _context4.sent;
-                this.addQuicklook();
-                if (!this.eventListeners) this.addEventListeners();
+                if (this.min) //this.addQuicklook();
+                  if (!this.eventListeners) this.addEventListeners();
 
-              case 5:
+              case 4:
               case "end":
                 return _context4.stop();
             }
@@ -1571,17 +1535,23 @@ var QList = /*#__PURE__*/function () {
   }, {
     key: "quicklook",
     value: function quicklook(e) {
+      var _this2 = this;
+
       e.preventDefault();
 
       if (e.target.dataset.action === "open" && (e.ctrlKey || e.metaKey) && this.previewSelected === -1) {
-        this.previewSelected = e.target.id;
-        this.$__preview__ = document.createElement("div");
-        this.$__preview__.classList.add("quicklook", "center-items", "flex-column");
-        this.$__preview__.innerHTML = "<div class=\"quicklook__title\">QuickLook</div><span>".concat(e.target.dataset.name, ":</span>");
-        this.$__preview__.innerHTML += [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(function (e, index) {
-          return "\n                <div class=\"quicklook__item ".concat(index + 1 === 3 ? "u" : "", "\">").concat(index + 1, " \u0410\u043D\u0434\u0440\u0435\u0439 \u0411\u0430\u0437\u0443\u043D\u043E\u0432</div>\n            ");
-        }).join("\n");
-        e.currentTarget.appendChild(this.$__preview__);
+        _serverReq.serverRequest.getListOfStudentInQueueById(e.target.id).then(function (data) {
+          _this2.previewSelected = e.target.id;
+          _this2.$__preview__ = document.createElement("div");
+
+          _this2.$__preview__.classList.add("quicklook", "center-items", "flex-column");
+
+          _this2.$__preview__.innerHTML = "<div class=\"quicklook__title\">QuickLook</div><span>".concat(e.target.dataset.name, ":</span>");
+          _this2.$__preview__.innerHTML += data.responseAboutStudentList.map(function (item, index) {
+            return "<div class=\"quicklook__item ".concat(item.idStudent === (0, _util.getId)() ? "u" : "", "\">").concat(index + 1, " ").concat(item.nameOfStudent, "</div>");
+          }).join('');
+          e.target.appendChild(_this2.$__preview__);
+        });
       }
     }
     /**
@@ -1595,55 +1565,54 @@ var QList = /*#__PURE__*/function () {
       e.preventDefault();
 
       if (this.previewSelected === e.target.id) {
-        this.previewSelected = -1;
         e.currentTarget.removeChild(this.$__preview__);
+        this.previewSelected = -1;
       }
     }
   }, {
     key: "addQuicklook",
     value: function addQuicklook() {
-      var _this2 = this;
+      var _this3 = this;
 
       document.querySelectorAll(".qItem").forEach(function (elem) {
-        elem.addEventListener("mouseover", _this2.quicklook.bind(_this2));
-        elem.addEventListener("mouseleave", _this2.closeQuicklook.bind(_this2));
+        elem.addEventListener("mouseover", _this3.quicklook.bind(_this3));
+        elem.addEventListener("mouseleave", _this3.closeQuicklook.bind(_this3));
       });
     }
   }, {
     key: "addEventListeners",
     value: function addEventListeners() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (_classPrivateFieldGet(this, _list).length > 0 || this.canAddQueue) {
         this.eventListeners = true;
         document.getElementById("content-main").addEventListener("click", function (e) {
           e.preventDefault();
           var action = e.target.dataset.action;
-          console.log(action);
 
           if (action) {
             switch (action) {
               case "open":
                 {
                   console.log("open");
-                  _this3.selected = _classPrivateFieldGet(_this3, _list).find(function (item) {
+                  _this4.selected = _classPrivateFieldGet(_this4, _list).find(function (item) {
                     return item.ID === +e.target.dataset.id;
                   });
-                  _this3.selected.min = false;
-                  _this3.min = false;
+                  _this4.selected.min = false;
+                  _this4.min = false;
 
-                  _this3.render();
+                  _this4.render();
 
                   break;
                 }
 
               case "back":
                 {
-                  _this3.allMin();
+                  _this4.allMin();
 
-                  _this3.selected = null;
+                  _this4.selected = null;
 
-                  _this3.render();
+                  _this4.render();
 
                   break;
                 }
@@ -1662,20 +1631,22 @@ var QList = /*#__PURE__*/function () {
                 {
                   (0, _Qmaker.$Qmaker)( /*#__PURE__*/function () {
                     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(options) {
-                      var name, type, dependOnApps, CountApps, DependOnDate, DateToPass;
+                      var name, type, dependOnApps, CountApps, DependOnDate, DateToPass, hash;
                       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
                         while (1) {
                           switch (_context5.prev = _context5.next) {
                             case 0:
                               name = options.name, type = options.type, dependOnApps = options.dependOnApps, CountApps = options.CountApps, DependOnDate = options.DependOnDate, DateToPass = options.DateToPass;
                               _context5.next = 3;
-                              return _serverReq.serverRequest.createQ(name, type, dependOnApps, CountApps, DependOnDate, DateToPass);
+                              return _serverReq.serverRequest.createQ(name, type, dependOnApps, CountApps, DependOnDate, DateToPass, (0, _util.getId)());
 
                             case 3:
-                              _context5.next = 5;
-                              return _this3.render();
+                              hash = _context5.sent.response;
+                              (0, _util.copyToClipboard)("http://25.85.15.23:1234/#".concat(hash));
+                              _context5.next = 7;
+                              return _this4.render();
 
-                            case 5:
+                            case 7:
                             case "end":
                               return _context5.stop();
                           }
@@ -1694,10 +1665,15 @@ var QList = /*#__PURE__*/function () {
                 {
                   break;
                 }
+
+              case "exit":
+                {
+                  _serverReq.serverRequest.leaveFromQueue(e.target.dataset.target, (0, _util.getId)()).then(function () {//window.location.reload();
+                  });
+                }
             }
           }
         }, true);
-        this.addQuicklook();
       }
     }
   }, {
@@ -1706,7 +1682,6 @@ var QList = /*#__PURE__*/function () {
   }, {
     key: "backButtonClick",
     value: function backButtonClick() {
-      console.log("click back button");
       this.allMin();
       this.min = true;
       this.selected = null;
@@ -2103,6 +2078,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+  var hash;
   return _regeneratorRuntime().wrap(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -2110,9 +2086,17 @@ window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime
           VK.init({
             apiId: 8229660
           });
-          (0, _homepage.homepage)(main);
+          hash = document.location.hash.replace('#', '');
 
-        case 2:
+          if (hash.length > 0) {
+            (0, _util.Auth)(function () {
+              (0, _notice.InviteApply)(hash);
+            });
+          } else {
+            (0, _homepage.homepage)(main);
+          }
+
+        case 3:
         case "end":
           return _context.stop();
       }
@@ -2121,18 +2105,11 @@ window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime
 }));
 
 var main = function main(error) {
-  console.log(error);
-  var hash = document.location.hash.replace('#', '');
+  var app = new _App.App();
 
-  if (hash) {
-    (0, _notice.InviteApply)(hash);
-  } else {
-    var app = new _App.App();
-
-    if (error) {
-      app.error = true;
-      app.render();
-    }
+  if (error) {
+    app.error = true;
+    app.render();
   }
 };
 

@@ -8,12 +8,12 @@ import { getId } from "../util/util";
 
 export class QList {
     #list = [];
-    constructor(canAddQueue = false) {
+    constructor() {
         this.selected = null;
         this.min = true;
-        this.canAddQueue = canAddQueue;
-        this.eventListeners = false
-        this.previewSelected = -1
+        this.canAddQueue = false;
+        this.eventListeners = false;
+        this.previewSelected = -1;
         this.setup();
     }
 
@@ -23,14 +23,13 @@ export class QList {
         if (values != -1) {
             await Promise.all(
                 values.map(async (item) => {
-                    // const name = (
-                    //     await serverRequest.getQueuePropertyById(item.idQueue)
-                    // ).subjectName;
-                    const name = 'test'
+                    const name = (
+                        await serverRequest.getQueuePropertyById(item.idQueue)
+                    ).subjectName;
                     const { idQueue, positionStudent } = item;
 
                     this.#list.push(
-                        new QueueBlock({ idQueue, name, positionStudent }),
+                        new QueueBlock({ idQueue, name, positionStudent }, this.canAddQueue),
                     );
                 }),
             );
@@ -50,16 +49,16 @@ export class QList {
         var html = this.min
             ? this.#list.map((item) => item.toHtml()).join("")
             : this.selected.toListHtml(
-                serverRequest.getListOfStudentInQueueById(
-                  this.selected.ID,
-                ),
+                  await serverRequest.getListOfStudentInQueueById(
+                      this.selected.ID,
+                  ),
               );
         if (this.min && this.canAddQueue) {
             html += `
-                <div class="QmakerContainer border-2px center-items">
-                <div class="Qmaker" id="Qmaker" data-action="create">
-                    <div class="btn about" id="QmakerAdd">Создать очередь</div>
-                </div>
+                <div class="QmakerContainer center-items" data-action="create">
+                    <div class="Qmaker center-items" id="Qmaker" data-action="create">
+                        Создать очередь
+                    </div>
                 </div>
             `;
         }
@@ -68,58 +67,65 @@ export class QList {
 
     async render() {
         document.getElementById("content-main").innerHTML = await this.toHtml();
-        this.addQuicklook()
+        if (this.min) //this.addQuicklook();
         if (!this.eventListeners) this.addEventListeners();
     }
     /**
-     * 
-     * @param {MouseEvent} e 
+     *
+     * @param {MouseEvent} e
      */
     quicklook(e) {
-        e.preventDefault()
-        if (e.target.dataset.action === 'open' && (e.ctrlKey || e.metaKey) && this.previewSelected === -1) {
-            this.previewSelected = e.target.id
-            this.$__preview__ = document.createElement('div')
-            this.$__preview__.classList.add('quicklook','center-items', 'flex-column')
-            this.$__preview__.innerHTML = `<div class="quicklook__title">QuickLook</div><span>${e.target.dataset.name}:</span>`
-            this.$__preview__.innerHTML += [1,2,3,4,5,6,7,8,9,10,11].map((e, index) => `
-                <div class="quicklook__item ${index+1===3 ? "u" : ''}">${index+1} Андрей Базунов</div>
-            `).join('\n')
-            e.currentTarget.appendChild(this.$__preview__)
+        e.preventDefault();
+        if (
+            e.target.dataset.action === "open" &&
+            (e.ctrlKey || e.metaKey) &&
+            this.previewSelected === -1
+        ) {
+            serverRequest.getListOfStudentInQueueById(e.target.id).then(data => {
+                this.previewSelected = e.target.id;
+                this.$__preview__ = document.createElement("div");
+                this.$__preview__.classList.add(
+                    "quicklook",
+                    "center-items",
+                    "flex-column",
+                );
+                this.$__preview__.innerHTML = `<div class="quicklook__title">QuickLook</div><span>${e.target.dataset.name}:</span>`;
+                this.$__preview__.innerHTML += data.responseAboutStudentList.map((item, index) => `<div class="quicklook__item ${item.idStudent === getId() ? "u" : ""}">${index+1} ${item.nameOfStudent}</div>`).join('')
+                e.target.appendChild(this.$__preview__);
+            })
         }
     }
     /**
-     * 
-     * @param {MouseEvent} e 
+     *
+     * @param {MouseEvent} e
      */
     closeQuicklook(e) {
-        e.preventDefault()
+        e.preventDefault();
         if (this.previewSelected === e.target.id) {
-            this.previewSelected = -1
-            e.currentTarget.removeChild(this.$__preview__)
+            e.currentTarget.removeChild(this.$__preview__);
+            this.previewSelected = -1;
         }
     }
 
     addQuicklook() {
-        document.querySelectorAll('.qItem').forEach(elem => {
-            elem.addEventListener('mouseover', this.quicklook.bind(this))
-            elem.addEventListener('mouseleave', this.closeQuicklook.bind(this))
-        })
+        document.querySelectorAll(".qItem").forEach((elem) => {
+            elem.addEventListener("mouseover", this.quicklook.bind(this));
+            elem.addEventListener("mouseleave", this.closeQuicklook.bind(this));
+        });
     }
 
     addEventListeners() {
-        if (this.#list.length > 0) {
+        if (this.#list.length > 0 || this.canAddQueue) {
             this.eventListeners = true;
-            document
-                .getElementById("content-main")
-                .addEventListener("click", (e) => {
-                    e.preventDefault()
+            document.getElementById("content-main").addEventListener(
+                "click",
+                (e) => {
+                    e.preventDefault();
                     const action = e.target.dataset.action;
-
                     if (action) {
                         switch (action) {
                             case "open": {
-                                console.log('open');
+                                console.log("open");
                                 this.selected = this.#list.find(
                                     (item) => item.ID === +e.target.dataset.id,
                                 );
@@ -140,14 +146,41 @@ export class QList {
                                         +e.target.dataset.id,
                                     )
                                     .then((item) => {
-                                        copyToClipboard(createQueueText(item.responseAboutStudentList))
-                                        $notice('Очередь скопирована в буфер обмена')
+                                        copyToClipboard(
+                                            createQueueText(
+                                                item.responseAboutStudentList,
+                                            ),
+                                        );
+                                        $notice(
+                                            "Очередь скопирована в буфер обмена",
+                                        );
                                     });
                                 break;
                             }
                             case "create": {
                                 $Qmaker(async (options) => {
-                                    //! await serverRequest.addQueue(options)
+                                    const {
+                                        name,
+                                        type,
+                                        dependOnApps,
+                                        CountApps,
+                                        DependOnDate,
+                                        DateToPass,
+                                    } = options;
+
+                                    const hash = (await serverRequest.createQ(
+                                        name,
+                                        type,
+                                        dependOnApps,
+                                        CountApps,
+                                        DependOnDate,
+                                        DateToPass,
+                                        getId()
+                                    )).response
+
+                                    copyToClipboard(
+                                        `http://25.85.15.23:1234/#${hash}`
+                                    );
                                     await this.render();
                                 });
                                 break;
@@ -155,17 +188,22 @@ export class QList {
                             case "delete": {
                                 break;
                             }
+                            case "exit" : {
+                                serverRequest.leaveFromQueue(e.target.dataset.target, getId()).then(() => {
+                                    //window.location.reload();
+                                })
+                            }
                         }
                     }
-                }, true);
-            this.addQuicklook()
+                },
+                true,
+            );
         }
     }
 
     deleteEventListeners() {}
 
     backButtonClick() {
-        console.log("click back button");
         this.allMin();
         this.min = true;
         this.selected = null;

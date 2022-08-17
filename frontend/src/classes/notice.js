@@ -1,5 +1,5 @@
-import { getListNotice } from "./serverReq";
-import { apply } from "./ApplyNotice"
+import { getListNotice, serverRequest } from "./serverReq";
+import { apply } from "../plugins/ApplyNotice"
 import { getId } from "../util/util";
 
 export class Notice {
@@ -80,7 +80,11 @@ export class Notice {
                     break;
                 }
                 case "apply": {
-                    apply("Введите номер задания", input()).then((data) => {
+                    apply("Введите номер задания", {
+                        id : 'apps_input',
+                        type : 'input',
+                        html : input()
+                    }).then((data) => {
                         if (data) {
                             this.noticeList = this.noticeList.filter(
                                 (item) => item.id !== +content,
@@ -191,21 +195,43 @@ export class Notice {
 }
 
 export const InviteApply = (hash) => {
-    apply("Введите номер задания", input()).then((data) => {
+    apply("Введите номер задания", {
+        id : 'apps_input',
+        type : 'input',
+        html : input()
+    }).then((data) => {
         if (data) {
-            // ! serverReq
             const id = getId();
-            window.location.hash = "";
-            window.location.reload();
-            console.log(
-                `student ${id} with app ${data} added to Q hash:${hash}`,
-            );
+            serverRequest.appendQ(id, hash, data).then((response) => {
+                history.pushState('', document.title, window.location.pathname)
+                window.location.reload();
+                if (response !== -1) {
+                    console.log(
+                        `student ${id} with app ${data} added to Q hash:${hash}`,
+                    );
+                }
+                else {
+                    $notice('Данная ссылка не работает!')
+                }
+            })
         }
     });
 };
 
-const input = () =>
-    '<input type="number" id="appNumber" class="padding-content border-2px" required>';
+const input = () => `
+    <div class="input_group" id="input_a">
+        <input id="apps_input" type="number" min="1" max="99" maxlength="2" data-to="CountApps" autocomplete="off" required="">
+        <label class="field_name">Ваша задача</label>
+        <i class="fi fi-rs-check"></i>
+        <i class="fi fi-rs-exclamation"></i>
+        <div class="error_message center-items">
+            Поле должно быть заполнено!
+        </div>
+        <div class="error_type center-items">
+            Недопустимый символ или значение!
+        </div>
+    </div>
+`
 
 export const $notice = (text) => {
     const cooldown = 5000;

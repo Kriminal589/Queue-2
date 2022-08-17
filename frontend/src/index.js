@@ -1,27 +1,28 @@
 import "./styles/main.scss";
 import { App } from "./classes/App";
 import { Auth } from "./util/util";
-import {$Qmaker} from "./classes/Qmaker"
 import { InviteApply } from "./classes/notice";
+import { homepage } from "./plugins/homepage"
 
 window.onload = async () => {
-	//$Qmaker()
     VK.init({ apiId: 8229660 });
-    Auth(main);
+	const hash = document.location.hash.replace('#', '')
+	if (hash.length > 0) {
+		Auth(() => {
+			InviteApply(hash);
+		})
+	}
+	else {
+		homepage(main)
+	}
 };
 
-const main = async (error) => {
-    console.log(error);
-    const hash = document.location.hash.replace('#', '')
-    if (hash) {
-        InviteApply(hash);
-    } else {
-        const app = new App();
-        if (error) {
-            app.error = true;
-            app.render();
-        }
-    }
+const main = error => {
+	const app = new App();
+	if (error) {
+		app.error = true;
+		app.render();
+	}
 };
 
 async function send() {

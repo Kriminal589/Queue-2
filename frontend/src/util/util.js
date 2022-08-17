@@ -23,10 +23,16 @@ export function ReloadName() {
 
 export const getName = () => JSON.parse(localStorage.getItem("vk_auth")).name
 export const getId = () => JSON.parse(localStorage.getItem("vk_auth")).id
+export const validSession = () => {
+  const data = JSON.parse(localStorage.getItem("vk_auth"));
+  return data && data.expire > getTimeUnix()
+}
+
+export const getPage = () => localStorage.getItem("page")
+export const setPage = value => localStorage.setItem("page", value)
 
 export function Auth(callback) {
-  const data = JSON.parse(localStorage.getItem("vk_auth"));
-  if (data && data.expire > getTimeUnix()) {
+  if (validSession()) {
     callback(false);
   } else {
     new Promise((resolve, reject) => {
@@ -54,6 +60,7 @@ export function Auth(callback) {
                 })
               );
               document.body.removeChild($btn_auth);
+              serverRequest.addStudent(id, `${first_name} ${last_name}`);
               resolve(false);
             } else {
               resolve(true);

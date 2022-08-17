@@ -21,14 +21,42 @@ export const apply = (text, content={
 		`;
         document.body.appendChild($apply);
 
-        $apply.onkeydown = e => {
-            e.preventDefault()
-            console.log(e.key);
-            if (e.key === 'escape') {
-                resolve(false);
-                document.body.removeChild($apply);
+        const toggleStateById = (id, flag, message) => {
+            const $elem = document.getElementById(id)
+            if (flag) {
+                $elem.classList.remove('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+                $elem.classList.add('success');
+            }
+            else {
+                $elem.classList.add('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+                $elem.classList.remove('success');
             }
         }
+
+        if (content.type === 'input') {
+            const $input = document.getElementById(content.id)
+            $input.oninput = e => {
+                e.preventDefault();
+                const number = e.target.valueAsNumber
+                
+                if (number > 100 || number <= 0 || (isNaN(parseInt(e.data)) && e.data)) {
+                    e.target.value = ''
+                    toggleStateById(e.target.parentNode.id, 0, 2)
+                }
+                else {
+                    toggleStateById(e.target.parentNode.id, 1)
+                }
+            }
+        }
+
+        // $apply.onkeydown = e => {
+        //     e.preventDefault()
+        //     console.log(e.key);
+        //     if (e.key === 'escape') {
+        //         resolve(false);
+        //         document.body.removeChild($apply);
+        //     }
+        // }
 
         $apply.addEventListener("click", (e) => {
             const action = e.target.dataset.action;
@@ -40,6 +68,9 @@ export const apply = (text, content={
                             document.getElementById(content.id).value;
                         if (value) {
                             resolve(value);
+                        }
+                        else {
+                            toggleStateById('input_a', 0, 1)
                         }
                     } else {
                         resolve(true);

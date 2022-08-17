@@ -1,5 +1,5 @@
 import { $notice } from "./notice";
-import { apply } from './ApplyNotice'
+import { apply } from '../plugins/ApplyNotice'
 
 const capitalize = s => (s && s[0].toUpperCase() + s.slice(1)) || ""
 
@@ -19,9 +19,9 @@ export const $Qmaker = function (callback) {
 	const controlInput = e => {
 		e.preventDefault();
 		const number = e.target.valueAsNumber
-		if (number > 100 || number <= 0 || !parseInt(e.data)) {
+		
+		if (number > 100 || number <= 0 || (isNaN(parseInt(e.data)) && e.data)) {
 			e.target.value = ''
-			options[e.target.dataset.to] = 1
 			toggleStateById(e.target.parentNode.id, 0, 2)
 		}
 		else {
@@ -137,7 +137,7 @@ export const $Qmaker = function (callback) {
 					id : null
 				}).then(e => {
 					if (e) {
-						//callback(parseValues())
+						callback(parseValues())
 						$notice(`Очередь ${$name.value} успешно создана`)
 						close()
 					}
@@ -158,7 +158,12 @@ export const $Qmaker = function (callback) {
 		}
 	})
 
-	$name.oninput = e => toggleStateById('name_input', e.target.value)
+	$name.oninput = e => {
+		toggleStateById('name_input', e.target.value)
+		if (e.data === ' ') {
+			e.target.value = e.target.value.replace(' ', '')
+		}
+	}
 	$apps.oninput = controlInput
 	$date.oninput = controlInput
 };
@@ -168,7 +173,7 @@ const pattern = () => `
 	<span class="Qtitle">Конструктор очередей</span>
 
 	<div class="input_group" id="name_input">
-		<input id="input_name" type="text" maxlength="32" data-to="name" required/>
+		<input id="input_name" type="text" maxlength="32" data-to="name" autocomplete="off" required/>
 		<label class="field_name">Название очереди</label>
 		<i class="fi fi-rs-check"></i>
 		<i class="fi fi-rs-exclamation"></i>
@@ -188,7 +193,7 @@ const pattern = () => `
 			<div class="info center-items">i</div>
 		</div>
 		<div class="input_group" id="apps_input">
-			<input id="input_apps" type="number" min="1" max="99" maxlength="2" data-to="CountApps" required/>
+			<input id="input_apps" type="number" min="1" max="99" maxlength="2" data-to="CountApps" autocomplete="off" required/>
 			<label class="field_name">Количество задач</label>
 			<i class="fi fi-rs-check"></i>
 			<i class="fi fi-rs-exclamation"></i>
@@ -200,7 +205,7 @@ const pattern = () => `
 			</div>
 		</div>
 		<div class="input_group" id="date_input">
-			<input id="input_date" type="number" min="1" max="99" maxlength="2" data-to="DateToPass" required/>
+			<input id="input_date" type="number" min="1" max="99" maxlength="2" data-to="DateToPass" autocomplete="off" required/>
 			<label class="field_name">Количество занятий для сдачи</label>
 			<i class="fi fi-rs-check"></i>
 			<i class="fi fi-rs-exclamation"></i>

@@ -588,7 +588,7 @@ body .modal .notice {
   position: relative;
   margin-top: 1vh;
   width: 60vw;
-  background-color: #EDFCF1;
+  background-color: #F3F1F5;
   font-size: 1em;
   color: #7F7C82;
 }
@@ -599,9 +599,6 @@ body .modal .notice .options div {
 body .modal .notice.update .btn.readMore a {
   text-decoration: none;
   color: #7F7C82;
-}
-body .modal .notice.apply {
-  background: #494748;
 }
 body .modal .notice.apply .input_group {
   margin-top: 1vh;
@@ -735,6 +732,9 @@ body main .qItem, body main .QmakerContainer {
   -webkit-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
   -moz-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
   box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
+}
+body main .qItem .btn, body main .QmakerContainer .btn {
+  z-index: 2;
 }
 body main .qItem .quicklook, body main .QmakerContainer .quicklook {
   position: absolute;
