@@ -1,9 +1,11 @@
 package com.webserver.webserver.controllers;
 
 import com.webserver.webserver.jsonResponse.JsonUtil;
+import com.webserver.webserver.models.Headman;
 import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.models.Student;
+import com.webserver.webserver.repos.HeadmanRepository;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
@@ -23,23 +25,28 @@ public class StudentController {
     private final QueueRepository queueRepository;
 
     private final ListOfQueueRepository listOfQueueRepository;
-
-    public StudentController(StudentRepository studentRepository, QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository) {
+    private final HeadmanRepository headmanRepository;
+    
+    public StudentController(StudentRepository studentRepository, QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, HeadmanRepository headmanRepository) {
         this.studentRepository = studentRepository;
         this.queueRepository = queueRepository;
         this.listOfQueueRepository = listOfQueueRepository;
+        this.headmanRepository = headmanRepository;
     }
 
     @GetMapping("/add")
-    public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id,
-                                              @RequestParam String domain){
+    public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id){
         Student student = new Student();
         student.setNameOfStudent(NameOfStudent);
-        student.setDomain(domain);
         student.setId(id);
         studentRepository.save(student);
         JsonUtil util = new JsonUtil();
-        return util.responseOfFindAndAdd("Saved", 200);
+
+        Optional<Headman> headman = headmanRepository.findById(id);
+        if (headman.isPresent())
+            return util.responseOfFindAndAdd("1", 200);
+        else
+            return util.responseOfFindAndAdd("0", 200);
     }
 
     @GetMapping("/all")

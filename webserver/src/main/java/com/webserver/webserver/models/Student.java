@@ -9,7 +9,7 @@ public class Student {
     @Id
     private Long id;
 
-    private String nameOfStudent, domain;
+    private String nameOfStudent;
     private Long idHeadman;
 
     public Student() {
@@ -32,13 +32,6 @@ public class Student {
         this.nameOfStudent = nameOfStudent;
     }
 
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
 
     public Long getIdHeadman() {
         return idHeadman;

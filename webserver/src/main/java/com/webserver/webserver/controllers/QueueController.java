@@ -6,6 +6,7 @@ import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
+import com.webserver.webserver.repos.StudentRepository;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,12 @@ public class QueueController {
     private final QueueRepository queueRepository;
 
     private final ListOfQueueRepository listOfQueueRepository;
+    private final StudentRepository studentRepository;
 
-    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository) {
+    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, StudentRepository studentRepository) {
         this.queueRepository = queueRepository;
         this.listOfQueueRepository = listOfQueueRepository;
+        this.studentRepository = studentRepository;
     }
 
 
@@ -72,7 +75,19 @@ public class QueueController {
 
         queueRepository.save(queue);
 
-        return util.responseOfFindAndAdd("Saved queue", 200);
+        ListOfQueues listOfQueues = new ListOfQueues();
+        listOfQueues.setIdQueue(queue.getId());
+        listOfQueues.setNameOfSubject(subjectName);
+        listOfQueues.setCurrentApp(1);
+        listOfQueues.setHexCode(queue.getHEXCode());
+        listOfQueues.setIdStudent(idStudent);
+        listOfQueues.setNumberOfAppStudent(1);
+        listOfQueues.setPositionStudent(1);
+        listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
+
+        listOfQueueRepository.save(listOfQueues);
+
+        return util.responseOfFindAndAdd(queue.getHEXCode(), 200);
     }
 
     @GetMapping("/test")
@@ -134,10 +149,16 @@ public class QueueController {
         return queueRepository.findAll();
     }
 
-    @GetMapping("/get/{idQueue}")
+    @GetMapping("/getById/{idQueue}")
     public @ResponseBody
     Optional<Queue> getQueueById(@PathVariable Long idQueue){
         return queueRepository.findById(idQueue);
+    }
+
+    @GetMapping("/getByHEX/{hexCode}")
+    public @ResponseBody
+    Optional<Queue> getQueueById(@PathVariable String hexCode){
+        return queueRepository.findByHEXCode(hexCode);
     }
 
     @DeleteMapping("/delete/{idQueue}")
