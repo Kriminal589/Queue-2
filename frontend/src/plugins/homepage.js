@@ -2,7 +2,8 @@ import { getPage, validSession } from "../util/util";
 
 export const homepage = (callback) => {
     new Promise((resolve, reject) => {
-        if (getPage() !== "home") resolve(false);
+        const session = validSession()
+        if (getPage() !== "home" && session) resolve(false);
 
         const $page = document.createElement("div");
         $page.classList.add("homepage");
@@ -23,7 +24,7 @@ export const homepage = (callback) => {
                         <span>разработаная такими же студентами</span>
                     </div>
                     ${
-                        validSession()
+                        session
                             ? '<div class="authbtn center-items" data-action="close">Перейти к очередям</div>'
                             : '<div class="authbtn center-items" data-action="auth">Авторизация через Вконтакте</div>'
                     }
