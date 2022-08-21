@@ -5,16 +5,16 @@ import { InviteApply } from "./classes/notice";
 import { homepage } from "./plugins/homepage"
 
 window.onload = async () => {
-    VK.init({ apiId: 8229660 });
-	const hash = document.location.hash.replace('#', '')
-	if (hash.length > 0) {
-		Auth(() => {
-			InviteApply(hash);
-		})
-	}
-	else {
-		homepage(main)
-	}
+  //   VK.init({ apiId: 8229660 });
+	// const hash = document.location.hash.replace('#', '')
+	// if (hash.length > 0) {
+	// 	Auth(() => {
+	// 		InviteApply(hash);
+	// 	})
+	// }
+	// else {
+	// 	homepage(main)
+	// }
 };
 
 const main = error => {

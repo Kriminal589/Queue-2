@@ -56,7 +56,7 @@ export class serverRequest {
 const boolToInt = (int) => (int ? 1 : 0);
 
 async function sendRequestAsync(url_to) {
-    const url = `http://${ip}:${port}/${url_to}`;
+    const url = `https://${ip}:${port}/${url_to}`;
     const loadbar = new $LoadBar();
     loadbar.load(url_to);
     try {
