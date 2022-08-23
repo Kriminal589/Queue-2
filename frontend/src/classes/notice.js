@@ -1,4 +1,5 @@
-import { getListNotice } from "./serverReq";
+import { getListNotice, serverRequest } from "./serverReq";
+import { apply } from "../plugins/ApplyNotice"
 import { getId } from "../util/util";
 
 export class Notice {
@@ -44,7 +45,7 @@ export class Notice {
     }
     renderNotice() {
         document.getElementById("modal-notice").innerHTML = `
-		<div class="notice Ntitle padding-content center-items border-2px">Ваши уведомления<div class="btn back" data-action="close"></div></div>
+		<div class="notice Ntitle padding-content center-items">Ваши уведомления<div class="btn back" data-action="close"></div></div>
 			${this.listToHtml()}
 		`;
     }
@@ -79,7 +80,11 @@ export class Notice {
                     break;
                 }
                 case "apply": {
-                    apply("Введите номер задания", input()).then((data) => {
+                    apply("Введите номер задания", {
+                        id : 'apps_input',
+                        type : 'input',
+                        html : input()
+                    }).then((data) => {
                         if (data) {
                             this.noticeList = this.noticeList.filter(
                                 (item) => item.id !== +content,
@@ -128,18 +133,18 @@ export class Notice {
                       switch (item.type) {
                           case "invite": {
                               return `
-							<div class="notice invite padding-content center-items border-2px flex-column" id=${item.id}>
+							<div class="notice invite padding-content center-items flex-column" id=${item.id}>
 								Приглашение в очередь ${item.Qname}
 								<div class="btn-container flex-row">
 										<div class="btn apply" data-action="apply" data-content=${item.id} data-src=${item.Qhash}>Принять</div>
-										<div class="btn close" data-action="delete" data-content=${item.id}>Удалить</div>
+										<div class="btn close" data-action="delete" data-content=${item.id}>Отказаться</div>
 								</div>
 							</div>
 						`;
                           }
                           case "swap": {
                               return `
-							<div class="notice swap padding-content center-items border-2px flex-column" id=${
+							<div class="notice swap padding-content center-items flex-column" id=${
                                 item.id
                             }>
 								Студент ${item.sender.name} предлагает вам поменяться с ним местами
@@ -167,14 +172,14 @@ export class Notice {
                               }">Принять</div>
 										<div class="btn close" data-action="delete" data-content=${
                                             item.id
-                                        }>Удалить</div>
+                                        }>Отказаться</div>
 								</div>
 							</div>
 						`;
                           }
                           case "update": {
                               return `
-							<div class="notice update padding-content center-items border-2px flex-row">
+							<div class="notice update padding-content center-items flex-row">
 								Обновление ${item.update.version} ${item.update.codeName}
 								<div class="btn readMore" data-action="readMore" data-content=${item.update.vkLink}>
 									<a href=${item.update.vkLink}>Узнать об изменениях</a>
@@ -190,61 +195,43 @@ export class Notice {
 }
 
 export const InviteApply = (hash) => {
-    apply("Введите номер задания", input()).then((data) => {
+    apply("Введите номер задания", {
+        id : 'apps_input',
+        type : 'input',
+        html : input()
+    }).then((data) => {
         if (data) {
-            // ! serverReq
             const id = getId();
-            window.location.hash = "";
-            window.location.reload();
-            console.log(
-                `student ${id} with app ${data} added to Q hash:${hash}`,
-            );
+            serverRequest.appendQ(id, hash, data).then((response) => {
+                history.pushState('', document.title, window.location.pathname)
+                window.location.reload();
+                if (response !== -1) {
+                    console.log(
+                        `student ${id} with app ${data} added to Q hash:${hash}`,
+                    );
+                }
+                else {
+                    $notice('Данная ссылка не работает!')
+                }
+            })
         }
     });
 };
 
-const input = () =>
-    '<input type="number" id="appNumber" class="padding-content border-2px" required>';
-
-const apply = (text, content) => {
-    return new Promise((resolve, reject) => {
-        const $apply = document.createElement("div");
-        $apply.classList.add("modal", "visible", "center-items", "flex-column");
-        $apply.id = "modal-apply";
-        $apply.dataset.action = "close";
-        $apply.innerHTML = `
-			<div class="notice apply padding-content center-items border-2px flex-column">
-			${text}
-			${content || ""}
-			<div class="btn-container flex-row">
-					<div class="btn apply" data-action="ok">Подтвердить</div>
-					<div class="btn close" data-action="cancel">Отмена</div>
-			</div>
-			</div>
-		`;
-        document.body.appendChild($apply);
-
-        $apply.addEventListener("click", (e) => {
-            const action = e.target.dataset.action;
-            if (action) {
-                console.log(`clicked on btn ${action}`);
-                if (action === "ok") {
-                    if (content) {
-                        const value =
-                            document.getElementById("appNumber").value;
-                        if (value) {
-                            resolve(value);
-                        }
-                    } else {
-                        resolve(true);
-                    }
-                }
-                resolve(false);
-                document.body.removeChild($apply);
-            }
-        });
-    });
-};
+const input = () => `
+    <div class="input_group" id="input_a">
+        <input id="apps_input" type="number" min="1" max="99" maxlength="2" data-to="CountApps" autocomplete="off" required="">
+        <label class="field_name">Ваша задача</label>
+        <i class="fi fi-rs-check"></i>
+        <i class="fi fi-rs-exclamation"></i>
+        <div class="error_message center-items">
+            Поле должно быть заполнено!
+        </div>
+        <div class="error_type center-items">
+            Недопустимый символ или значение!
+        </div>
+    </div>
+`
 
 export const $notice = (text) => {
     const cooldown = 5000;

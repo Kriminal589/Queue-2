@@ -189,7 +189,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"./..\\assets\\back.png":[["back.e6f29605.png","assets/back.png"],"assets/back.png"],"./..\\assets\\notification.png":[["notification.8f1ad31f.png","assets/notification.png"],"assets/notification.png"],"./..\\assets\\logout.png":[["logout.8f74ff45.png","assets/logout.png"],"assets/logout.png"],"./..\\assets\\copy.png":[["copy.77129a08.png","assets/copy.png"],"assets/copy.png"],"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"classes/queue.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"classes/queue.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -204,11 +204,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 var QueueBlock = /*#__PURE__*/function () {
-  function QueueBlock(values) {
+  function QueueBlock(values, canAddQueue) {
     _classCallCheck(this, QueueBlock);
 
     this.values = values;
     this.min = true;
+    this.canAddQueue = canAddQueue;
   }
 
   _createClass(QueueBlock, [{
@@ -234,7 +235,7 @@ var QueueBlock = /*#__PURE__*/function () {
 exports.QueueBlock = QueueBlock;
 
 var template = function template(content) {
-  return "\n    <div class=\"qItem border-2px\" id=\"".concat(content.idQueue, "\" data-action=\"open\" data-id=\"").concat(content.idQueue, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\" data-app=\"0\">\n        <span class=\"btn-text\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
+  return "\n    <div class=\"qItem\" id=\"".concat(content.idQueue, "\" data-action=\"open\" data-id=\"").concat(content.idQueue, "\" data-name=\"").concat(content.name, "\">\n      <div class=\"qName\">").concat(content.name, "</div>\n      <div class=\"qPos\">\u0412\u0430\u0448\u0430 \u043F\u043E\u0437\u0438\u0446\u0438\u044F: ").concat(content.positionStudent, "</div>\n      <div class=\"btn apply\" data-action=\"passed\" data-app=\"0\">\n        <span class=\"btn-text\">\u0421\u0434\u0430\u043B \u0437\u0430\u0434\u0430\u043D\u0438\u0435</span>\n      </div>\n    </div>\n    ");
 };
 
 function div(content) {
@@ -244,19 +245,27 @@ function div(content) {
 }
 
 var templateList = function templateList(content, list, idStudent) {
-  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"btn copy off_border\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"btn exit off_border\" data-action=\"exit\"></div>\n    </div>\n    <div class=\"btn back\" data-action=\"back\"></div>"), "subject-name border-2px center-items");
-  HTML += div(list.responseAboutStudentList.map(function (item, index) {
-    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "vk.com/id".concat(item.id));
-  }).join(""), "contanier custom-scrollbar");
+  var HTML = div("<span>".concat(content.name, "</span>\n    <div class=\"btn_container flex-row\">\n        <div class=\"p_btn copy\" data-action=\"copy\" data-target=\"").concat(content.idQueue, "\"></div>\n        <div class=\"p_btn exit\" data-action=\"exit\" data-target=").concat(content.idQueue, "></div>\n    </div>\n    <div class=\"p_btn back\" data-action=\"back\"></div>"), "subject-name center-items");
+  HTML += ul(list.responseAboutStudentList.map(function (item, index) {
+    return "".concat(item.idStudent) === idStudent ? template_u(index) : template_list(item.nameOfStudent.replace("_", " "), index, "http://vk.com/id".concat(item.idStudent));
+  }).join(""), "custom-scrollbar");
   return div(HTML, "qList", "queueBody");
 };
 
 var template_list = function template_list(content, index, vk_link) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div>\n    <div class=\"nameStudent border-2px center-items\">").concat(content, "</div>\n    <a class=\"vklink border-2px center-items\" href=\"").concat(vk_link, "\">vk</a>\n    <div class=\"swap border-2px center-items\" data-action=\"swap\" data-target=\"id\">\u041F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438</div>"), "qList-item flex-row");
+  return li("\n      <div class=\"position center-items\">".concat(index + 1, "</div>\n      <span class=\"name center-items\">").concat(content, "</span>\n      <div class=\"btn_container flex-row\">\n          <a class=\"btn vk\" href=").concat(vk_link, " data-action='link'>VK</a>\n          <div class=\"btn swap\" data-action=\"swap\" data-target=\"id\">SWAP</div>\n      </div>\n    "), 'item center-items');
+};
+
+var ul = function ul(content, class_, id) {
+  return "<ul class=".concat(class_, " id=\"").concat(id, "\">").concat(content, "</ul>");
+};
+
+var li = function li(content, class_, id) {
+  return "<li class=".concat(class_, " id=\"").concat(id, "\">").concat(content, "</li>");
 };
 
 var template_u = function template_u(index) {
-  return div("<div class=\"position border-2px center-items\">".concat(index + 1, "</div><div class=\"u border-2px center-items\">\u0412\u044B</div>"), "qList-item uitem flex-row");
+  return li("<div class=\"position center-items\">".concat(index + 1, "</div><span class=\"center-items\">\u0412\u044B</span>"), 'item u center-items');
 };
 },{}],"classes/loadBar.js":[function(require,module,exports) {
 "use strict";
@@ -318,6 +327,8 @@ String.prototype.hashCode = function () {
 
   return hash;
 };
+},{}],"../node_modules/parcel-bundler/src/builtins/_empty.js":[function(require,module,exports) {
+
 },{}],"classes/serverReq.js":[function(require,module,exports) {
 "use strict";
 
@@ -342,6 +353,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
+"use strict";
+
+require("fs");
+
 var ip = "25.84.228.15";
 var port = "8080";
 
@@ -353,13 +368,13 @@ var serverRequest = /*#__PURE__*/function () {
   _createClass(serverRequest, null, [{
     key: "addStudent",
     value: function () {
-      var _addStudent = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(idS, name, domen) {
+      var _addStudent = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(idS, name) {
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return sendRequestAsync("student/add?id=".concat(idS, "&NameOfStudent=").concat(name.replace(" ", "_"), "&domain=").concat(domen));
+                return sendRequestAsync("student/add?id=".concat(idS, "&NameOfStudent=").concat(name.replace(" ", "_")));
 
               case 2:
                 return _context.abrupt("return", _context.sent);
@@ -372,7 +387,7 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee);
       }));
 
-      function addStudent(_x, _x2, _x3) {
+      function addStudent(_x, _x2) {
         return _addStudent.apply(this, arguments);
       }
 
@@ -400,7 +415,7 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee2);
       }));
 
-      function getQueuesById(_x4) {
+      function getQueuesById(_x3) {
         return _getQueuesById.apply(this, arguments);
       }
 
@@ -428,7 +443,7 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee3);
       }));
 
-      function getQueuePropertyById(_x5) {
+      function getQueuePropertyById(_x4) {
         return _getQueuePropertyById.apply(this, arguments);
       }
 
@@ -456,7 +471,7 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee4);
       }));
 
-      function getListOfStudentInQueueById(_x6) {
+      function getListOfStudentInQueueById(_x5) {
         return _getListOfStudentInQueueById.apply(this, arguments);
       }
 
@@ -493,13 +508,13 @@ var serverRequest = /*#__PURE__*/function () {
   }, {
     key: "appendQ",
     value: function () {
-      var _appendQ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(idS) {
+      var _appendQ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(idS, hash, app) {
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
                 _context6.next = 2;
-                return sendRequestAsync("listOfQueues/add/{idQueue}/{idStudent}/{numberOfAppStudent}");
+                return sendRequestAsync("listOfQueues/add/".concat(hash, "/").concat(idS, "/").concat(app));
 
               case 2:
                 return _context6.abrupt("return", _context6.sent);
@@ -512,7 +527,7 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee6);
       }));
 
-      function appendQ(_x7) {
+      function appendQ(_x6, _x7, _x8) {
         return _appendQ.apply(this, arguments);
       }
 
@@ -536,22 +551,22 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee7);
       }));
 
-      function getListNotice(_x8) {
+      function getListNotice(_x9) {
         return _getListNotice.apply(this, arguments);
       }
 
       return getListNotice;
     }()
   }, {
-    key: "request",
+    key: "leaveFromQueue",
     value: function () {
-      var _request = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(url) {
+      var _leaveFromQueue = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(idQueue, idStudent) {
         return _regeneratorRuntime().wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
                 _context8.next = 2;
-                return sendRequestAsyncURL(url);
+                return sendRequestAsync("listOfQueues/ByIdStudentAndQueue/".concat(idStudent, "/").concat(idQueue));
 
               case 2:
                 return _context8.abrupt("return", _context8.sent);
@@ -564,11 +579,39 @@ var serverRequest = /*#__PURE__*/function () {
         }, _callee8);
       }));
 
-      function request(_x9) {
-        return _request.apply(this, arguments);
+      function leaveFromQueue(_x10, _x11) {
+        return _leaveFromQueue.apply(this, arguments);
       }
 
-      return request;
+      return leaveFromQueue;
+    }()
+  }, {
+    key: "createQ",
+    value: function () {
+      var _createQ = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(name, type, dependOnApps, CountApps, DependOnDate, DateToPass, idS) {
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _context9.next = 2;
+                return sendRequestAsync("queue/add?subjectName=".concat(name, "&type=").concat(boolToInt(type), "&dependOnApps=").concat(boolToInt(dependOnApps), "&countApps=").concat(CountApps, "&dependOnDate=").concat(boolToInt(DependOnDate), "&dateToPass=").concat(DateToPass, "&idStudent=").concat(idS));
+
+              case 2:
+                return _context9.abrupt("return", _context9.sent);
+
+              case 3:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9);
+      }));
+
+      function createQ(_x12, _x13, _x14, _x15, _x16, _x17, _x18) {
+        return _createQ.apply(this, arguments);
+      }
+
+      return createQ;
     }()
   }]);
 
@@ -577,97 +620,142 @@ var serverRequest = /*#__PURE__*/function () {
 
 exports.serverRequest = serverRequest;
 
-function sendRequestAsync(_x10) {
+var boolToInt = function boolToInt(int) {
+  return int ? 1 : 0;
+};
+
+function sendRequestAsync(_x19) {
   return _sendRequestAsync.apply(this, arguments);
 }
 
 function _sendRequestAsync() {
-  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(url_to) {
+  _sendRequestAsync = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(url_to) {
     var url, loadbar, response;
-    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-      while (1) {
-        switch (_context9.prev = _context9.next) {
-          case 0:
-            url = "http://".concat(ip, ":").concat(port, "/").concat(url_to);
-            loadbar = new _loadBar.$LoadBar();
-            loadbar.load(url_to);
-            _context9.prev = 3;
-            _context9.next = 6;
-            return fetch(url, {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json"
-              }
-            });
-
-          case 6:
-            response = _context9.sent;
-            loadbar.destroy(url_to);
-            return _context9.abrupt("return", response.json());
-
-          case 11:
-            _context9.prev = 11;
-            _context9.t0 = _context9["catch"](3);
-            loadbar.destroy(url_to);
-            return _context9.abrupt("return", -1);
-
-          case 15:
-          case "end":
-            return _context9.stop();
-        }
-      }
-    }, _callee9, null, [[3, 11]]);
-  }));
-  return _sendRequestAsync.apply(this, arguments);
-}
-
-function sendRequestAsyncURL(_x11) {
-  return _sendRequestAsyncURL.apply(this, arguments);
-}
-
-function _sendRequestAsyncURL() {
-  _sendRequestAsyncURL = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(url_to) {
-    var response;
     return _regeneratorRuntime().wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
-            _loadBar.$LoadBar.load();
-
-            _context10.prev = 1;
-            _context10.next = 4;
-            return fetch(url_to, {
+            url = "https://".concat(ip, ":").concat(port, "/").concat(url_to);
+            loadbar = new _loadBar.$LoadBar();
+            loadbar.load(url_to);
+            _context10.prev = 3;
+            _context10.next = 6;
+            return fetch(url, {
               method: "GET",
               headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: JSON.stringify("12345")
               }
             });
 
-          case 4:
+          case 6:
             response = _context10.sent;
-
-            _loadBar.$LoadBar.destroy();
-
+            loadbar.destroy(url_to);
             return _context10.abrupt("return", response.json());
 
-          case 9:
-            _context10.prev = 9;
-            _context10.t0 = _context10["catch"](1);
-
-            _loadBar.$LoadBar.destroy();
-
+          case 11:
+            _context10.prev = 11;
+            _context10.t0 = _context10["catch"](3);
+            loadbar.destroy(url_to);
             return _context10.abrupt("return", -1);
 
-          case 13:
+          case 15:
           case "end":
             return _context10.stop();
         }
       }
-    }, _callee10, null, [[1, 9]]);
+    }, _callee10, null, [[3, 11]]);
   }));
-  return _sendRequestAsyncURL.apply(this, arguments);
+  return _sendRequestAsync.apply(this, arguments);
 }
-},{"./loadBar":"classes/loadBar.js"}],"util/util.js":[function(require,module,exports) {
+},{"./loadBar":"classes/loadBar.js","fs":"../node_modules/parcel-bundler/src/builtins/_empty.js"}],"plugins/ApplyNotice.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.apply = void 0;
+
+var apply = function apply(text) {
+  var content = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+    id: 0,
+    html: "",
+    type: ""
+  };
+  return new Promise(function (resolve, reject) {
+    var $apply = document.createElement("div");
+    $apply.classList.add("modal", "visible", "center-items", "flex-column");
+    $apply.tabIndex = 0;
+    $apply.id = "modal-apply";
+    $apply.dataset.action = "close";
+    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items shadow flex-column\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content.html || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
+    document.body.appendChild($apply);
+
+    var toggleStateById = function toggleStateById(id, flag, message) {
+      var $elem = document.getElementById(id);
+
+      if (flag) {
+        $elem.classList.remove('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+        $elem.classList.add('success');
+      } else {
+        $elem.classList.add('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+        $elem.classList.remove('success');
+      }
+    };
+
+    if (content.type === 'input') {
+      var $input = document.getElementById(content.id);
+
+      $input.oninput = function (e) {
+        e.preventDefault();
+        var number = e.target.valueAsNumber;
+
+        if (number > 100 || number <= 0 || isNaN(parseInt(e.data)) && e.data) {
+          e.target.value = '';
+          toggleStateById(e.target.parentNode.id, 0, 2);
+        } else {
+          toggleStateById(e.target.parentNode.id, 1);
+        }
+      };
+    } // $apply.onkeydown = e => {
+    //     e.preventDefault()
+    //     console.log(e.key);
+    //     if (e.key === 'escape') {
+    //         resolve(false);
+    //         document.body.removeChild($apply);
+    //     }
+    // }
+
+
+    $apply.addEventListener("click", function (e) {
+      var action = e.target.dataset.action;
+
+      if (action) {
+        console.log("clicked on btn ".concat(action));
+
+        if (action === "ok") {
+          if (content.type === 'input') {
+            var value = document.getElementById(content.id).value;
+
+            if (value) {
+              resolve(value);
+            } else {
+              toggleStateById('input_a', 0, 1);
+            }
+          } else {
+            resolve(true);
+          }
+        }
+
+        resolve(false);
+        document.body.removeChild($apply);
+      }
+    });
+  });
+};
+
+exports.apply = apply;
+},{}],"util/util.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -675,7 +763,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Auth = Auth;
 exports.ReloadName = ReloadName;
-exports.openModal = exports.getTimeUnix = exports.getStateModal = exports.getName = exports.getId = exports.createQueueText = exports.closeModal = exports.applyInvite = void 0;
+exports.validSession = exports.setPage = exports.openModal = exports.getTimeUnix = exports.getStateModal = exports.getPage = exports.getName = exports.getId = exports.createQueueText = exports.copyToClipboard = exports.closeModal = exports.applyInvite = void 0;
 
 var _serverReq = require("../classes/serverReq");
 
@@ -724,10 +812,27 @@ var getId = function getId() {
 
 exports.getId = getId;
 
-function Auth(callback) {
+var validSession = function validSession() {
   var data = JSON.parse(localStorage.getItem("vk_auth"));
+  return data && data.expire > getTimeUnix();
+};
 
-  if (data && data.expire > getTimeUnix()) {
+exports.validSession = validSession;
+
+var getPage = function getPage() {
+  return localStorage.getItem("page");
+};
+
+exports.getPage = getPage;
+
+var setPage = function setPage(value) {
+  return localStorage.setItem("page", value);
+};
+
+exports.setPage = setPage;
+
+function Auth(callback) {
+  if (validSession()) {
     callback(false);
   } else {
     new Promise(function (resolve, reject) {
@@ -755,6 +860,9 @@ function Auth(callback) {
                 name: "".concat(first_name, " ").concat(last_name)
               }));
               document.body.removeChild($btn_auth);
+
+              _serverReq.serverRequest.addStudent(id, "".concat(first_name, " ").concat(last_name));
+
               resolve(false);
             } else {
               resolve(true);
@@ -768,11 +876,36 @@ function Auth(callback) {
 
 var createQueueText = function createQueueText(list) {
   return list.map(function (item, index) {
-    return "".concat(index + 1, " ").concat(item);
+    return "".concat(index + 1, " ").concat(item.nameOfStudent);
   }).join('\n');
 };
 
 exports.createQueueText = createQueueText;
+
+var copyToClipboard = function copyToClipboard(text) {
+  if (window.clipboardData && window.clipboardData.setData) {
+    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+    return window.clipboardData.setData("Text", text);
+  } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in Microsoft Edge.
+
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+      return document.execCommand("copy"); // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return prompt("Copy to clipboard: Ctrl+C, Enter", text);
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+};
+
+exports.copyToClipboard = copyToClipboard;
 },{"../classes/serverReq":"classes/serverReq.js"}],"classes/notice.js":[function(require,module,exports) {
 "use strict";
 
@@ -782,6 +915,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.Notice = exports.InviteApply = exports.$notice = void 0;
 
 var _serverReq = require("./serverReq");
+
+var _ApplyNotice = require("../plugins/ApplyNotice");
 
 var _util = require("../util/util");
 
@@ -836,7 +971,7 @@ var Notice = /*#__PURE__*/function () {
   }, {
     key: "renderNotice",
     value: function renderNotice() {
-      document.getElementById("modal-notice").innerHTML = "\n\t\t<div class=\"notice Ntitle padding-content center-items border-2px\">\u0412\u0430\u0448\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F<div class=\"btn back\" data-action=\"close\"></div></div>\n\t\t\t".concat(this.listToHtml(), "\n\t\t");
+      document.getElementById("modal-notice").innerHTML = "\n\t\t<div class=\"notice Ntitle padding-content center-items\">\u0412\u0430\u0448\u0438 \u0443\u0432\u0435\u0434\u043E\u043C\u043B\u0435\u043D\u0438\u044F<div class=\"btn back\" data-action=\"close\"></div></div>\n\t\t\t".concat(this.listToHtml(), "\n\t\t");
     }
   }, {
     key: "open",
@@ -875,7 +1010,11 @@ var Notice = /*#__PURE__*/function () {
 
           case "apply":
             {
-              apply("Введите номер задания", input()).then(function (data) {
+              (0, _ApplyNotice.apply)("Введите номер задания", {
+                id: 'apps_input',
+                type: 'input',
+                html: input()
+              }).then(function (data) {
                 if (data) {
                   _this.noticeList = _this.noticeList.filter(function (item) {
                     return item.id !== +content;
@@ -899,7 +1038,7 @@ var Notice = /*#__PURE__*/function () {
 
           case "delete":
             {
-              apply("Вы точно хотите удалить это уведомление?").then(function (data) {
+              (0, _ApplyNotice.apply)("Вы точно хотите удалить это уведомление?").then(function (data) {
                 if (data) {
                   _this.noticeList = _this.noticeList.filter(function (item) {
                     return item.id !== +content;
@@ -928,17 +1067,17 @@ var Notice = /*#__PURE__*/function () {
         switch (item.type) {
           case "invite":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice invite padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u041F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u0435 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u044C ").concat(item.Qname, "\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"apply\" data-content=").concat(item.id, " data-src=").concat(item.Qhash, ">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice invite padding-content center-items flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u041F\u0440\u0438\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u0435 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u044C ").concat(item.Qname, "\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"apply\" data-content=").concat(item.id, " data-src=").concat(item.Qhash, ">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u041E\u0442\u043A\u0430\u0437\u0430\u0442\u044C\u0441\u044F</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
 
           case "swap":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice swap padding-content center-items border-2px flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u0421\u0442\u0443\u0434\u0435\u043D\u0442 ").concat(item.sender.name, " \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0432\u0430\u043C \u043F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C \u043C\u0435\u0441\u0442\u0430\u043C\u0438\n\t\t\t\t\t\t\t\t<div class=\"swap-state\">\n\t\t\t\t\t\t\t\t\t\t").concat(item.Q.name, " :\n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "red" : "green", ">").concat(item.recipient.position, "</span> \n\t\t\t\t\t\t\t\t\t\t-> \n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "green" : "red", ">").concat(item.sender.position, "</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"swap\" data-content=").concat(item.id, " data-src=\"").concat(item.sender.id, "|").concat(item.recipient.id, "|").concat(item.Q.hash, "\">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice swap padding-content center-items flex-column\" id=".concat(item.id, ">\n\t\t\t\t\t\t\t\t\u0421\u0442\u0443\u0434\u0435\u043D\u0442 ").concat(item.sender.name, " \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u0435\u0442 \u0432\u0430\u043C \u043F\u043E\u043C\u0435\u043D\u044F\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C \u043C\u0435\u0441\u0442\u0430\u043C\u0438\n\t\t\t\t\t\t\t\t<div class=\"swap-state\">\n\t\t\t\t\t\t\t\t\t\t").concat(item.Q.name, " :\n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "red" : "green", ">").concat(item.recipient.position, "</span> \n\t\t\t\t\t\t\t\t\t\t-> \n\t\t\t\t\t\t\t\t\t\t<span class=").concat(item.sender.position > item.recipient.position ? "green" : "red", ">").concat(item.sender.position, "</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn apply\" data-action=\"swap\" data-content=").concat(item.id, " data-src=\"").concat(item.sender.id, "|").concat(item.recipient.id, "|").concat(item.Q.hash, "\">\u041F\u0440\u0438\u043D\u044F\u0442\u044C</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"btn close\" data-action=\"delete\" data-content=").concat(item.id, ">\u041E\u0442\u043A\u0430\u0437\u0430\u0442\u044C\u0441\u044F</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
 
           case "update":
             {
-              return "\n\t\t\t\t\t\t\t<div class=\"notice update padding-content center-items border-2px flex-row\">\n\t\t\t\t\t\t\t\t\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 ".concat(item.update.version, " ").concat(item.update.codeName, "\n\t\t\t\t\t\t\t\t<div class=\"btn readMore\" data-action=\"readMore\" data-content=").concat(item.update.vkLink, ">\n\t\t\t\t\t\t\t\t\t<a href=").concat(item.update.vkLink, ">\u0423\u0437\u043D\u0430\u0442\u044C \u043E\u0431 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F\u0445</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
+              return "\n\t\t\t\t\t\t\t<div class=\"notice update padding-content center-items flex-row\">\n\t\t\t\t\t\t\t\t\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 ".concat(item.update.version, " ").concat(item.update.codeName, "\n\t\t\t\t\t\t\t\t<div class=\"btn readMore\" data-action=\"readMore\" data-content=").concat(item.update.vkLink, ">\n\t\t\t\t\t\t\t\t\t<a href=").concat(item.update.vkLink, ">\u0423\u0437\u043D\u0430\u0442\u044C \u043E\u0431 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F\u0445</a>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t");
             }
         }
       }).join("") : "<div class=\"notice padding-content center-items border-2px\">\u0422\u0443\u0442 \u043F\u0443\u0441\u0442\u043E :)</div>";
@@ -951,13 +1090,24 @@ var Notice = /*#__PURE__*/function () {
 exports.Notice = Notice;
 
 var InviteApply = function InviteApply(hash) {
-  apply("Введите номер задания", input()).then(function (data) {
+  (0, _ApplyNotice.apply)("Введите номер задания", {
+    id: 'apps_input',
+    type: 'input',
+    html: input()
+  }).then(function (data) {
     if (data) {
-      // ! serverReq
       var id = (0, _util.getId)();
-      window.location.hash = "";
-      window.location.reload();
-      console.log("student ".concat(id, " with app ").concat(data, " added to Q hash:").concat(hash));
+
+      _serverReq.serverRequest.appendQ(id, hash, data).then(function (response) {
+        history.pushState('', document.title, window.location.pathname);
+        window.location.reload();
+
+        if (response !== -1) {
+          console.log("student ".concat(id, " with app ").concat(data, " added to Q hash:").concat(hash));
+        } else {
+          $notice('Данная ссылка не работает!');
+        }
+      });
     }
   });
 };
@@ -965,40 +1115,7 @@ var InviteApply = function InviteApply(hash) {
 exports.InviteApply = InviteApply;
 
 var input = function input() {
-  return '<input type="number" id="appNumber" class="padding-content border-2px" required>';
-};
-
-var apply = function apply(text, content) {
-  return new Promise(function (resolve, reject) {
-    var $apply = document.createElement("div");
-    $apply.classList.add("modal", "visible", "center-items", "flex-column");
-    $apply.id = "modal-apply";
-    $apply.dataset.action = "close";
-    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items border-2px flex-column\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
-    document.body.appendChild($apply);
-    $apply.addEventListener("click", function (e) {
-      var action = e.target.dataset.action;
-
-      if (action) {
-        console.log("clicked on btn ".concat(action));
-
-        if (action === "ok") {
-          if (content) {
-            var value = document.getElementById("appNumber").value;
-
-            if (value) {
-              resolve(value);
-            }
-          } else {
-            resolve(true);
-          }
-        }
-
-        resolve(false);
-        document.body.removeChild($apply);
-      }
-    });
-  });
+  return "\n    <div class=\"input_group\" id=\"input_a\">\n        <input id=\"apps_input\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"CountApps\" autocomplete=\"off\" required=\"\">\n        <label class=\"field_name\">\u0412\u0430\u0448\u0430 \u0437\u0430\u0434\u0430\u0447\u0430</label>\n        <i class=\"fi fi-rs-check\"></i>\n        <i class=\"fi fi-rs-exclamation\"></i>\n        <div class=\"error_message center-items\">\n            \u041F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n        </div>\n        <div class=\"error_type center-items\">\n            \u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B \u0438\u043B\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435!\n        </div>\n    </div>\n";
 };
 
 var $notice = function $notice(text) {
@@ -1015,7 +1132,7 @@ var $notice = function $notice(text) {
 };
 
 exports.$notice = $notice;
-},{"./serverReq":"classes/serverReq.js","../util/util":"util/util.js"}],"classes/Qmaker.js":[function(require,module,exports) {
+},{"./serverReq":"classes/serverReq.js","../plugins/ApplyNotice":"plugins/ApplyNotice.js","../util/util":"util/util.js"}],"classes/Qmaker.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1024,6 +1141,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.$Qmaker = void 0;
 
 var _notice = require("./notice");
+
+var _ApplyNotice = require("../plugins/ApplyNotice");
 
 var capitalize = function capitalize(s) {
   return s && s[0].toUpperCase() + s.slice(1) || "";
@@ -1035,58 +1154,115 @@ var $Qmaker = function $Qmaker(callback) {
     $f.classList.add("modal", "visible", "center-items");
     $f.dataset.action = "close";
     $f.innerHTML = pattern();
+    document.body.appendChild($f);
     return $f;
   }
 
+  var options = false;
+
+  var controlInput = function controlInput(e) {
+    e.preventDefault();
+    var number = e.target.valueAsNumber;
+
+    if (number > 100 || number <= 0 || isNaN(parseInt(e.data)) && e.data) {
+      e.target.value = '';
+      toggleStateById(e.target.parentNode.id, 0, 2);
+    } else {
+      toggleStateById(e.target.parentNode.id, 1);
+    }
+  };
+
+  var __popup__ = open();
+
   function _close() {
     document.body.removeChild(__popup__);
-  }
+  } //? inputs
 
-  var options = {
-    smart: false
+
+  var $name = document.getElementById('input_name');
+  var $apps = document.getElementById('input_apps');
+  var $date = document.getElementById('input_date'); //? buttons
+
+  var $cmnB = document.getElementById('C_btn');
+  var $smrB = document.getElementById('S_btn');
+
+  var toggleStateById = function toggleStateById(id, flag, message) {
+    var $elem = document.getElementById(id);
+
+    if (flag) {
+      $elem.classList.remove('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+      $elem.classList.add('success');
+    } else {
+      $elem.classList.add('error', message === 1 ? 'message' : message === 2 ? 'type_err' : null);
+      $elem.classList.remove('success');
+    }
+  };
+
+  var parseValues = function parseValues() {
+    return {
+      name: $name.value.trim(),
+      type: options,
+      dependOnApps: options ? $apps.value ? 1 : 0 : 0,
+      CountApps: options ? $apps.value || 0 : 0,
+      dependOnDate: options ? $date.value ? 1 : 0 : 0,
+      DateToPass: options ? $date.value || 0 : 0
+    };
+  };
+
+  var checkInputs = function checkInputs() {
+    if ($name.value) {
+      toggleStateById('name_input', 1);
+    } else {
+      toggleStateById('name_input', 0, 1);
+    }
+
+    if (options) {
+      if (!$apps.value && !$date.value) {
+        toggleStateById('apps_input', 0, 1);
+        toggleStateById('date_input', 0, 1);
+      } else {
+        if ($apps.value) toggleStateById('apps_input', 1);
+        if ($date.value) toggleStateById('date_input', 1);
+      }
+    }
+
+    return $name.value && (options ? $apps.value || $date.value : true);
   };
 
   function toggleState() {
-    document.getElementById('C_btn').classList.toggle('active');
-    var $smart_btn = document.getElementById('S_btn');
-    $smart_btn.classList.toggle('active');
-    options.smart = $smart_btn.classList.contains('active');
-  }
-
-  function checkInputs() {
-    return document.getElementById('input_name').value && (options.smart ? document.getElementById('input_apps').value || document.getElementById('input_date').value : true);
+    $cmnB.classList.toggle('active');
+    $smrB.classList.toggle('active');
+    options = $smrB.classList.contains('active');
   }
 
   var actions = {
-    common: function common(id) {
+    switch: function _switch(id) {
       var $btn = document.getElementById(id);
 
       if (!$btn.classList.contains('active')) {
         toggleState();
-        document.getElementById('smart_options').classList.remove('active');
-      }
-    },
-    smart: function smart(id) {
-      var $btn = document.getElementById(id);
-
-      if (!$btn.classList.contains('active')) {
-        toggleState();
-        document.getElementById('smart_options').classList.toggle('active');
+        if (id === 'C_btn') document.getElementById('smart_options').classList.remove('active');else document.getElementById('smart_options').classList.add('active');
       }
     },
     close: function close() {
-      apply('Вы точно хотите отменить создание очереди?').then(function (e) {
+      (0, _ApplyNotice.apply)('Вы точно хотите отменить создание очереди?').then(function (e) {
         if (e) _close();
       });
     },
     create: function create() {
       if (checkInputs()) {
-        apply('Подтвердите создание очереди с параметрами', "\n\t\t\t\t\t<div class=\"info\">\n\t\t\t\t\t\t".concat(JSON.stringify(parseValues()), "\n\t\t\t\t\t</div>\n\t\t\t\t")).then(function (e) {
-          if (e) {
-            //callback(parseValues())
-            _close();
+        var _options = parseValues();
 
-            (0, _notice.$notice)("Очередь успешно создана");
+        (0, _ApplyNotice.apply)('Подтвердите создание очереди с параметрами', {
+          type: 'div',
+          html: "\n\t\t\t\t\t\t<div class=\"options center-items flex-column w100\">\n\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span> <i>".concat(_options.name, "</i></div>\n\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0422\u0438\u043F \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span> <i>").concat(!_options.type ? 'обычная' : 'умная', "</i></div>\n\t\t\t\t\t\t\t").concat(_options.dependOnApps ? "\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u043E\u0442 \u043A\u043E\u043B-\u0432\u0430 \u0437\u0430\u0434\u0430\u0447</span> <i>".concat(_options.dependOnApps ? '+' : '-', "</i></div>\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041A\u043E\u043B-\u0432\u043E \u0437\u0430\u0434\u0430\u0447</span> <i>").concat(_options.CountApps, "</i></div>\n\t\t\t\t\t\t\t\t") : '', "\n\t\t\t\t\t\t\t").concat(_options.dependOnDate ? "\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u0417\u0430\u0432\u0438\u0441\u0438\u043C\u043E\u0441\u0442\u044C \u043E\u0442 \u0434\u0430\u0442\u044B</span> <i>".concat(_options.dependOnDate ? '+' : '-', "</i></div>\n\t\t\t\t\t\t\t\t<div class=\"sp_btw\"><span>\u041A\u043E\u043B-\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u043D\u0430 \u0441\u0434\u0430\u0447\u0443</span> <i>").concat(_options.DateToPass, "</i></div>\n\t\t\t\t\t\t\t\t") : '', "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t"),
+          id: null
+        }).then(function (e) {
+          if (e) {
+            callback(parseValues());
+            (0, _notice.$notice)("\u041E\u0447\u0435\u0440\u0435\u0434\u044C ".concat($name.value, " \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0437\u0434\u0430\u043D\u0430"));
+
+            _close();
           }
         });
       } else {//! Добавить подсказки
@@ -1094,40 +1270,8 @@ var $Qmaker = function $Qmaker(callback) {
     }
   };
 
-  var parseValues = function parseValues() {
-    var name = document.getElementById('input_name').value;
-
-    if (options.smart) {
-      var apps = document.getElementById('input_apps').value;
-      var date = document.getElementById('input_date').value;
-      return {
-        name: name,
-        type: 'smart',
-        dependOnApps: apps ? true : false,
-        CountApps: apps || 0,
-        dependOnDate: date ? true : false,
-        DateToPass: date || 0
-      };
-    }
-
-    return {
-      name: name,
-      type: 'common'
-    };
-  };
-
-  var controlInput = function controlInput(e) {
-    var number = e.target.valueAsNumber;
-
-    if (number > 100 || number <= 0) {
-      e.target.value = 1;
-      options[e.target.dataset.to] = 1;
-    }
-  };
-
-  var __popup__ = open();
-
   __popup__.addEventListener("click", function (e) {
+    e.preventDefault();
     var action = e.target.dataset.action;
 
     if (action) {
@@ -1135,49 +1279,24 @@ var $Qmaker = function $Qmaker(callback) {
     }
   });
 
-  document.body.appendChild(__popup__);
-  document.getElementById('input_apps').oninput = controlInput;
-  document.getElementById('input_date').oninput = controlInput;
+  $name.oninput = function (e) {
+    toggleStateById('name_input', e.target.value);
+
+    if (e.data === ' ') {
+      e.target.value = e.target.value.replace(' ', '');
+    }
+  };
+
+  $apps.oninput = controlInput;
+  $date.oninput = controlInput;
 };
 
 exports.$Qmaker = $Qmaker;
 
 var pattern = function pattern() {
-  return "\n<div class=\"form padding-content center-items-inline shadow\">\n\t<span class=\"Qtitle\">\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u043E\u0447\u0435\u0440\u0435\u0434\u0435\u0439</span>\n\n\t<div class=\"input_group\">\n\t\t<input id=\"input_name\" type=\"text\" maxlength=\"32\" data-to=\"name\" required/>\n\t\t<label class=\"field_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</label>\n\t</div>\n\n\t<div class=\"type_selector flex-row\">\n\t\t<div class=\"common padding-content center-items active\" data-action=\"common\" id=\"C_btn\">\u041E\u0431\u044B\u0447\u043D\u0430\u044F</div>\n\t\t<div class=\"smart padding-content center-items\" data-action=\"smart\" id=\"S_btn\">\u0423\u043C\u043D\u0430\u044F</div>\n\t</div>\n\n\t<div class=\"smart_options flex-column\" id=\"smart_options\">\n\t\t<div class=\"qm_title flex-row center-items\">\n\t\t\t<span>\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u043C\u043D\u043E\u0439 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span>\n\t\t\t<div class=\"info center-items\">i</div>\n\t\t</div>\n\t\t<div class=\"input_group\">\n\t\t\t<input id=\"input_apps\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"CountApps\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u0434\u0430\u0447</label>\n\t\t</div>\n\t\t<div class=\"input_group\">\n\t\t\t<input id=\"input_date\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"DateToPass\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0434\u043B\u044F \u0441\u0434\u0430\u0447\u0438</label>\n\t\t</div>\n\t</div>\n\n\t<div class=\"btn_container flex-row\">\n\t\t<div class=\"btn\" data-action=\"create\" id=\"create\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n\t\t<div class=\"btn\" data-action=\"close\" id=\"close\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t</div>\n</div>\n";
+  return "\n<div class=\"form padding-content center-items-inline shadow\">\n\t<span class=\"Qtitle\">\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440 \u043E\u0447\u0435\u0440\u0435\u0434\u0435\u0439</span>\n\n\t<div class=\"input_group\" id=\"name_input\">\n\t\t<input id=\"input_name\" type=\"text\" maxlength=\"32\" data-to=\"name\" autocomplete=\"off\" required/>\n\t\t<label class=\"field_name\">\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</label>\n\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t<div class=\"error_message center-items\">\n\t\t\t\u041F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t</div>\n\t</div>\n\n\t<div class=\"type_selector flex-row\">\n\t\t<div class=\"common padding-content center-items active\" data-action=\"switch\" id=\"C_btn\">\u041E\u0431\u044B\u0447\u043D\u0430\u044F</div>\n\t\t<div class=\"smart padding-content center-items\" data-action=\"switch\" id=\"S_btn\">\u0423\u043C\u043D\u0430\u044F</div>\n\t</div>\n\n\t<div class=\"smart_options flex-column\" id=\"smart_options\">\n\t\t<div class=\"qm_title flex-row center-items\">\n\t\t\t<span>\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0443\u043C\u043D\u043E\u0439 \u043E\u0447\u0435\u0440\u0435\u0434\u0438</span>\n\t\t\t<div class=\"info center-items\">i</div>\n\t\t</div>\n\t\t<div class=\"input_group\" id=\"apps_input\">\n\t\t\t<input id=\"input_apps\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"CountApps\" autocomplete=\"off\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u0434\u0430\u0447</label>\n\t\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t\t<div class=\"error_message center-items\">\n\t\t\t\t\u0425\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u043F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t\t</div>\n\t\t\t<div class=\"error_type center-items\">\n\t\t\t\t\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B \u0438\u043B\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435!\n\t\t\t</div>\n\t\t</div>\n\t\t<div class=\"input_group\" id=\"date_input\">\n\t\t\t<input id=\"input_date\" type=\"number\" min=\"1\" max=\"99\" maxlength=\"2\" data-to=\"DateToPass\" autocomplete=\"off\" required/>\n\t\t\t<label class=\"field_name\">\u041A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u0439 \u0434\u043B\u044F \u0441\u0434\u0430\u0447\u0438</label>\n\t\t\t<i class=\"fi fi-rs-check\"></i>\n\t\t\t<i class=\"fi fi-rs-exclamation\"></i>\n\t\t\t<div class=\"error_message center-items\">\n\t\t\t\t\u0425\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u043F\u043E\u043B\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0431\u044B\u0442\u044C \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E!\n\t\t\t</div>\n\t\t\t<div class=\"error_type center-items\">\n\t\t\t\t\u041D\u0435\u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0439 \u0441\u0438\u043C\u0432\u043E\u043B \u0438\u043B\u0438 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435!\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\t<div class=\"btn_container flex-row\">\n\t\t<div class=\"btn\" data-action=\"create\" id=\"create\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n\t\t<div class=\"btn\" data-action=\"close\" id=\"close\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t</div>\n</div>\n";
 };
-/**
- * Создает окно с запросом
- * @param {string} text 
- * @param {string} content 
- * @returns null
- */
-
-
-var apply = function apply(text, content) {
-  return new Promise(function (resolve, reject) {
-    var $apply = document.createElement("div");
-    $apply.classList.add("modal", "visible", "center-items", "flex-column");
-    $apply.id = "modal-apply";
-    $apply.dataset.action = "close";
-    $apply.innerHTML = "\n\t\t\t<div class=\"notice apply padding-content center-items flex-column shadow\">\n\t\t\t".concat(text, "\n\t\t\t").concat(content || "", "\n\t\t\t<div class=\"btn-container flex-row\">\n\t\t\t\t\t<div class=\"btn apply\" data-action=\"ok\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</div>\n\t\t\t\t\t<div class=\"btn close\" data-action=\"cancel\">\u041E\u0442\u043C\u0435\u043D\u0430</div>\n\t\t\t</div>\n\t\t\t</div>\n\t\t");
-    document.body.appendChild($apply);
-    $apply.addEventListener("click", function (e) {
-      var action = e.target.dataset.action;
-
-      if (action) {
-        console.log("clicked on btn ".concat(action));
-
-        if (action === "ok") {
-          resolve(true);
-        }
-
-        resolve(false);
-        document.body.removeChild($apply);
-      }
-    });
-  });
-};
-},{"./notice":"classes/notice.js"}],"classes/Qlist.js":[function(require,module,exports) {
+},{"./notice":"classes/notice.js","../plugins/ApplyNotice":"plugins/ApplyNotice.js"}],"classes/Qlist.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1227,8 +1346,6 @@ var _list = /*#__PURE__*/new WeakMap();
 
 var QList = /*#__PURE__*/function () {
   function QList() {
-    var canAddQueue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
     _classCallCheck(this, QList);
 
     _classPrivateFieldInitSpec(this, _list, {
@@ -1238,7 +1355,9 @@ var QList = /*#__PURE__*/function () {
 
     this.selected = null;
     this.min = true;
-    this.canAddQueue = canAddQueue;
+    this.canAddQueue = false;
+    this.eventListeners = false;
+    this.previewSelected = -1;
     this.setup();
   }
 
@@ -1285,7 +1404,7 @@ var QList = /*#__PURE__*/function () {
                               idQueue: idQueue,
                               name: name,
                               positionStudent: positionStudent
-                            }));
+                            }, _this.canAddQueue));
 
                           case 5:
                           case "end":
@@ -1359,7 +1478,7 @@ var QList = /*#__PURE__*/function () {
                 html = _context3.t0;
 
                 if (this.min && this.canAddQueue) {
-                  html += "\n                <div class=\"QmakerContainer border-2px center-items\">\n                <div class=\"Qmaker\" id=\"Qmaker\" data-action=\"create\">\n                    <div class=\"btn about\" id=\"QmakerAdd\">\u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C</div>\n                </div>\n                </div>\n            ";
+                  html += "\n                <div class=\"QmakerContainer center-items\" data-action=\"create\">\n                    <div class=\"Qmaker center-items\" id=\"Qmaker\" data-action=\"create\">\n                        \u0421\u043E\u0437\u0434\u0430\u0442\u044C \u043E\u0447\u0435\u0440\u0435\u0434\u044C\n                    </div>\n                </div>\n            ";
                 }
 
                 return _context3.abrupt("return", html);
@@ -1391,7 +1510,8 @@ var QList = /*#__PURE__*/function () {
 
               case 2:
                 document.getElementById("content-main").innerHTML = _context4.sent;
-                this.addEventListeners();
+                if (this.min) //this.addQuicklook();
+                  if (!this.eventListeners) this.addEventListeners();
 
               case 4:
               case "end":
@@ -1407,37 +1527,92 @@ var QList = /*#__PURE__*/function () {
 
       return render;
     }()
+    /**
+     *
+     * @param {MouseEvent} e
+     */
+
+  }, {
+    key: "quicklook",
+    value: function quicklook(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+
+      if (e.target.dataset.action === "open" && (e.ctrlKey || e.metaKey) && this.previewSelected === -1) {
+        _serverReq.serverRequest.getListOfStudentInQueueById(e.target.id).then(function (data) {
+          _this2.previewSelected = e.target.id;
+          _this2.$__preview__ = document.createElement("div");
+
+          _this2.$__preview__.classList.add("quicklook", "center-items", "flex-column");
+
+          _this2.$__preview__.innerHTML = "<div class=\"quicklook__title\">QuickLook</div><span>".concat(e.target.dataset.name, ":</span>");
+          _this2.$__preview__.innerHTML += data.responseAboutStudentList.map(function (item, index) {
+            return "<div class=\"quicklook__item ".concat(item.idStudent === (0, _util.getId)() ? "u" : "", "\">").concat(index + 1, " ").concat(item.nameOfStudent, "</div>");
+          }).join('');
+          e.target.appendChild(_this2.$__preview__);
+        });
+      }
+    }
+    /**
+     *
+     * @param {MouseEvent} e
+     */
+
+  }, {
+    key: "closeQuicklook",
+    value: function closeQuicklook(e) {
+      e.preventDefault();
+
+      if (this.previewSelected === e.target.id) {
+        e.currentTarget.removeChild(this.$__preview__);
+        this.previewSelected = -1;
+      }
+    }
+  }, {
+    key: "addQuicklook",
+    value: function addQuicklook() {
+      var _this3 = this;
+
+      document.querySelectorAll(".qItem").forEach(function (elem) {
+        elem.addEventListener("mouseover", _this3.quicklook.bind(_this3));
+        elem.addEventListener("mouseleave", _this3.closeQuicklook.bind(_this3));
+      });
+    }
   }, {
     key: "addEventListeners",
     value: function addEventListeners() {
-      var _this2 = this;
+      var _this4 = this;
 
-      if (_classPrivateFieldGet(this, _list).length > 0) {
-        document.getElementById('content-main').addEventListener('click', function (e) {
+      if (_classPrivateFieldGet(this, _list).length > 0 || this.canAddQueue) {
+        this.eventListeners = true;
+        document.getElementById("content-main").addEventListener("click", function (e) {
+          e.preventDefault();
           var action = e.target.dataset.action;
 
           if (action) {
             switch (action) {
               case "open":
                 {
-                  _this2.selected = _classPrivateFieldGet(_this2, _list).find(function (item) {
+                  console.log("open");
+                  _this4.selected = _classPrivateFieldGet(_this4, _list).find(function (item) {
                     return item.ID === +e.target.dataset.id;
                   });
-                  _this2.selected.min = false;
-                  _this2.min = false;
+                  _this4.selected.min = false;
+                  _this4.min = false;
 
-                  _this2.render();
+                  _this4.render();
 
                   break;
                 }
 
               case "back":
                 {
-                  _this2.allMin();
+                  _this4.allMin();
 
-                  _this2.selected = null;
+                  _this4.selected = null;
 
-                  _this2.render();
+                  _this4.render();
 
                   break;
                 }
@@ -1445,11 +1620,8 @@ var QList = /*#__PURE__*/function () {
               case "copy":
                 {
                   _serverReq.serverRequest.getListOfStudentInQueueById(+e.target.dataset.id).then(function (item) {
-                    navigator.clipboard.writeText((0, _util.createQueueText)(item)).then(function () {
-                      (0, _notice.$notice)('Очередь скопирована в буфер обмена');
-                    }).catch(function () {
-                      (0, _notice.$notice)('Произошла ошибка при копировании в буфер обмена');
-                    });
+                    (0, _util.copyToClipboard)((0, _util.createQueueText)(item.responseAboutStudentList));
+                    (0, _notice.$notice)("Очередь скопирована в буфер обмена");
                   });
 
                   break;
@@ -1459,14 +1631,22 @@ var QList = /*#__PURE__*/function () {
                 {
                   (0, _Qmaker.$Qmaker)( /*#__PURE__*/function () {
                     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(options) {
+                      var name, type, dependOnApps, CountApps, DependOnDate, DateToPass, hash;
                       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
                         while (1) {
                           switch (_context5.prev = _context5.next) {
                             case 0:
-                              _context5.next = 2;
-                              return _this2.render();
+                              name = options.name, type = options.type, dependOnApps = options.dependOnApps, CountApps = options.CountApps, DependOnDate = options.DependOnDate, DateToPass = options.DateToPass;
+                              _context5.next = 3;
+                              return _serverReq.serverRequest.createQ(name, type, dependOnApps, CountApps, DependOnDate, DateToPass, (0, _util.getId)());
 
-                            case 2:
+                            case 3:
+                              hash = _context5.sent.response;
+                              (0, _util.copyToClipboard)("http://25.85.15.23:1234/#".concat(hash));
+                              _context5.next = 7;
+                              return _this4.render();
+
+                            case 7:
                             case "end":
                               return _context5.stop();
                           }
@@ -1480,9 +1660,20 @@ var QList = /*#__PURE__*/function () {
                   }());
                   break;
                 }
+
+              case "delete":
+                {
+                  break;
+                }
+
+              case "exit":
+                {
+                  _serverReq.serverRequest.leaveFromQueue(e.target.dataset.target, (0, _util.getId)()).then(function () {//window.location.reload();
+                  });
+                }
             }
           }
-        });
+        }, true);
       }
     }
   }, {
@@ -1491,7 +1682,6 @@ var QList = /*#__PURE__*/function () {
   }, {
     key: "backButtonClick",
     value: function backButtonClick() {
-      console.log("click back button");
       this.allMin();
       this.min = true;
       this.selected = null;
@@ -1513,7 +1703,66 @@ var QList = /*#__PURE__*/function () {
 }();
 
 exports.QList = QList;
-},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js","./Qmaker":"classes/Qmaker.js","../classes/notice":"classes/notice.js","../util/util":"util/util.js"}],"classes/App.js":[function(require,module,exports) {
+},{"./queue":"classes/queue.js","./serverReq":"classes/serverReq.js","./Qmaker":"classes/Qmaker.js","../classes/notice":"classes/notice.js","../util/util":"util/util.js"}],"plugins/modal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.$modalWindow = void 0;
+
+var $modalWindow = function $modalWindow(content) {
+  var open = function open() {
+    var $modal = document.createElement('div');
+    $modal.classList.add('modal', 'visible', 'center-items');
+    $modal.dataset.action = 'close';
+    $modal.innerHTML += "\n      <div class=\"content flex-column center-items padding-content\">\n        <div class=\"btn close center-items\" data-action='close'>X</div>\n        <div class=\"modal_title center-items\">".concat(content.title, "</div>\n        ").concat(parseContent(content), "\n      </div>\n    ");
+    document.body.appendChild($modal);
+    return $modal;
+  };
+
+  var __popup__ = open();
+
+  __popup__.addEventListener('click', function (e) {
+    e.preventDefault();
+    var action = e.target.dataset.action;
+
+    if (action) {
+      document.body.removeChild(__popup__);
+    }
+  });
+};
+
+exports.$modalWindow = $modalWindow;
+
+var parseContent = function parseContent(content) {
+  return content.elements.map(function (el) {
+    return "<".concat(el.type, " class=").concat(el.class || '', " id=").concat(el.id || '', ">").concat(el.innerHTML || '', "</").concat(el.type, ">");
+  }).join('');
+};
+/*
+
+{
+  title : 'DOAPW',
+  elements : [
+    {
+      type : 'div',
+      innerHtml : "mdaw",
+      class : '',
+      id : ""
+    },
+    {
+
+    }
+  ],
+  buttons : [
+    'ok',
+    'close'
+  ]
+}
+
+*/
+},{}],"classes/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1528,6 +1777,10 @@ var _serverReq = require("./serverReq");
 var _util = require("../util/util");
 
 var _notice2 = require("./notice");
+
+var _modal = require("../plugins/modal");
+
+var _Qmaker = require("./Qmaker");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -1561,6 +1814,12 @@ var _qList = /*#__PURE__*/new WeakMap();
 
 var _notice = /*#__PURE__*/new WeakMap();
 
+var _header = /*#__PURE__*/new WeakSet();
+
+var _main = /*#__PURE__*/new WeakSet();
+
+var _footer = /*#__PURE__*/new WeakSet();
+
 var _setup = /*#__PURE__*/new WeakSet();
 
 var App = /*#__PURE__*/function () {
@@ -1568,6 +1827,12 @@ var App = /*#__PURE__*/function () {
     _classCallCheck(this, App);
 
     _classPrivateMethodInitSpec(this, _setup);
+
+    _classPrivateMethodInitSpec(this, _footer);
+
+    _classPrivateMethodInitSpec(this, _main);
+
+    _classPrivateMethodInitSpec(this, _header);
 
     _classPrivateFieldInitSpec(this, _qList, {
       writable: true,
@@ -1588,6 +1853,12 @@ var App = /*#__PURE__*/function () {
     key: "show_error",
     value: function show_error() {
       document.getElementById("content-main").innerHTML = '<div class="error">Сайт не работает. Звоните фиксикам или попробуйте обновить страницу :)</div>';
+    }
+  }, {
+    key: "openHome",
+    value: function openHome() {
+      (0, _util.setPage)('home');
+      window.location.reload();
     }
   }, {
     key: "openNotice",
@@ -1617,6 +1888,27 @@ var App = /*#__PURE__*/function () {
 
 exports.App = App;
 
+function _header2() {
+  var $header = document.createElement('header');
+  $header.classList.add('center-items-inline');
+  $header.innerHTML = "\n    <div class=\"container center-items-inline\">\n      <div class=\"logo border-2px\"></div>\n      <span class=\"title\">\u0423\u0434\u043E\u0431\u043D\u0430\u044F \u043E\u0447\u0435\u0440\u0435\u0434\u044C</span>\n    </div>\n    <div class=\"profile center-items-inline\">\n        <div class=\"name center-items\" id=\"name_holder\"></div>\n        <div class=\"p_btn notice_btn center-items padding-lr\" id=\"noticeList\"></div>\n        <div class=\"p_btn home center-items padding-lr\" id=\"home\"></div>\n        <div class=\"p_btn logout center-items padding-lr\" id=\"logout\"></div>\n    </div>";
+  document.body.appendChild($header);
+}
+
+function _main2() {
+  var $main = document.createElement('main');
+  $main.classList.add('flex-space-center-wrap');
+  $main.id = 'content-main';
+  document.body.appendChild($main);
+}
+
+function _footer2() {
+  var $footer = document.createElement('footer');
+  $footer.classList.add('center-items-inline');
+  $footer.innerHTML = "\n    <div class=\"dev flex-row\">\n      <span>\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0438:</span>\n      <div class=\"link center-items padding-lr\" data-action=\"open_modal\" data-target=\"kriminal589\">@Kriminal589</div>\n      <div class=\"link center-items padding-lr\" data-action=\"open_modal\" data-target=\"viltskaa\">@Viltskaa</div>\n    </div>";
+  document.body.appendChild($footer);
+}
+
 function _setup2() {
   return _setup3.apply(this, arguments);
 }
@@ -1629,44 +1921,74 @@ function _setup3() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            document.body.innerHTML = '';
+
+            _classPrivateMethodGet(this, _header, _header2).call(this);
+
+            _classPrivateMethodGet(this, _main, _main2).call(this);
+
+            _classPrivateMethodGet(this, _footer, _footer2).call(this);
+
+            (0, _util.setPage)('main');
+
             document.getElementById("logout").onclick = function () {
+              (0, _util.setPage)('home');
               console.log('logout init');
               VK.Auth.getLoginStatus(function (response) {
                 if (response) {
                   VK.Auth.logout(function (data) {
                     console.log(data);
                     localStorage.removeItem('vk_auth');
-                    window.location.reload();
+                    document.location.reload();
                   });
                 }
               });
             };
 
             document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
+            document.getElementById('home').addEventListener('click', this.openHome.bind(this));
+            document.querySelectorAll('.link').forEach(function (item) {
+              item.addEventListener('click', function (e) {
+                e.preventDefault();
+                (0, _modal.$modalWindow)({
+                  title: item.dataset.target,
+                  elements: [{
+                    type: 'div',
+                    innerHTML: 'vk',
+                    class: 'dev-item center-items'
+                  }, {
+                    type: 'div',
+                    innerHTML: 'github',
+                    class: 'dev-item center-items'
+                  }]
+                });
+              });
+            });
             _JSON$parse = JSON.parse(localStorage.getItem("vk_auth")), id = _JSON$parse.id, name = _JSON$parse.name;
-            _context.next = 5;
+            _context.next = 12;
             return _serverReq.serverRequest.addStudent(id, name);
 
-          case 5:
+          case 12:
             response = _context.sent;
+            _classPrivateFieldGet(this, _qList).canAddQueue = response.response || false;
 
             if (!(response === -1)) {
-              _context.next = 10;
+              _context.next = 18;
               break;
             }
 
             this.error = true;
-            _context.next = 12;
+            _context.next = 20;
             break;
 
-          case 10:
-            _context.next = 12;
+          case 18:
+            _context.next = 20;
             return _classPrivateFieldGet(this, _qList).parseListOfQueues(id);
 
-          case 12:
+          case 20:
             this.render();
 
-          case 13:
+          case 21:
           case "end":
             return _context.stop();
         }
@@ -1675,7 +1997,67 @@ function _setup3() {
   }));
   return _setup3.apply(this, arguments);
 }
-},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","../util/util":"util/util.js","./notice":"classes/notice.js"}],"index.js":[function(require,module,exports) {
+},{"./Qlist":"classes/Qlist.js","./serverReq":"classes/serverReq.js","../util/util":"util/util.js","./notice":"classes/notice.js","../plugins/modal":"plugins/modal.js","./Qmaker":"classes/Qmaker.js"}],"plugins/homepage.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.homepage = void 0;
+
+var _util = require("../util/util");
+
+var homepage = function homepage(callback) {
+  new Promise(function (resolve, reject) {
+    var session = (0, _util.validSession)();
+    if ((0, _util.getPage)() !== "home" && session) resolve(false);
+    var $page = document.createElement("div");
+    $page.classList.add("homepage");
+    $page.innerHTML = "\n            <div class=\"circle\" id=\"a\"></div>\n            <div class=\"square\" id=\"b\"></div>\n            <div class=\"homepage_content flex-row\">\n                <div class=\"left flex-column\">\n                    <div class=\"nav flex-row\">\n                        <div class=\"h_btn about\" data-action=\"about\">\u0421\u0435\u0440\u0432\u0438\u0441</div>\n                        <div class=\"h_btn link\" data-action=\"link\">\u0421\u0432\u044F\u0437\u044C</div>\n                    </div>\n\n                    <div class=\"homepage_title flex-column\">\n                        <span>\u0423\u0434\u043E\u0431\u043D\u0430\u044F</span>\n                        <span>\u041E\u0447\u0435\u0440\u0435\u0434\u044C</span>\n                        <span>\u0434\u043B\u044F \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432</span>\n                        <span>\u0440\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0430\u043D\u0430\u044F \u0442\u0430\u043A\u0438\u043C\u0438 \u0436\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430\u043C\u0438</span>\n                    </div>\n                    ".concat(session ? '<div class="authbtn center-items" data-action="close">Перейти к очередям</div>' : '<div class="authbtn center-items" data-action="auth">Авторизация через Вконтакте</div>', "\n                </div>\n                <div class=\"right center-items\">\n                    <div class=\"news_page custom-scrollbar\">\n                        <div class=\"news_item center-items\">\n                            <div class=\"news_title\">\u041E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 1.1</div>\n                            <div class=\"description\">lol</div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        ");
+    document.body.appendChild($page);
+    $page.addEventListener("click", function (e) {
+      var action = e.target.dataset.action;
+
+      if (action) {
+        switch (action) {
+          case "auth":
+            {
+              VK.Auth.login(function (data) {
+                if (data.session) {
+                  console.log("auth | success");
+                  var _data$session = data.session,
+                      expire = _data$session.expire,
+                      user = _data$session.user;
+                  var id = user.id,
+                      first_name = user.first_name,
+                      last_name = user.last_name;
+                  localStorage.setItem("vk_auth", JSON.stringify({
+                    expire: expire,
+                    id: id,
+                    name: "".concat(first_name, " ").concat(last_name)
+                  }));
+                  document.body.removeChild($page);
+                  resolve(false);
+                } else {
+                  resolve(true);
+                }
+              });
+              break;
+            }
+
+          case "close":
+            {
+              document.body.removeChild($page);
+              resolve(false);
+            }
+        }
+      }
+    });
+  }).then(callback);
+};
+
+exports.homepage = homepage;
+},{"../util/util":"util/util.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("./styles/main.scss");
@@ -1684,9 +2066,9 @@ var _App = require("./classes/App");
 
 var _util = require("./util/util");
 
-var _Qmaker = require("./classes/Qmaker");
-
 var _notice = require("./classes/notice");
+
+var _homepage = require("./plugins/homepage");
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -1701,10 +2083,6 @@ window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          (0, _Qmaker.$Qmaker)(); //VK.init({ apiId: 8229660 });
-          //Auth(main);
-
-        case 1:
         case "end":
           return _context.stop();
       }
@@ -1712,82 +2090,15 @@ window.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime
   }, _callee);
 }));
 
-var main = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(error) {
-    var hash, app;
-    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            console.log(error);
-            hash = document.location.hash.replace('#', '');
+var main = function main(error) {
+  var app = new _App.App();
 
-            if (hash) {
-              (0, _notice.InviteApply)(hash);
-            } else {
-              app = new _App.App();
-
-              if (error) {
-                app.error = true;
-                app.render();
-              }
-            }
-
-          case 3:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function main(_x) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-
-function send() {
-  return _send.apply(this, arguments);
-}
-
-function _send() {
-  _send = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-    var request, res;
-    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            request = new Request('http://25.84.228.15:8080/queue/test', {});
-            _context3.next = 4;
-            return fetch(request, {
-              method: 'GET',
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": JSON.stringify("BEER_MONSTER_ENTERS_TO_SERVER!")
-              }
-            });
-
-          case 4:
-            res = _context3.sent;
-            return _context3.abrupt("return", res.json());
-
-          case 8:
-            _context3.prev = 8;
-            _context3.t0 = _context3["catch"](0);
-            console.error(_context3.t0);
-            return _context3.abrupt("return", _context3.t0);
-
-          case 12:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3, null, [[0, 8]]);
-  }));
-  return _send.apply(this, arguments);
-}
-},{"./styles/main.scss":"styles/main.scss","./classes/App":"classes/App.js","./util/util":"util/util.js","./classes/Qmaker":"classes/Qmaker.js","./classes/notice":"classes/notice.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  if (error) {
+    app.error = true;
+    app.render();
+  }
+};
+},{"./styles/main.scss":"styles/main.scss","./classes/App":"classes/App.js","./util/util":"util/util.js","./classes/notice":"classes/notice.js","./plugins/homepage":"plugins/homepage.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -1815,7 +2126,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "25.85.15.23" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54546" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52623" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

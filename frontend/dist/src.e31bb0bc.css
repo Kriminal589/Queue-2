@@ -1,6 +1,6 @@
-@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap");
 @import url("https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css");
+@import url("https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css");
 * {
   padding: 0;
   margin: 0;
@@ -67,180 +67,65 @@ html, body {
   box-sizing: border-box;
 }
 
-.border-2px {
-  border: 2px solid #000;
-}
-
-.btn {
-  text-align: center;
-  padding: 1vh 0.5vh;
-  box-sizing: border-box;
-  width: 100%;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.2);
-  font-size: 1.5vh;
-  transition: all 0.3s ease;
-}
-.btn:not(.disabled):hover {
-  background: rgba(0, 0, 0, 0.4);
-  transform: scaleY(1.1);
-}
-.btn.disabled {
-  background: rgba(0, 0, 0, 0.2);
-}
-.btn.apply {
-  background: rgba(111, 240, 108, 0.8);
-}
-.btn.auth {
-  width: 30vw;
-  background: rgba(245, 191, 66, 0.7);
-}
-.btn.close {
-  background: aquamarine;
-}
-
-.hide {
-  display: none;
-}
-
-@media (max-width: 1200px) {
-  .qItem, .QmakerContainer {
-    min-width: 20vw;
-  }
-}
-@media (max-width: 840px) {
-  .qItem, .QmakerContainer {
-    min-width: 30vw;
-  }
-  .input_group {
-    min-width: 75vw;
-  }
-}
-@media (max-width: 700px) {
-  .title {
-    display: none;
-  }
-  .profile {
-    width: 100%;
-  }
-  .qItem, .QmakerContainer {
-    min-width: 45vw;
-  }
-  .qList-item {
-    flex-wrap: wrap;
-    height: 7vh;
-  }
-  .qList-item .position {
-    min-width: 5%;
-  }
-  .qList-item .nameStudent {
-    min-width: 94%;
-  }
-  .qList-item .vklink {
-    min-width: 35%;
-  }
-  .qList-item .swap {
-    min-width: 50%;
-  }
-  .qList-item .btn.delete {
-    min-width: 12%;
-  }
-}
-@media (max-width: 400px) {
-  .qList-item {
-    height: 5vh;
-  }
-  .qList-item > * {
-    font-size: 0.8em;
-  }
-}
-@keyframes countdown {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0;
-  }
-}
-body {
-  min-height: 100vh;
-  background: #E8FFFC;
-}
-body .notification {
-  position: absolute;
-  bottom: 2vh;
-  width: 100%;
-  animation: fold 0.5s;
-  z-index: 1000;
-}
-body .notification .notification-content {
-  position: relative;
-}
-body .notification .notification-content .countdown {
-  position: absolute;
-  bottom: 5%;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #000;
-  animation: countdown 5s ease-in-out;
-}
-body .load {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-body .load::after {
-  position: absolute;
-  content: "Подождите";
-  color: #fff;
-  font-weight: 800;
-}
-body .load .square {
-  height: 15vh;
-  width: 15vh;
-  animation: loading 2s ease-in-out infinite;
-}
-body .modal {
-  visibility: hidden;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  animation: fold 0.5s;
-  animation-timing-function: ease;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-body .modal.visible {
-  visibility: visible;
-}
-body .modal .form {
-  flex-direction: column;
-  background-color: #fff;
-}
-body .modal .form > * {
-  margin-top: 1vh;
-}
-body .modal .form .input_group {
+.input_group {
   position: relative;
   width: 30vw;
 }
-body .modal .form .input_group input {
+.input_group input {
   width: 100%;
   height: auto;
   padding: 1vh 0.5vh;
   box-sizing: border-box;
   border: 1px solid #000;
+  background-color: #F3F1F5;
+  color: #7F7C82;
 }
-body .modal .form .input_group input:focus + .field_name, body .modal .form .input_group input:valid + .field_name {
+.input_group i {
+  width: 3vh;
+  height: 3vh;
+  position: absolute;
+  right: 0;
+  top: 1.2vh;
+  opacity: 0;
+  transition: all 0.2s;
+}
+.input_group.success input {
+  border-color: rgba(0, 240, 0, 0.5);
+}
+.input_group.success i.fi-rs-check {
+  opacity: 1;
+  color: rgba(0, 240, 0, 0.9);
+}
+.input_group.error input {
+  border-color: rgba(240, 0, 0, 0.9);
+}
+.input_group.error i.fi-rs-exclamation {
+  opacity: 1;
+  color: rgba(240, 0, 0, 0.9);
+}
+.input_group.error.message .error_message {
+  height: auto;
+}
+.input_group.error.type_err .error_type {
+  height: auto;
+}
+.input_group .error_message,
+.input_group .error_type {
+  font-size: 0.9em;
+  color: #EE3F3F;
+  font-weight: bold;
+  overflow: hidden;
+  height: 0;
+}
+.input_group input:focus + .field_name, .input_group input:valid + .field_name {
   font-size: 0.8em;
   color: #afbdcf;
   top: -0.75vh;
   left: 2vh;
-  background: #ffffff;
+  background: #F3F1F5;
   padding: 0px 5px 0px 5px;
 }
-body .modal .form .input_group .field_name {
+.input_group .field_name {
   position: absolute;
   font-size: 1em;
   top: 1vh;
@@ -248,364 +133,63 @@ body .modal .form .input_group .field_name {
   pointer-events: none;
   transition: 0.2s ease all;
 }
-body .modal .form .input_group input:focus {
+.input_group input:focus {
   outline: none;
 }
-body .modal .form .type_selector {
-  width: 100%;
-}
-body .modal .form .type_selector > * {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  transition: all 0.2s;
-}
-body .modal .form .type_selector *.active {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-body .modal .form .type_selector *:hover {
-  background-color: rgba(0, 0, 0, 0.6);
-  transform: scaleY(1.1);
-}
-body .modal .form .smart_options {
-  position: relative;
-  height: 0;
-  overflow-y: hidden;
-  transition: all 0.6s;
-}
-body .modal .form .smart_options.active {
-  margin: 1vh 0;
-  border-bottom: 2px solid #000;
-  height: auto;
-}
-body .modal .form .smart_options.active .qm_title {
-  width: 100%;
-  position: relative;
-  z-index: 5;
-  overflow: hidden;
-  text-align: center;
-  background-color: #fff;
-}
-body .modal .form .smart_options.active .qm_title::after, body .modal .form .smart_options.active .qm_title::before {
-  content: "";
-  display: inline-block;
-  width: 100%;
-  height: 2px;
-  background: #000;
-  z-index: -1;
-  position: relative;
-  vertical-align: middle;
-}
-body .modal .form .smart_options.active .qm_title::after {
-  right: -0.2vh;
-  margin-right: -100%;
-}
-body .modal .form .smart_options.active .qm_title::before {
-  left: -0.2vh;
-  margin-left: -100%;
-}
-body .modal .form .smart_options.active .qm_title .span {
-  pointer-events: none;
-}
-body .modal .form .smart_options.active .qm_title .info {
-  width: 2vh;
-  height: 2vh;
-  margin-left: 0.5vw;
-  background-color: gray;
-  border-radius: 50%;
-  color: white;
-}
-body .modal .form .smart_options > * {
-  margin: 1vh 0;
-}
-body .modal .form .btn_container {
-  width: 100%;
-}
-body .modal .content {
-  background-color: #fff;
-}
-body .modal .content .info {
-  margin-bottom: 2vh;
-}
-body .modal .content .btn.invite {
-  background-color: rgba(0, 100, 240, 0.5);
-}
-body .modal .notice {
-  position: relative;
-  margin-top: 1vh;
-  width: 90vw;
-  background-color: #fff;
-}
-body .modal .notice.update .btn.readMore a {
-  text-decoration: none;
-  color: #000;
-}
-body .modal .notice.apply {
-  background: #fff;
-}
-body .modal .notice.apply input {
-  margin-top: 1vh;
-  width: 95%;
-}
-body .modal .notice.Ntitle .btn.back {
-  position: absolute;
-  background: url("/back.e6f29605.png") no-repeat;
-  background-size: contain;
-  left: 1%;
-  width: 2.5vw;
-  height: 2.5vw;
-}
-body .modal .notice .swap-state .red {
-  color: green;
-}
-body .modal .notice .swap-state .green {
-  color: red;
-}
-body .modal .notice.update {
-  justify-content: space-between;
-}
-body .modal .notice.update .btn.readMore {
-  background: rgba(0, 240, 0, 0.5);
-  width: 50%;
-}
-body .modal .notice .btn-container {
-  margin-top: 1vh;
-  justify-content: space-between;
-  width: 95%;
-}
-body .modal .notice .btn-container .btn {
-  width: 49%;
-}
-body header {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  flex-direction: row;
-  justify-content: space-between;
-  height: 8vh;
-  background: #D9D9D9;
-}
-body header .container {
+
+.padding-lr {
+  padding: 1vh 2vh;
   box-sizing: border-box;
-  height: 5vh;
-}
-body header .container .logo {
-  box-sizing: border-box;
-  height: 5vh;
-  width: 5vh;
-  margin-right: 1vw;
-  transition: all 0.5s;
-}
-body header .container .logo:hover {
-  transform: rotate(1turn);
-}
-body header .profile {
-  box-sizing: border-box;
-  justify-content: center;
-  position: relative;
-  height: 5vh;
-  min-width: 30vw;
-}
-body header .profile .name {
-  padding: 0 2vw;
-}
-body header .profile .notice {
-  position: absolute;
-  left: 1vw;
-  height: 3vh;
-  width: 3vh;
-  background: url("/notification.8f1ad31f.png") no-repeat;
-  background-size: contain;
-  cursor: pointer;
-}
-body header .profile .notice::after {
-  content: "";
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-body header .profile .notice:hover::after {
-  position: absolute;
-  opacity: 1;
-  content: "Уведомления";
-  font-size: 0.8em;
-  top: 5vh;
-  right: -3vw;
-  padding: 1vh 1vw;
-  background: rgba(0, 240, 0, 0.5);
-  border: 1px solid #000;
-}
-body header .profile .logout {
-  position: absolute;
-  right: 1vw;
-  height: 3vh;
-  width: 3vh;
-  background: url("/logout.8f74ff45.png") no-repeat;
-  background-size: contain;
-  cursor: pointer;
-}
-body header .profile .logout::after {
-  content: "";
-  opacity: 0;
-  transition: opacity 0.5s;
-}
-body header .profile .logout:hover::after {
-  position: absolute;
-  opacity: 1;
-  content: "Выход";
-  font-size: 0.8em;
-  top: 5vh;
-  right: -1.2vw;
-  padding: 1vh 1vw;
-  background: rgba(255, 0, 0, 0.5);
-  border: 1px solid #000;
-}
-body main {
-  position: absolute;
-  top: 8vh;
-  width: 100%;
-  animation: fold 0.5s;
-  animation-timing-function: ease;
-}
-body main .qItem, body main .QmakerContainer {
-  position: relative;
-  padding: 1vh 1vw;
-  margin: 1vh 1vw;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  width: 15vw;
-  height: 40vh;
-}
-body main .qItem::after,
-body main .QmakerContainer::after {
-  content: "";
-  bottom: 0;
-  position: absolute;
-  width: 100%;
-  height: 0;
-  background: rgba(245, 191, 66, 0.7);
-  background-size: cover;
-  transition: height 0.5s;
-  z-index: -1;
-}
-body main .qItem:hover::after,
-body main .QmakerContainer:hover::after {
-  height: 100%;
-}
-body main .QmakerContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-body main .QmakerContainer .btn.about {
-  background-color: rgba(10, 200, 200, 0.7);
-}
-body main .qList {
-  width: 100%;
-}
-body main .qList .subject-name {
-  position: relative;
-  height: 5vh;
-}
-body main .qList .subject-name .btn.back {
-  position: absolute;
-  background: url("/back.e6f29605.png") no-repeat center;
-  background-size: contain;
-  left: 1%;
-  width: 4vh;
-  height: 4vh;
-  background-color: rgba(200, 10, 0, 0.3);
-}
-body main .qList .subject-name .btn_container {
-  position: absolute;
-  justify-content: space-between;
-  width: 7vh;
-  right: 1%;
-}
-body main .qList .subject-name .btn_container .btn.copy {
-  background: url("/copy.77129a08.png") no-repeat center;
-  background-size: contain;
-  width: 3vh;
-  height: 3vh;
-}
-body main .qList .subject-name .btn_container .btn.exit {
-  background: url("/logout.8f74ff45.png") no-repeat center;
-  background-size: contain;
-  width: 3vh;
-  height: 3vh;
-}
-body main .qList .contanier {
-  margin-top: 2vh;
-  width: 100%;
-  height: 81vh;
-  overflow-y: overlay;
-}
-body main .qList .contanier .qList-item {
-  width: 100%;
-  margin-bottom: 1vh;
-  justify-content: space-between;
-}
-body main .qList .contanier .qList-item.uitem {
-  height: 3vh;
-}
-body main .qList .contanier .qList-item > * {
-  box-sizing: border-box;
-  padding: 0.3vw;
-}
-body main .qList .contanier .qList-item .position {
-  width: 5%;
-}
-body main .qList .contanier .qList-item .nameStudent {
-  width: 45%;
-}
-body main .qList .contanier .qList-item .vklink {
-  width: 20%;
-  text-decoration: none;
-  background-color: rgba(0, 30, 200, 0.3);
-}
-body main .qList .contanier .qList-item .swap {
-  width: 20%;
-  cursor: pointer;
-}
-body main .qList .contanier .qList-item .btn.delete {
-  width: 5%;
-  background: rgba(255, 0, 0, 0.5);
-}
-body main .qList .contanier .qList-item .u {
-  width: 93.7%;
-  background-color: rgba(0, 200, 200, 0.3);
 }
 
-@keyframes rotation {
-  0% {
-    transform: rotate(5deg);
-  }
-  50% {
-    transform: rotate(-5deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+.hide {
+  display: none;
 }
-@keyframes fold {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+
+body {
+  background-color: #FF3CAC;
+  background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
 }
-@keyframes loading {
-  0% {
-    transform: rotate(180deg);
-  }
-  50% {
-    transform: rotate(-360deg) scale(0.6);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+body header {
+  position: relative;
+  height: 6vh;
+  padding: 0.5vh 2vw;
+  box-sizing: border-box;
+}
+body header .logo {
+  width: 5vh;
+  height: 5vh;
+  background-color: white;
+}
+body header .title {
+  height: 100%;
+  padding: 0 1.5vw;
+}
+body header nav {
+  position: absolute;
+  right: 2vw;
+  display: flex;
+}
+body header nav .btn_contanier {
+  height: 5vh;
+}
+body header nav .btn_contanier .btn {
+  position: relative;
+  width: 5vh;
+  height: 5vh;
+  background-color: rgba(0, 0, 0, 0);
+  border: none !important;
+}
+body header nav .btn_contanier .btn span i::before {
+  font-size: 2.5vh;
+}
+body header nav .btn_contanier .capture {
+  width: 0;
+  overflow-x: hidden;
+  transition: width 0.5s;
+}
+body header nav .btn_contanier .btn:hover + .capture {
+  width: 100%;
 }
 
 /*# sourceMappingURL=/src.e31bb0bc.css.map */
