@@ -9,8 +9,13 @@ import com.webserver.webserver.repos.HeadmanRepository;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
+import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +29,7 @@ public class StudentController {
 
     private final QueueRepository queueRepository;
 
+
     private final ListOfQueueRepository listOfQueueRepository;
     private final HeadmanRepository headmanRepository;
     
@@ -35,6 +41,7 @@ public class StudentController {
     }
 
     @GetMapping("/add")
+    @WriteOperation
     public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id){
         Student student = new Student();
         student.setNameOfStudent(NameOfStudent);

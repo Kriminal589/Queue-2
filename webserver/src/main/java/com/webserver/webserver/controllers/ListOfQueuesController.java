@@ -55,7 +55,7 @@ public class ListOfQueuesController {
 
             Optional<ListOfQueues> list = listOfQueueRepository.findByHexCodeAndIdStudent(hexCode, idStudent);
 
-            if (list.isEmpty()) {
+            if (!list.isPresent()) {
 
                 Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByHexCodeAndIdStudent(queue.getHEXCode(), idStudent);
                 pastConnection.ifPresent(listOfQueueRepository::delete);

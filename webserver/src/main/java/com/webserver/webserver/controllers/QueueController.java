@@ -7,6 +7,8 @@ import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
@@ -27,12 +29,12 @@ public class QueueController {
     private final QueueRepository queueRepository;
 
     private final ListOfQueueRepository listOfQueueRepository;
-    private final StudentRepository studentRepository;
+    //private final StudentRepository studentRepository;
 
     public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, StudentRepository studentRepository) {
         this.queueRepository = queueRepository;
         this.listOfQueueRepository = listOfQueueRepository;
-        this.studentRepository = studentRepository;
+        //this.studentRepository = studentRepository;
     }
 
 
@@ -57,6 +59,7 @@ public class QueueController {
 //    }
 
     @GetMapping("/add")
+    @WriteOperation
     public @ResponseBody String add(@RequestParam String subjectName, @RequestParam short type,
                                     @RequestParam short dependOnApps, @RequestParam int countApps,
                                     @RequestParam short dependOnDate, @RequestParam int dateToPass,
