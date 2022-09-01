@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
 @CrossOrigin
 @RequestMapping(path = "/listOfQueues")
 public class ListOfQueuesController {
@@ -63,6 +62,7 @@ public class ListOfQueuesController {
                 listOfQueues.setIdQueue(queue.getId());
                 listOfQueues.setCurrentApp(queue.getCurrentApp());
                 listOfQueues.setNameOfSubject(queue.getSubjectName());
+                listOfQueues.setIdCreater(idStudent);
 
                 int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
                 listOfQueues.setPositionStudent(position);

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-@CrossOrigin
 @RequestMapping(path = "/student")
 public class StudentController {
 

@@ -14,11 +14,19 @@ public class ListOfQueues {
 
     private String nameOfSubject, hexCode;
 
-    private Long idStudent, idQueue;
+    private Long idStudent, idQueue, idCreater;
     private int positionStudent = 0;
     private int numberOfAppStudent;
     private int currentApp;
     private Long queueEntryDate;
+
+    public java.lang.Long getIdCreater() {
+        return idCreater;
+    }
+
+    public void setIdCreater(java.lang.Long idCreater) {
+        this.idCreater = idCreater;
+    }
 
     public Long getQueueEntryDate() {
         return queueEntryDate;

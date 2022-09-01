@@ -22,7 +22,6 @@ import java.util.Optional;
 
 
 @Controller
-@CrossOrigin
 @RequestMapping(path = "/queue")
 public class QueueController {
 
