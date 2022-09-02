@@ -36,27 +36,6 @@ public class QueueController {
         //this.studentRepository = studentRepository;
     }
 
-
-//    @GetMapping("/add/{SubjectName}/{type}/{dependOnApps}/{countApps}/{dependOnDate}/{dateToPass}")
-//    public @ResponseBody
-//    String addSmartQueue(@PathVariable String SubjectName, @PathVariable short type, @PathVariable short dependOnApps,
-//                         @PathVariable int countApps, @PathVariable short dependOnDate, @PathVariable String dateToPass){
-//
-//        JsonUtil util = new JsonUtil();
-//
-//        Queue queue = new Queue();
-//        queue.setCountApps(countApps);
-//        queue.setDateToPass(dateToPass);
-//        queue.setDependOnApps(dependOnApps);
-//        queue.setDependOnDate(dependOnDate);
-//        queue.setType(type);
-//        queue.setSubjectName(SubjectName);
-//
-//        queueRepository.save(queue);
-//        return util.responseOfFindAndAdd("Saved smart queue", 200);
-    //http://localhost:8080/queue/add?subjectName=OOP&type=0&dependOnApps=0&countApps=0&dependOnDate=0&dateToPass=0
-//    }
-
     @GetMapping("/add")
     @WriteOperation
     public @ResponseBody String add(@RequestParam String subjectName, @RequestParam short type,
@@ -72,6 +51,7 @@ public class QueueController {
         queue.setDependOnApps(dependOnApps);
         queue.setDependOnDate(dependOnDate);
         queue.setType(type);
+        queue.setIdCreator(idStudent);
         queue.setSubjectName(subjectName);
         queue.setHEXCode(new CRC32Hash().getHash(subjectName+idStudent+Instant.now().getEpochSecond()));
 
@@ -96,54 +76,6 @@ public class QueueController {
     public ResponseEntity<String> test (@RequestHeader(value = "Authorization") String key){
         return ResponseEntity.status(HttpStatus.OK).body(key);
     }
-
-//    @GetMapping("/add/{SubjectName}/{type}")
-//    public @ResponseBody String addSimpleQueue(@PathVariable String SubjectName, @PathVariable String type){
-//
-//        JsonUtil util = new JsonUtil();
-//
-//        Queue queue = new Queue();
-//        queue.setType(type);
-//        queue.setSubjectName(SubjectName);
-//
-//        queueRepository.save(queue);
-//        return util.responseOfFindAndAdd("Saved simple queue", 200);
-//    }
-//
-//    @GetMapping("/add/{SubjectName}/{type}/{dependOnApps}/{countApps}/{dependOnDate}")
-//    public @ResponseBody String addQueueWithCountApps(@PathVariable String SubjectName, @PathVariable String type, @PathVariable short dependOnApps,
-//                         @PathVariable int countApps, @PathVariable short dependOnDate){
-//
-//        JsonUtil util = new JsonUtil();
-//
-//        Queue queue = new Queue();
-//        queue.setCountApps(countApps);
-//        queue.setDependOnApps(dependOnApps);
-//        queue.setDependOnDate(dependOnDate);
-//        queue.setType(type);
-//        queue.setSubjectName(SubjectName);
-//
-//        queueRepository.save(queue);
-//        return util.responseOfFindAndAdd("Saved smart queue with count of apps", 200);
-//    }
-//
-//    @GetMapping("/add/{SubjectName}/{type}/{dependOnApps}/{dependOnDate}/{dateToPass}")
-//    public @ResponseBody
-//    String addSmartQueueWithDateToPass(@PathVariable String SubjectName, @PathVariable String type, @PathVariable short dependOnApps,
-//                         @PathVariable short dependOnDate, @PathVariable String dateToPass){
-//
-//        JsonUtil util = new JsonUtil();
-//
-//        Queue queue = new Queue();
-//        queue.setDateToPass(dateToPass);
-//        queue.setDependOnApps(dependOnApps);
-//        queue.setDependOnDate(dependOnDate);
-//        queue.setType(type);
-//        queue.setSubjectName(SubjectName);
-//
-//        queueRepository.save(queue);
-//        return util.responseOfFindAndAdd("Saved smart queue with date to pass", 200);
-//    }
 
     @GetMapping("/all")
     public @ResponseBody

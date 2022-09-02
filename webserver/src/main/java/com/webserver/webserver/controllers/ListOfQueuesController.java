@@ -9,7 +9,6 @@ import com.webserver.webserver.models.Student;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -62,7 +61,7 @@ public class ListOfQueuesController {
                 listOfQueues.setIdQueue(queue.getId());
                 listOfQueues.setCurrentApp(queue.getCurrentApp());
                 listOfQueues.setNameOfSubject(queue.getSubjectName());
-                listOfQueues.setIdCreater(idStudent);
+                listOfQueues.setIdCreator(queue.getIdCreator());
 
                 int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
                 listOfQueues.setPositionStudent(position);
