@@ -74,20 +74,22 @@ export const $Qmaker = function (callback) {
 			toggleStateById('name_input', 0, 1)
 		}
 		if (options) {
-			if (!$apps.value && !$date.value) {
-				toggleStateById('apps_input', 0, 1)
-				toggleStateById('date_input', 0, 1)
+			if ($apps.value) {
+				toggleStateById('apps_input', 1)
 			}
 			else {
-				if ($apps.value)
-					toggleStateById('apps_input', 1)
-				if ($date.value)
-					toggleStateById('date_input', 1)
+				toggleStateById('apps_input', 0, 1)
+			}
+			if ($date.value) {
+				toggleStateById('date_input', 1)
+			}
+			else {
+				toggleStateById('date_input', 0, 1)
 			}
 		}
 		return $name.value &&
 			   (options ? 
-			   $apps.value || $date.value :
+			   $apps.value && $date.value :
 			   true)
 	}
 
@@ -173,7 +175,7 @@ const pattern = () => `
 	<span class="Qtitle">Конструктор очередей</span>
 
 	<div class="input_group" id="name_input">
-		<input id="input_name" type="text" maxlength="32" data-to="name" autocomplete="off" required/>
+		<input id="input_name" type="text" maxlength="16" data-to="name" autocomplete="off" required/>
 		<label class="field_name">Название очереди</label>
 		<i class="fi fi-rs-check"></i>
 		<i class="fi fi-rs-exclamation"></i>
@@ -198,7 +200,7 @@ const pattern = () => `
 			<i class="fi fi-rs-check"></i>
 			<i class="fi fi-rs-exclamation"></i>
 			<div class="error_message center-items">
-				Хотя бы одно поле должно быть заполнено!
+				Поле должно быть заполнено!
 			</div>
 			<div class="error_type center-items">
 				Недопустимый символ или значение!
@@ -210,7 +212,7 @@ const pattern = () => `
 			<i class="fi fi-rs-check"></i>
 			<i class="fi fi-rs-exclamation"></i>
 			<div class="error_message center-items">
-				Хотя бы одно поле должно быть заполнено!
+				Поле должно быть заполнено!
 			</div>
 			<div class="error_type center-items">
 				Недопустимый символ или значение!

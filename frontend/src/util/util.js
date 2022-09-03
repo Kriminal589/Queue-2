@@ -1,4 +1,16 @@
+import { $notice } from "../classes/notice";
 import { serverRequest } from "../classes/serverReq";
+
+String.prototype.hashCode = function() {
+	var hash = 0, i, chr;
+	if (this.length === 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		chr   = this.charCodeAt(i);
+		hash  = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return hash;
+};
 
 export const applyInvite = (href, id) => {};
 
@@ -25,7 +37,7 @@ export const getName = () => JSON.parse(localStorage.getItem("vk_auth")).name
 export const getId = () => JSON.parse(localStorage.getItem("vk_auth")).id
 export const validSession = () => {
   const data = JSON.parse(localStorage.getItem("vk_auth"));
-  return data && data.expire > getTimeUnix()
+  return data && data.expire > getTimeUnix();
 }
 
 export const getPage = () => localStorage.getItem("page")
@@ -73,7 +85,10 @@ export function Auth(callback) {
   }
 }
 
-export const createQueueText = list => list.map((item, index) => `${index+1} ${item.nameOfStudent}`).join('\n')
+export const createQueueText = list => list.map((item, index) => `${index+1} ${item.nameOfStudent.replace('_', ' ')}`).join('\n')
+
+export const createQinvite = hex => `${document.location.origin}/#${hex}`
+export const createTeacherInvite = hex => `${document.location.origin}/t?${hex}`
 
 export const copyToClipboard = text => {
   if (window.clipboardData && window.clipboardData.setData) {
@@ -98,4 +113,44 @@ export const copyToClipboard = text => {
           document.body.removeChild(textarea);
       }
   }
+}
+
+export const InviteLink = hash => {
+	const $modal = document.createElement("div");
+	$modal.classList.add('modal', 'center-items', 'shadow')
+	$modal.dataset.action = 'close'
+	$modal.innerHTML = `<div class="inviteLink">
+												<div class="close" data-action="close"></div>
+												<span class="center-items">Приглашение в очередь</span>
+												<div class="qrCode center-items" id="qrCode"></div>
+												<div class="linkContainer center-items-inline">
+													<div class="copy" data-action="copy"></div>
+													<div class="link" data-action="copy">studentq.ru/#${hash}</div>
+												</div>
+												<div class="share center-items">Поделиться</div>
+											</div>`
+	document.body.appendChild($modal)
+
+	var qrcode = new QRCode(document.getElementById("qrCode"), {
+    text: `http://studentq.ru/#${hash}`,
+    width: 230,
+    height: 230,
+    colorDark : "#7F7C82",
+    colorLight : "#EDFCF1",
+    correctLevel : QRCode.CorrectLevel.H
+	});
+
+	$modal.addEventListener('click', e => {
+		const action = e.target.dataset.action
+
+		if (action) {
+			if (action === 'close') {
+				document.body.removeChild($modal)
+			}
+			else if (action === 'copy') {
+				copyToClipboard(createQinvite(hash));
+				$notice('Приглашение скопировано в буфер обмена');
+			}
+		}
+	})
 }

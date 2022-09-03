@@ -1,0 +1,66 @@
+
+// colors
+$mainColor : #F3F1F5;
+$headerColor : #BFA2DB;
+$footerColor : #F0D9FF;
+$quColor : #d9b3f2;
+$qlColor : #f7c5fd;
+$contentColor : #EDFCF1;
+$textColor : #7F7C82;
+$alTextColor : #BFA2DB;
+$white : #ffffff;
+
+ul[role='list'],
+ol[role='list'],
+li {
+  list-style: none;
+}
+
+.openLook {
+	padding: 4vh 5vw;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+
+	.qTitle {
+		width: 100%;
+		height: 5vh;
+		background: $qlColor;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	ul {
+		li.item {
+			position: relative;
+			margin: 1vh 0;
+			height: 5vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-color: $quColor;
+
+			&.visited {
+				background-color: rgba(0, 0, 0, 0.2);
+			}
+
+			button {
+				position: absolute;
+				right: 1%;
+				width: 8vh;
+				height: 4vh;
+				font-size: 1em;
+				border-radius: 0;
+				outline: none;
+				border: none;
+				transition: all 0.5s ease;
+
+				&:hover {
+					background-color: rgba(0, 0, 0, 0.5);
+					color: white;
+				}
+			}
+		}
+	}
+}

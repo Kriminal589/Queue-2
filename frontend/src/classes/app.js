@@ -3,8 +3,6 @@ import { serverRequest } from "./serverReq";
 import { ReloadName, setPage } from "../util/util";
 import { Notice } from "./notice";
 import { $modalWindow } from "../plugins/modal"
-import { getName } from "../util/util";
-import { $Qmaker } from "./Qmaker";
 
 export class App {
   #qList = new QList();
@@ -22,14 +20,14 @@ export class App {
   #header() {
     const $header = document.createElement('header')
     $header.classList.add('center-items-inline')
+		// <div class="p_btn notice_btn center-items padding-lr" id="noticeList"></div>
     $header.innerHTML = `
     <div class="container center-items-inline">
-      <div class="logo border-2px"></div>
+      <div class="logo center-items">stdq</div>
       <span class="title">Удобная очередь</span>
     </div>
     <div class="profile center-items-inline">
         <div class="name center-items" id="name_holder"></div>
-        <div class="p_btn notice_btn center-items padding-lr" id="noticeList"></div>
         <div class="p_btn home center-items padding-lr" id="home"></div>
         <div class="p_btn logout center-items padding-lr" id="logout"></div>
     </div>`
@@ -49,8 +47,8 @@ export class App {
     $footer.innerHTML = `
     <div class="dev flex-row">
       <span>Разработчики:</span>
-      <div class="link center-items padding-lr" data-action="open_modal" data-target="kriminal589">@Kriminal589</div>
-      <div class="link center-items padding-lr" data-action="open_modal" data-target="viltskaa">@Viltskaa</div>
+      <div class="link center-items padding-lr" data-action="open_modal" data-target="kriminal589" data-vk="https://vk.com/kriminal589" data-github="https://github.com/Kriminal589" data-role="backend разработчик">@Kriminal589</div>
+      <div class="link center-items padding-lr" data-action="open_modal" data-target="viltskaa" data-vk="https://vk.com/viltskaa" data-github="https://github.com/viltskaa" data-role="frontend разработчик">@Viltskaa</div>
     </div>`
     document.body.appendChild($footer)
   }
@@ -75,7 +73,7 @@ export class App {
         }
       })
     }
-    document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
+    //document.getElementById('noticeList').addEventListener('click', this.openNotice.bind(this));
     document.getElementById('home').addEventListener('click', this.openHome.bind(this));
     document.querySelectorAll('.link').forEach(item => {
       item.addEventListener('click', e => {
@@ -83,14 +81,19 @@ export class App {
         $modalWindow({
           title : item.dataset.target,
           elements : [
+						{
+							type : 'span',
+							innerHTML : item.dataset.role,
+							class : '' 
+						},
             {
               type : 'div',
-              innerHTML : 'vk',
+              innerHTML : `<div class="vk"></div><a href=${item.dataset.vk}>Профиль ВК</a>`,
               class : 'dev-item center-items'
             },
             {
               type : 'div',
-              innerHTML : 'github',
+              innerHTML : `<div class="github"></div><a href=${item.dataset.github}>Профиль Github</a>`,
               class : 'dev-item center-items'
             }
           ]
@@ -101,7 +104,7 @@ export class App {
     const { id, name } = JSON.parse(localStorage.getItem("vk_auth"));
     const response = await serverRequest.addStudent(id, name);
     
-    this.#qList.canAddQueue = response.response || false;
+    this.#qList.canAddQueue = +response.response || false;
 
     if (response === -1) {
       this.error = true;
@@ -126,7 +129,6 @@ export class App {
     if (this.error) {
       this.show_error();
     } else {
-      //const data = JSON.parse(localStorage.getItem("vk_auth")).name
       this.#qList.render();
       console.log("render...");
     }

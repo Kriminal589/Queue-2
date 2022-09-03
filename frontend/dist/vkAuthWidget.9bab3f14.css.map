@@ -1,1 +1,0 @@
-{"version":3,"sources":["styles\\vkAuthWidget.scss"],"names":[],"mappings":"AAAA;EACI","file":"vkAuthWidget.9bab3f14.css","sourceRoot":"..\\src","sourcesContent":["[dir] .wauth_head {\r\n    background-color: red;\r\n}"]}

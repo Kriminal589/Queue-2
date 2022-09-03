@@ -17,7 +17,7 @@ export const $modalWindow = content => {
 
   const __popup__ = open()
   __popup__.addEventListener('click', e => {
-    e.preventDefault()
+    //e.preventDefault()
     const action = e.target.dataset.action
 
     if (action) {
