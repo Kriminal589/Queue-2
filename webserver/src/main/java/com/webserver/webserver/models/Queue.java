@@ -12,9 +12,18 @@ public class Queue {
     private Long id;
 
     private String SubjectName, HEXCode;
+    private Long idCreator;
     private int countApps, dateToPass;
     private int currentApp = 1;
     private short dependOnApps, dependOnDate, type;
+
+    public Long getIdCreator() {
+        return idCreator;
+    }
+
+    public void setIdCreator(Long idCreator) {
+        this.idCreator = idCreator;
+    }
 
     public String getHEXCode() {
         return HEXCode;

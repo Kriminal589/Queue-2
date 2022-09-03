@@ -4,10 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 
 @Entity
 public class ListOfQueues {
@@ -17,11 +14,19 @@ public class ListOfQueues {
 
     private String nameOfSubject, hexCode;
 
-    private Long idStudent, idQueue;
+    private Long idStudent, idQueue, idCreator;
     private int positionStudent = 0;
     private int numberOfAppStudent;
     private int currentApp;
     private Long queueEntryDate;
+
+    public java.lang.Long getIdCreator() {
+        return idCreator;
+    }
+
+    public void setIdCreator(java.lang.Long idCreator) {
+        this.idCreator = idCreator;
+    }
 
     public Long getQueueEntryDate() {
         return queueEntryDate;
@@ -93,10 +98,4 @@ public class ListOfQueues {
 
     public ListOfQueues() {
     }
-
-
-//    {"id":4,"nameOfSubject":"History","hexCode":null,"idStudent":236673313,"idQueue":1,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1},
-//    {"id":5,"nameOfSubject":"OAIP","hexCode":null,"idStudent":236673313,"idQueue":2,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1},
-//    {"id":6,"nameOfSubject":"СИАОД","hexCode":null,"idStudent":236673313,"idQueue":3,"positionStudent":1,"numberOfAppStudent":0,"currentApp":1}
-
 }

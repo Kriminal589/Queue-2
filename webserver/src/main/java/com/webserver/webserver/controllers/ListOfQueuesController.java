@@ -9,7 +9,6 @@ import com.webserver.webserver.models.Student;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -18,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
 @CrossOrigin
 @RequestMapping(path = "/listOfQueues")
 public class ListOfQueuesController {
@@ -48,37 +46,34 @@ public class ListOfQueuesController {
 
         listOfQueues.setIdStudent(idStudent);
         listOfQueues.setNumberOfAppStudent(numberOfAppStudent);
-
+        listOfQueues.setHexCode(hexCode);
         if (tryQueue.isPresent() && tryStudent.isPresent()){
 
             Queue queue = tryQueue.get();
 
-            Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByHexCodeAndIdStudent(queue.getHEXCode(), idStudent);
-            pastConnection.ifPresent(listOfQueueRepository::delete);
+            Optional<ListOfQueues> list = listOfQueueRepository.findByHexCodeAndIdStudent(hexCode, idStudent);
 
-            listOfQueues.setIdQueue(queue.getId());
-            listOfQueues.setCurrentApp(queue.getCurrentApp());
-            listOfQueues.setNameOfSubject(queue.getSubjectName());
+            if (!list.isPresent()) {
 
-            int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
-            listOfQueues.setPositionStudent(position);
-            listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
-            listOfQueueRepository.save(listOfQueues);
+                Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByHexCodeAndIdStudent(queue.getHEXCode(), idStudent);
+                pastConnection.ifPresent(listOfQueueRepository::delete);
 
-            //Наработка для сортировки при отправлении списка группы в очереди
-//            if (Objects.equals(queue.getType(), "simple")){
-//                int position = listOfQueueRepository.findAllByIdQueue(idQueue).size() + 1;
-//                listOfQueues.setPositionStudent(position);
-//                listOfQueueRepository.save(listOfQueues);
-//            }else if (Objects.equals(queue.getDependOnApps(), 1)){
-//                List<ListOfQueues> queueOfStudentOnOneGroup = listOfQueueRepository.findAllByIdQueue(idQueue);
-//                queueOfStudentOnOneGroup = listOfQueues.sortByNumberOfApp(queueOfStudentOnOneGroup);
-//            }
+                listOfQueues.setIdQueue(queue.getId());
+                listOfQueues.setCurrentApp(queue.getCurrentApp());
+                listOfQueues.setNameOfSubject(queue.getSubjectName());
+                listOfQueues.setIdCreator(queue.getIdCreator());
+
+                int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
+                listOfQueues.setPositionStudent(position);
+                listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
+                listOfQueueRepository.save(listOfQueues);
+            }
         }else{
             return util.responseOfFindAndAdd("Not found", 404);
         }
         return util.responseOfFindAndAdd("Add new student to queue", 200);
     }
+
 
     @GetMapping("/all")
     public @ResponseBody
@@ -112,7 +107,6 @@ public class ListOfQueuesController {
                 if (s.isPresent()) {
                     Student student = s.get();
                     responseAboutStudent.setNameOfStudent(student.getNameOfStudent());
-                    responseAboutStudent.setDomain(student.getDomain());
                 }
 
                 listResponseStudent.add(responseAboutStudent);
