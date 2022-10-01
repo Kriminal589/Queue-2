@@ -1,24 +1,20 @@
 package com.webserver.webserver.controllers;
 
+import com.webserver.webserver.Timer.CustomTimer;
+import com.webserver.webserver.Timer.SortTimer;
 import com.webserver.webserver.hash.CRC32Hash;
 import com.webserver.webserver.jsonResponse.JsonUtil;
 import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
-import com.webserver.webserver.repos.StudentRepository;
-import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -27,13 +23,13 @@ public class QueueController {
 
     private final QueueRepository queueRepository;
 
-    private final ListOfQueueRepository listOfQueueRepository;
-    //private final StudentRepository studentRepository;
+    private final ArrayList<CustomTimer> timers = new ArrayList<>();
 
-    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, StudentRepository studentRepository) {
+    private final ListOfQueueRepository listOfQueueRepository;
+
+    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository) {
         this.queueRepository = queueRepository;
         this.listOfQueueRepository = listOfQueueRepository;
-        //this.studentRepository = studentRepository;
     }
 
     @GetMapping("/add")
@@ -51,31 +47,57 @@ public class QueueController {
         queue.setDependOnApps(dependOnApps);
         queue.setDependOnDate(dependOnDate);
         queue.setType(type);
+//        queue.setCurrentApp(1);
         queue.setIdCreator(idStudent);
         queue.setSubjectName(subjectName);
-        queue.setHEXCode(new CRC32Hash().getHash(subjectName+idStudent+Instant.now().getEpochSecond()));
+        queue.setHexCode(new CRC32Hash().getHash(subjectName+idStudent+Instant.now().getEpochSecond()));
 
         queueRepository.save(queue);
 
-        ListOfQueues listOfQueues = new ListOfQueues();
-        listOfQueues.setIdQueue(queue.getId());
-        listOfQueues.setNameOfSubject(subjectName);
-        listOfQueues.setCurrentApp(1);
-        listOfQueues.setHexCode(queue.getHEXCode());
-        listOfQueues.setIdStudent(idStudent);
-        listOfQueues.setNumberOfAppStudent(1);
-        listOfQueues.setPositionStudent(1);
-        listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
+        listOfQueueRepository.save(ListOfQueues.newBuilder()
+                .setIdQueue(queue.getId())
+                .setIdStudent(idStudent)
+                .setNumberOfAppStudent(1)
+                .setPositionStudent(1)
+                .setQueueEntryDate(Instant.now().getEpochSecond())
+                .build());
 
-        listOfQueueRepository.save(listOfQueues);
+        Timer t = new Timer();
+        t.schedule(
+                SortTimer
+                        .newBuilder()
+                        .setId(queue.getId())
+                        .build(), 0, dateToPass * 604800000L);
+        timers.add(new CustomTimer(queue.getId(), t));
 
-        return util.responseOfFindAndAdd(queue.getHEXCode(), 200);
+        return util.responseOfFindAndAddAndCreate(queue.getHEXCode(), 200);
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test (@RequestHeader(value = "Authorization") String key){
-        return ResponseEntity.status(HttpStatus.OK).body(key);
-    }
+//    @GetMapping("/test")
+//    public String test (@RequestParam Long value){
+//
+//        Timer t = new Timer();
+//        t.schedule(
+//                SortTimer
+//                        .newBuilder()
+//                        .setId(value)
+//                        .build(), 0, 1000);
+//        timers.add(new CustomTimer(value, t));
+//        return "Hello, world!";
+//    }
+//
+//    @GetMapping("/test/delete")
+//    public String testDelete (@RequestParam Long value){
+//        int k = -1;
+//        for (int i = 0; i < timers.size(); i++){
+//            if (Objects.equals(timers.get(i).idQueue, value)){
+//                timers.get(i).timer.cancel();
+//                k = i;
+//            }
+//        }
+//        timers.remove(k);
+//        return "Hello, world!";
+//    }
 
     @GetMapping("/all")
     public @ResponseBody
@@ -91,8 +113,8 @@ public class QueueController {
 
     @GetMapping("/getByHEX/{hexCode}")
     public @ResponseBody
-    Optional<Queue> getQueueById(@PathVariable String hexCode){
-        return queueRepository.findByHEXCode(hexCode);
+    Optional<Queue> getQueueByHEXCode(@PathVariable String hexCode){
+        return queueRepository.findByHexCode(hexCode);
     }
 
     @DeleteMapping("/delete/{idQueue}")
@@ -107,9 +129,19 @@ public class QueueController {
             if (!listOfQueues.isEmpty())
                 listOfQueueRepository.deleteAll(listOfQueues);
             queueRepository.delete(q);
-            return util.responseOfFindAndAdd("Deleted", 200);
+
+            int k = -1;
+            for (int i = 0; i < timers.size(); i++){
+                if (Objects.equals(timers.get(i).idQueue, idQueue)){
+                    timers.get(i).timer.cancel();
+                    k = i;
+                }
+            }
+            timers.remove(k);
+
+            return util.responseOfFindAndAddAndCreate("Deleted", 200);
         }else{
-            return util.responseOfFindAndAdd("Not found", 404);
+            return util.responseOfFindAndAddAndCreate("Not found", 404);
         }
     }
 
@@ -121,6 +153,6 @@ public class QueueController {
         queueRepository.deleteAll();
         listOfQueueRepository.deleteAll();
 
-        return util.responseOfFindAndAdd("Deleted all queues", 200);
+        return util.responseOfFindAndAddAndCreate("Deleted all queues", 200);
     }
 }

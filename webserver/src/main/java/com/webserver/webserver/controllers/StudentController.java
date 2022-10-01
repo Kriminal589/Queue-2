@@ -9,13 +9,9 @@ import com.webserver.webserver.repos.HeadmanRepository;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,9 +46,9 @@ public class StudentController {
 
         Optional<Headman> headman = headmanRepository.findById(id);
         if (headman.isPresent())
-            return util.responseOfFindAndAdd("1", 200);
+            return util.responseOfFindAndAddAndCreate("1", 200);
         else
-            return util.responseOfFindAndAdd("0", 200);
+            return util.responseOfFindAndAddAndCreate("0", 200);
     }
 
     @GetMapping("/all")
@@ -80,7 +76,7 @@ public class StudentController {
         studentRepository.deleteAll();
         queueRepository.deleteAll();
         listOfQueueRepository.deleteAll();
-        return util.responseOfFindAndAdd("Deleted all students", 200);
+        return util.responseOfFindAndAddAndCreate("Deleted all students", 200);
     }
 
     @DeleteMapping("/delete/{idStudent}")
@@ -113,21 +109,9 @@ public class StudentController {
                 }
             }
             studentRepository.delete(s);
-            return util.responseOfFindAndAdd("Deleted student", 200);
+            return util.responseOfFindAndAddAndCreate("Deleted student", 200);
         }else{
-            return util.responseOfFindAndAdd("Not found", 404);
+            return util.responseOfFindAndAddAndCreate("Not found", 404);
         }
     }
 }
-
-//"id": 257557389,
-//        "nameOfStudent": "Максим_Сыров",
-//        "domain": "moximillian",
-//        "idHeadman": null
-//    },
-//    {
-//        "id": 296383509,
-//        "nameOfStudent": "Леша_Чижиков",
-//        "domain": "chizh1k",
-//        "idHeadman": null
-//    }

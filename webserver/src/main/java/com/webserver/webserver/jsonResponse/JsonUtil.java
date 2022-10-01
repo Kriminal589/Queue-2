@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JsonUtil {
-    public String responseOfFindAndAdd(String response, int code){
+    public String responseOfFindAndAddAndCreate(String response, int code){
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.response(response, code);
         Gson gson = new GsonBuilder()

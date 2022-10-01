@@ -12,8 +12,6 @@ import com.webserver.webserver.repos.StudentRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,38 +38,34 @@ public class ListOfQueuesController {
 
         JsonUtil util = new JsonUtil();
 
-        Optional<Queue> tryQueue = queueRepository.findByHEXCode(hexCode);
+        Optional<Queue> tryQueue = queueRepository.findByHexCode(hexCode);
         Optional<Student> tryStudent = studentRepository.findById(idStudent);
-        ListOfQueues listOfQueues = new ListOfQueues();
 
-        listOfQueues.setIdStudent(idStudent);
-        listOfQueues.setNumberOfAppStudent(numberOfAppStudent);
-        listOfQueues.setHexCode(hexCode);
         if (tryQueue.isPresent() && tryStudent.isPresent()){
 
             Queue queue = tryQueue.get();
 
-            Optional<ListOfQueues> list = listOfQueueRepository.findByHexCodeAndIdStudent(hexCode, idStudent);
+            Optional<ListOfQueues> list = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, queue.getId());
 
             if (!list.isPresent()) {
 
-                Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByHexCodeAndIdStudent(queue.getHEXCode(), idStudent);
+                Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, queue.getId());
                 pastConnection.ifPresent(listOfQueueRepository::delete);
 
-                listOfQueues.setIdQueue(queue.getId());
-                listOfQueues.setCurrentApp(queue.getCurrentApp());
-                listOfQueues.setNameOfSubject(queue.getSubjectName());
-                listOfQueues.setIdCreator(queue.getIdCreator());
-
                 int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
-                listOfQueues.setPositionStudent(position);
-                listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
-                listOfQueueRepository.save(listOfQueues);
+
+                listOfQueueRepository.save(ListOfQueues.newBuilder()
+                        .setIdStudent(idStudent)
+                        .setNumberOfAppStudent(numberOfAppStudent)
+                        .setIdQueue(queue.getId())
+                        .setPositionStudent(position)
+                        .setQueueEntryDate(Instant.now().getEpochSecond())
+                        .build());
             }
         }else{
-            return util.responseOfFindAndAdd("Not found", 404);
+            return util.responseOfFindAndAddAndCreate("Not found", 404);
         }
-        return util.responseOfFindAndAdd("Add new student to queue", 200);
+        return util.responseOfFindAndAddAndCreate("Add new student to queue", 200);
     }
 
 
@@ -79,9 +73,7 @@ public class ListOfQueuesController {
     public @ResponseBody
     List<ListOfQueues> getAllListOfQueues(){
         Iterable<ListOfQueues> l = listOfQueueRepository.findAll();
-        List<ListOfQueues> list = (List<ListOfQueues>) l;
-        list = sort(list);
-        return list;
+        return (List<ListOfQueues>) l;
     }
 
     @GetMapping("/getByIdStudent/{idStudent}")
@@ -114,7 +106,7 @@ public class ListOfQueuesController {
             return util.responseStudent(listResponseStudent);
         }
         else{
-            return util.responseOfFindAndAdd("Not found", 404);
+            return util.responseOfFindAndAddAndCreate("Not found", 404);
         }
     }
 
@@ -123,50 +115,23 @@ public class ListOfQueuesController {
 
         JsonUtil util = new JsonUtil();
 
-        List<ListOfQueues> queues = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, idQueue);
-        if (!queues.isEmpty()){
-            listOfQueueRepository.deleteAll(queues);
+        Optional<ListOfQueues> q = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, idQueue);
+        if (q.isPresent()){
+            ListOfQueues queue = q.get();
+            int position = queue.getPositionStudent();
+            listOfQueueRepository.delete(queue);
 
-            return util.responseOfFindAndAdd("Deleted", 200);
-        }else{
-            return util.responseOfFindAndAdd("Not found", 404);
-        }
-    }
-
-    public List<ListOfQueues> sort(List<ListOfQueues> list){
-        List<ListOfQueues> current = new ArrayList<>();
-        List<ListOfQueues> late = new ArrayList<>();
-        List<ListOfQueues> hurrying = new ArrayList<>();
-
-        for (ListOfQueues item:list){
-            if (item.getQueueEntryDate() == 3)
-                current.add(0,item);
-            else if (item.getNumberOfAppStudent() == item.getCurrentApp())
-                current.add(item);
-            else if (item.getNumberOfAppStudent() < item.getCurrentApp())
-                late.add(item);
-            else if (item.getNumberOfAppStudent() > item.getCurrentApp())
-                hurrying.add(item);
-        }
-
-        sortByEntryDate(current);
-        sortByEntryDate(late);
-        sortByEntryDate(hurrying);
-
-        current.addAll(late);
-        current.addAll(hurrying);
-
-        return current;
-    }
-
-    public void sortByEntryDate(List<ListOfQueues> list){
-        for (int i = 0; i < list.size()-1; i++){
-            for (int j = 0; j < list.size(); j++){
-                if (list.get(i).getQueueEntryDate() > list.get(j).getQueueEntryDate()){
-                    Collections.swap(list, i, j);
+            List<ListOfQueues> listOfQueuesIterable = listOfQueueRepository.findAllByIdQueue(idQueue);
+            if (!listOfQueuesIterable.isEmpty()){
+                for (ListOfQueues student:listOfQueuesIterable){
+                    if (student.getIdStudent() > position)
+                        student.setPositionStudent(student.getPositionStudent() - 1);
                 }
             }
+
+            return util.responseOfFindAndAddAndCreate("Deleted", 200);
+        }else{
+            return util.responseOfFindAndAddAndCreate("Not found", 404);
         }
     }
-
 }
