@@ -61,8 +61,6 @@ export const homepage = (callback) => {
                                 );
                                 document.body.removeChild($page);
                                 resolve(false);
-                            } else {
-                                resolve(true);
                             }
                         });
                         break;

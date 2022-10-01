@@ -4,8 +4,9 @@
   "description": "java-javaScript",
   "main": "index.js",
   "scripts": {
+		"clean:output": "rimraf dist",
     "serve": "parcel ./src/index.html --open --host 25.85.15.23",
-    "build": "parcel build ./src/index.html --public-url ./"
+    "build": "npm run clean:output && parcel build ./src/index.html --public-url ./"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
   "homepage": "https://github.com/Kriminal589/Queue-2#readme",
   "devDependencies": {
     "parcel-bundler": "^1.12.5",
+    "rimraf": "^3.0.2",
     "sass": "^1.53.0"
   },
   "dependencies": {

@@ -1,9 +1,8 @@
 import { $LoadBar } from "./loadBar";
-("use strict");
-require("fs");
 
-const ip = "25.84.228.15";
-const port = "8080";
+const ip = process.env.IP_ADDRESS;
+const port = process.env.PORT;
+const protocol = document.location.protocol
 
 export class serverRequest {
     static async addStudent(idS, name) {
@@ -14,9 +13,12 @@ export class serverRequest {
     static async getQueuesById(idS) {
         return await sendRequestAsync(`listOfQueues/getByIdStudent/${idS}`);
     }
-    static async getQueuePropertyById(idQ) {
-        return await sendRequestAsync(`queue/get/${idQ}`);
+    static async getQueuePropertyById(idQueue) {
+        return await sendRequestAsync(`queue/getById/${idQueue}`);
     }
+	static async getQueuePropertyByHex(hexQueue) {
+		return await sendRequestAsync(`queue/getByHEX/${hexQueue}`);
+	}
     static async getListOfStudentInQueueById(idQ) {
         return await sendRequestAsync(`listOfQueues/getByIdQueue/${idQ}`);
     }
@@ -30,7 +32,12 @@ export class serverRequest {
         return [];
     }
     static async leaveFromQueue(idQueue, idStudent) {
-        return await sendRequestAsync(`listOfQueues/ByIdStudentAndQueue/${idStudent}/${idQueue}`);
+        return await sendRequestAsyncDelete(
+            `listOfQueues/delete/ByIdStudentAndQueue/${idStudent}/${idQueue}`,
+        );
+    }
+    static async deleteQueueById(idQueue) {
+        return await sendRequestAsyncDelete(`queue/delete/${idQueue}`);
     }
     static async createQ(
         name,
@@ -56,12 +63,32 @@ export class serverRequest {
 const boolToInt = (int) => (int ? 1 : 0);
 
 async function sendRequestAsync(url_to) {
-    const url = `https://${ip}:${port}/${url_to}`;
+    const url = `${protocol}//${ip}:${port}/${url_to}`;
     const loadbar = new $LoadBar();
     loadbar.load(url_to);
     try {
         const response = await fetch(url, {
             method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: JSON.stringify("12345"),
+            },
+        });
+        loadbar.destroy(url_to);
+        return response.json();
+    } catch (err) {
+        loadbar.destroy(url_to);
+        return -1;
+    }
+}
+
+async function sendRequestAsyncDelete(url_to) {
+    const url = `http://${ip}:${port}/${url_to}`;
+    const loadbar = new $LoadBar();
+    loadbar.load(url_to);
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: JSON.stringify("12345"),

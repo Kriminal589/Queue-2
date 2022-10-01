@@ -63,6 +63,41 @@ html, body
     width: 100%;
 }
 
+.h100 {
+	height: 100%;
+}
+
+.invite-err {
+	background-color: $contentColor;
+}
+
+.reload {
+	margin-top: 2vh;
+	display: inline-block;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #212529;
+	text-align: center;
+	text-decoration: none;
+	vertical-align: middle;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+	background-color: transparent;
+	border: 1px solid #212529;
+	padding: .375rem .75rem;
+	font-size: 1rem;
+	border-radius: .25rem;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+	&:hover {
+		color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+	}
+}
+
 .custom-scrollbar {
     &::-webkit-scrollbar {
         width: 5px;
@@ -106,7 +141,7 @@ html, body
     cursor: pointer;
     background: rgba(0, 0, 0, .2);
     font-size: 1.5vh;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-out;
 
     &:not(.disabled):hover {
         //animation: rotation 0.3s linear;
@@ -217,6 +252,15 @@ html, body
 
 .hide {
     display: none;
+}
+
+.dot {
+	width: 0.8vh;
+	height: 0.8vh;
+	border-radius: 50%;
+	background-color: white;
+
+	margin-right: 0.5vh;
 }
 
 // breakpoints
@@ -497,12 +541,19 @@ body {
         }
     }
 
+		.notification_container {
+			position: absolute;
+			bottom: 8vh;
+			width: 100%;
+		}
+
     .notification {
-        position: absolute;
-        bottom: 8vh;
         width: 100%;
         animation: fold 0.5s;
         z-index: 1000;
+				top: 85vh;
+				position: relative;
+				transition: all 0.2s;
 
         .notification-content {
             color: $textColor;
@@ -540,6 +591,7 @@ body {
     }
 
     .modal {
+				top: 0;
         position: fixed;
         width: 100%;
         height: 100%;
@@ -548,6 +600,107 @@ body {
         background-color: rgba(0, 0, 0, .4);
         transition: opacity 0.5s;
         z-index: 1000;
+
+				.inviteLink {
+					position: relative;
+					background-color: $contentColor;
+					box-sizing: border-box;
+					padding: 10px;
+					width: 260px;
+					height: 420px;
+
+					.close {
+						position: absolute;
+						top: 1%;
+						right: 1%;
+						cursor: pointer;
+
+						&::after,
+						&::before {
+							content: ' ';
+							position: absolute;
+							width: 20px;
+							left: -18px;
+							top: 8px;
+							height: 1px;
+							background-color: #000;
+						}
+
+						&::after {
+							transform: rotate(45deg);
+						}
+						&::before {
+							transform: rotate(-45deg);
+						}
+
+						&:hover {
+							&::after,
+							&::before {
+								background-color: #1E1E1E;
+							}
+						}
+					}
+
+					.qrCode {
+						margin-top: 15px;
+						margin-bottom: 15px;
+						width: 240px;
+						height: 240px;
+						//background-color: $headerColor;
+						border: 1px solid #000;
+						border-radius: 3px;
+					}
+					.linkContainer {
+						width: 240px;
+						height: 40px;
+						border: 1px solid #000;
+						border-radius: 5px;
+						box-sizing: border-box;
+						position: relative;
+						cursor: pointer;
+						transition: all 0.2s;
+
+						.copy {
+							margin: 0 5px 0 8px;
+							width: 2.5vh;
+							height: 2.5vh;
+							background: url('../assets/copy.png') no-repeat center center;
+							background-size: 2.5vh 2.5vh;
+						}
+
+						&::before {
+							content: 'Скопировать';
+							font-size: 0.8em;
+							position: absolute;
+							top: 30px;
+							left: 5px;
+							padding: 0 0.3em;
+							background-color: $contentColor;
+						}
+
+						&:hover {
+							color: #0d6efd;
+							border-color: #0d6efd;
+						}
+					}
+					.share {
+						position: absolute;
+						width: 100%;
+						bottom: 10px;
+						width: 240px;
+						height: 30px;
+						border: 1px solid #000;
+						border-radius: 3px;
+						cursor: pointer;
+						transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+
+						&:hover {
+							color: #fff;
+							background-color: #0d6efd;
+							border-color: #0d6efd;
+						}
+					}
+				}
 
         &:focus {
             outline: none;
@@ -651,9 +804,13 @@ body {
         .content {
             position: relative;
             background-color: $mainColor;
-            color : #fff;
-            width: 20vh;
+            color : $textColor;
+            width: 30vh;
             overflow-y: hidden;
+
+						.modal_title {
+							margin-top: 1.5vh;
+						}
 
             .btn.close {
                 position: absolute;
@@ -663,16 +820,27 @@ body {
                 height: 3vh;
             }
 
-            .modal_title {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 4vh;
-            }
-
             .dev-item {
-                margin: 2.5vh 0;
+                margin: 1vh 0;
+								display: flex;
+								align-items: center;
+								justify-content: flex-start;
+								width: 90%;
+								font-size: 1.1em;
+								.vk {
+									margin-right: 1vh;
+									width: 4vh;
+									height: 4vh;
+									background: url('../assets/vk-logo-of-social-network.png') no-repeat center center;
+									background-size: 3vh 3vh;
+								}
+								.github {
+									margin-right: 1vh;
+									width: 4vh;
+									height: 4vh;
+									background: url('../assets/github.png') no-repeat center center;
+									background-size: 3vh 3vh;
+								}
             }
 
             .info {
@@ -721,6 +889,7 @@ body {
 
             &.Ntitle {
                 overflow-y: hidden;
+								background-color: $qlColor;
                 .btn.back {
                     position: absolute;
                     background: url('../assets/back.png') no-repeat center center;
@@ -780,11 +949,13 @@ body {
             box-sizing: border-box;
             height: 4vh;
             .logo {
-                box-sizing: border-box;
                 height: 4vh;
                 width: 4vh;
                 margin-right: 1vw;
                 transition: all 0.5s;
+								font-weight: bold;
+								border-bottom: 2px solid $textColor;
+								border-top: 2px solid $textColor;
 
                 &:hover {
                     transform: rotate(1turn);
@@ -858,6 +1029,7 @@ body {
             background-color: $white;
             animation: fold 0.5s;
             animation-timing-function: ease;
+						overflow-x: hidden;
             
             -webkit-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
             -moz-box-shadow: 0px 4px 8px 4px rgba(34, 60, 80, 0.2);
@@ -946,6 +1118,79 @@ body {
                     left: 1%;
                 }
 
+								.dropdown-menu {
+									position: absolute;
+									height: 100%;
+									top: 0;
+									right: 1%;
+									font-size: 0.8em;
+									cursor: pointer;
+
+									.btn_list {
+										position: absolute;
+										top: 4vh;
+										width: max-content;
+										right: -0.95vw;
+										height: 0;
+										background-color: #474748a8;
+										transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+										overflow: hidden;
+
+										li {
+											padding: 0.5vh 0;
+											padding-left: 5vh;
+
+											.icon {
+												position: absolute;
+												left: 5%;
+												height: 2vh;
+												width: 2vh;
+
+												&.settings {
+													background: url('../assets/settings.png') no-repeat center;
+													filter:  brightness(0) invert(1);
+													background-size: 2vh 2vh;
+												}
+
+												&.copy {
+													background: url('../assets/copy.png') no-repeat center;
+													filter:  brightness(0) invert(1);
+													background-size: 2vh 2vh;
+												}
+				
+												&.exit {
+														background: url('../assets/logout.png') no-repeat center;
+														filter:  brightness(0) invert(1);
+														background-size: 2vh 2vh;
+												}
+		
+												&.delete {
+													background: url('../assets/trash.png') no-repeat center;
+													filter:  brightness(0) invert(1);
+													background-size: 2vh 2vh;
+												}
+		
+												&.link {
+													background: url('../assets/link.png') no-repeat center;
+													filter:  brightness(0) invert(1);
+													background-size: 2vh 2vh;
+												}
+											}
+
+											&:hover {
+												background-color: rgba(255, 255, 255, 0.3);
+											}
+										}
+									}
+
+									&.active .btn_list {
+										height: auto;
+										z-index: 2;
+										box-sizing: border-box;
+										padding: 0.5vh;
+									}
+								}
+
                 .btn_container {
                     position: absolute;
                     justify-content: space-between;
@@ -963,6 +1208,24 @@ body {
                         filter:  brightness(0) invert(1);
                         background-size: 2.5vh 2.5vh;
                     }
+
+										.delete {
+											background: url('../assets/trash.png') no-repeat center;
+											filter:  brightness(0) invert(1);
+											background-size: 2.5vh 2.5vh;
+										}
+
+										.link {
+											background: url('../assets/link.png') no-repeat center;
+											filter:  brightness(0) invert(1);
+											background-size: 2.5vh 2.5vh;
+										}
+
+										.teacher {
+											background: url('../assets/teacher.png') no-repeat center;
+											filter:  brightness(0) invert(1);
+											background-size: 2.5vh 2.5vh;
+										}
                 }
 
                 .p_btn {
@@ -985,11 +1248,13 @@ body {
                     position: relative;
                     width: 100%;
                     height: 4vh;
-                    padding: 0 1.7vw;
+                    padding: 0 1%;
+										display: flex;
+										flex-direction: row;
+										justify-content: space-between;
                     box-sizing: border-box;
                     margin-bottom: 1vh;
                     background-color: $qlColor;
-                    overflow-y: hidden;
 
                     > * {
                         box-sizing: border-box;
@@ -999,19 +1264,20 @@ body {
 
                     &.u {
                         background-color: $qlColor;
+												justify-content: center;
+
+												.position {
+													position: absolute;
+													left: 1%;
+												}
                     }
 
                     .position {
-                        position: absolute;
-                        left: 1%;
                         width: 4vh;
                         background-color: rgba(255, 255, 255, 0.2);
                     }
 
                     .btn_container {
-                        position: absolute;
-                        top: 0;
-                        right: 1%;
                         width: 8vh;
                         font-weight: bold;
 
