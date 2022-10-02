@@ -5,7 +5,6 @@ import javax.persistence.*;
 @Entity
 public class DisposableLink {
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
     @Column

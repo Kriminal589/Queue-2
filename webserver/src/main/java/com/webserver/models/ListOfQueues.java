@@ -1,19 +1,19 @@
 package com.webserver.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Entity
 public class ListOfQueues {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
-
-    private Long idStudent, idQueue;
+    @Column(name = "id_student")
+    private Long idStudent;
+    @Column(name = "id_queue")
+    private Long idQueue;
     private int positionStudent = 0;
     private int numberOfAppStudent;
     private Long queueEntryDate;
@@ -52,7 +52,6 @@ public class ListOfQueues {
 
     public class Builder{
         private Builder(){}
-
         public Builder setQueueEntryDate(Long queueEntryDate) {
             ListOfQueues.this.queueEntryDate = queueEntryDate;
             return this;
@@ -73,7 +72,6 @@ public class ListOfQueues {
             ListOfQueues.this.positionStudent = positionStudent;
             return this;
         }
-
         public ListOfQueues build(){
             return ListOfQueues.this;
         }

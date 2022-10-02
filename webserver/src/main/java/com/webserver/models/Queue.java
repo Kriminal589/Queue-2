@@ -1,21 +1,32 @@
 package com.webserver.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Queue {
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    private String subjectName, hexCode;
+    @Column(name = "subject_name")
+    private String subjectName;
+    @Column(name = "hex_code")
+    private String hexCode;
+    @Column(name = "id_creator")
     private Long idCreator;
-    private int countApps, dateToPass;
+    @Column(name = "count_apps")
+    private int countApps;
+    @Column(name = "date_to_pass")
+    private int dateToPass;
+    @Column(name = "current_app")
     private int currentApp = 1;
-    private short dependOnApps, dependOnDate, type;
+    @Column(name = "depend_on_apps")
+    private short dependOnApps;
+    @Column(name = "depend_on_date")
+    private short dependOnDate;
+    @Column(name = "type")
+    private  short type;
 
     public Long getIdCreator() {
         return idCreator;

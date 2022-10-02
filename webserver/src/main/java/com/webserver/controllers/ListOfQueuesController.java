@@ -79,7 +79,8 @@ public class ListOfQueuesController {
     @GetMapping("/getByIdStudent/{idStudent}")
     public @ResponseBody
     Iterable<ListOfQueues> getAllListOfQueuesByIdStudent(@PathVariable Long idStudent){
-        return listOfQueueRepository.findAllByIdStudent(idStudent);
+        List<ListOfQueues> listOfQueues = listOfQueueRepository.findAllByIdStudent(idStudent);
+        return listOfQueues;
     }
 
     @GetMapping("/getByIdQueue/{idQueue}")

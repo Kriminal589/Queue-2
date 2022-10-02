@@ -32,14 +32,4 @@ public class Student {
         this.nameOfStudent = nameOfStudent;
     }
 
-
-    public Long getIdHeadman() {
-        return idHeadman;
-    }
-
-    public void setIdHeadman(Long idHeadman) {
-        this.idHeadman = idHeadman;
-    }
-
-
 }
