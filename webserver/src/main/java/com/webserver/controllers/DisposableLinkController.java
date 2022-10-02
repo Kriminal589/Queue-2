@@ -25,7 +25,7 @@ public class DisposableLinkController {
     public @ResponseBody String createLink(@RequestParam Long id){
         DisposableLink disposableLink = new DisposableLink();
         Long time = Instant.now().getEpochSecond();
-        disposableLink.setExtension(CRC32Hash.getHash(String.valueOf(id + time)));
+        disposableLink.setExtension(Long.toHexString(id)+CRC32Hash.getHash(String.valueOf(time)));
         disposableLinkRepository.save(disposableLink);
 
         new Timer().schedule(new TimerTask() {
