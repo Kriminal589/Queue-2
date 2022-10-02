@@ -31,15 +31,4 @@ public class Student {
     public void setNameOfStudent(String nameOfStudent) {
         this.nameOfStudent = nameOfStudent;
     }
-
-
-    public Long getIdHeadman() {
-        return idHeadman;
-    }
-
-    public void setIdHeadman(Long idHeadman) {
-        this.idHeadman = idHeadman;
-    }
-
-
 }
