@@ -31,5 +31,8 @@ public class Student {
     public void setNameOfStudent(String nameOfStudent) {
         this.nameOfStudent = nameOfStudent;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> ceaf438d479da9e0df02895a70e0b8c85043bb60
 }
