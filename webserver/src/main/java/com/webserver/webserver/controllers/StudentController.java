@@ -37,7 +37,6 @@ public class StudentController {
     }
 
     @GetMapping("/add")
-    @WriteOperation
     public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id){
         Student student = new Student();
         student.setNameOfStudent(NameOfStudent);
