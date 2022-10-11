@@ -1,4 +1,5 @@
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/repos/ListOfQueueRepository.java
+/Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/repos/DisposableLinkRepository.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/hash/CRC32Hash.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/models/Headman.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/controllers/NotificationController.java
@@ -7,6 +8,7 @@
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/WebserverApplication.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/jsonResponse/JsonUtil.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/repos/StudentRepository.java
+/Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/controllers/DisposableLinkController.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/repos/HeadmanRepository.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/models/ListOfQueues.java
 /Users/AndreyNovikov/Desktop/Queue-2/webserver/src/main/java/com/webserver/webserver/models/Notification.java

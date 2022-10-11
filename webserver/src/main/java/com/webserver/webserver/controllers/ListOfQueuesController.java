@@ -118,8 +118,14 @@ public class ListOfQueuesController {
         JsonUtil util = new JsonUtil();
 
         Optional<ListOfQueues> queues = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, idQueue);
-        if (queues.isPresent()){
+        Optional<Student> optionalStudent = studentRepository.findById(idStudent);
+        if (queues.isPresent() && optionalStudent.isPresent()){
             ListOfQueues q = queues.get();
+            List<ListOfQueues> listOfQueues = listOfQueueRepository.findAllByIdQueue(idQueue);
+            for (ListOfQueues l : listOfQueues){
+                if (l.getPositionStudent() > q.getPositionStudent())
+                    l.setPositionStudent(l.getPositionStudent()-1);
+            }
             listOfQueueRepository.delete(q);
 
             return util.responseOfFindAndAdd("Deleted", 200);
