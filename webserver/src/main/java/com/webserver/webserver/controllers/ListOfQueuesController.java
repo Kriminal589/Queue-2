@@ -9,13 +9,14 @@ import com.webserver.webserver.models.Student;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-@CrossOrigin
+@Controller
 @RequestMapping(path = "/listOfQueues")
 public class ListOfQueuesController {
 
