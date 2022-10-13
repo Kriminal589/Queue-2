@@ -22,7 +22,7 @@ import java.util.*;
 @RequestMapping(path = "/queue")
 public class QueueController {
 
-    private ArrayList<CustomTimer> customTimers = new ArrayList<>();
+    private final ArrayList<CustomTimer> customTimers = new ArrayList<>();
 
     private final QueueRepository queueRepository;
 
@@ -66,13 +66,26 @@ public class QueueController {
             @Override
             public void run() {
                 List<ListOfQueues> listOfQueuesList = listOfQueueRepository.findAllByIdQueue(queue.getId());
+
+                int currentApp = queue.getCurrentApp() + 1;
+
+                queue.setCurrentApp(currentApp);
+
+                queueRepository.save(queue);
+
                 listOfQueueRepository.saveAll(sort(listOfQueuesList));
+
+                System.out.println("Sorted");
             }
         };
 
-        Timer timer = new Timer();
-        customTimers.add(new CustomTimer(timer, queue.getId()));
-        timer.schedule(timerTask, 60000, 60000); //604800000L
+        if (type == 1){
+            Timer timer = new Timer();
+
+            customTimers.add(new CustomTimer(timer, queue.getId()));
+
+            timer.schedule(timerTask, dateToPass * 604800000L, dateToPass * 604800000L);
+        }
 
         return util.responseOfFindAndAdd(queue.getHexCode(), 200);
     }
@@ -112,6 +125,12 @@ public class QueueController {
             if (!listOfQueues.isEmpty())
                 listOfQueueRepository.deleteAll(listOfQueues);
             queueRepository.delete(q);
+            for (CustomTimer timer : customTimers){
+                if (Objects.equals(timer.getId(), idQueue)){
+                    timer.getTimer().cancel();
+                    customTimers.remove(timer);
+                }
+            }
             return util.responseOfFindAndAdd("Deleted", 200);
         }else{
             return util.responseOfFindAndAdd("Not found", 404);
@@ -126,6 +145,11 @@ public class QueueController {
         queueRepository.deleteAll();
         listOfQueueRepository.deleteAll();
 
+        for (CustomTimer timer:customTimers){
+            timer.getTimer().cancel();
+            customTimers.remove(timer);
+        }
+
         return util.responseOfFindAndAdd("Deleted all queues", 200);
     }
 
@@ -137,7 +161,7 @@ public class QueueController {
         if (optionalQueue.isPresent()) {
             Queue queue = optionalQueue.get();
             for (ListOfQueues item : list) {
-                if (item.getQueueEntryDate() == 3)
+                if (Instant.now().getEpochSecond() / item.getQueueEntryDate() > queue.getDateToPass())
                     current.add(0, item);
                 else if (item.getNumberOfAppStudent() == queue.getCurrentApp())
                     current.add(item);
@@ -159,7 +183,7 @@ public class QueueController {
     }
     public void sortByEntryDate(List<ListOfQueues> list){
         for (int i = 0; i < list.size()-1; i++){
-            for (int j = 0; j < list.size(); j++){
+            for (int j = i; j < list.size(); j++){
                 if (list.get(i).getQueueEntryDate() > list.get(j).getQueueEntryDate()){
                     Collections.swap(list, i, j);
                 }
