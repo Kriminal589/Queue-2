@@ -101,12 +101,12 @@ export const $Qmaker = function (callback) {
 
 	const actions = {
 		switch : id => {
-			const $btn = document.getElementById(id)
-			if (!$btn.classList.contains('active')) {
-				toggleState()
-				if (id === 'C_btn') document.getElementById('smart_options').classList.remove('active')
-				else document.getElementById('smart_options').classList.add('active')
-			}
+			// const $btn = document.getElementById(id)
+			// if (!$btn.classList.contains('active')) {
+			// 	toggleState()
+			// 	if (id === 'C_btn') document.getElementById('smart_options').classList.remove('active')
+			// 	else document.getElementById('smart_options').classList.add('active')
+			// }
 		},
 		close : () => {
 			apply('Вы точно хотите отменить создание очереди?').then(e => {
@@ -185,8 +185,8 @@ const pattern = () => `
 	</div>
 
 	<div class="type_selector flex-row">
-		<div class="common padding-content center-items active" data-action="switch" id="C_btn">Обычная</div>
-		<div class="smart padding-content center-items" data-action="switch" id="S_btn">Умная</div>
+		<div class="common center-items active" data-action="switch" id="C_btn">Обычная</div>
+		<div class="smart center-items disabled" data-action="switch" id="S_btn">Умная</div>
 	</div>
 
 	<div class="smart_options flex-column" id="smart_options">

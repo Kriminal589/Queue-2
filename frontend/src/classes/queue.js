@@ -27,8 +27,8 @@ const template = (content) => {
     <div class="qItem" id="${content.idQueue}" data-action="open" data-id="${content.idQueue}" data-name="${content.subjectName}">
       <div class="qName">${content.subjectName}</div>
       <div class="qPos">Ваша позиция: ${content.positionStudent}</div>
-      <div class="btn apply" data-action="passed" data-app="0" data-type=${content.type}>
-        <span class="btn-text">Сдал задание</span>
+      <div class="btn apply" data-action="passed" data-app="0" data-target=${content.idQueue} data-hash=${content.hexCode}  data-type=${content.type}>
+        Сдал задание
       </div>
     </div>
     `;
@@ -52,7 +52,7 @@ const templateList = (content, list, idStudent, canAddQueue) => {
 				<ul class="btn_list">
 					${
 						canAddQueue
-							? `<li data-action="options" data-target=${content.idQueue}>
+							? `<li class="disabled" data-action="options" data-target=${content.idQueue}>
 							<div class="icon settings"></div>
 							Настройки очереди
 							</li>`
@@ -108,11 +108,7 @@ const template_list = (content, index, vk_link) => {
   return li(
     `
       <div class="position center-items">${index + 1}</div>
-      <span class="name center-items">${content}</span>
-      <div class="btn_container flex-row">
-          <a class="btn vk" href=${vk_link} data-action='link'>VK</a>
-          <div class="btn swap" data-action="swap" data-target="id">SWAP</div>
-      </div>
+      <span class="item-name center-items">${content}</span>
     `,
     "item center-items",
   );
