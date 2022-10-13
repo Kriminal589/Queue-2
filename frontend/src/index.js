@@ -1,11 +1,8 @@
 import "./styles/main.scss";
-import "./styles/openLook.scss"
 import { App } from "./classes/App";
 import { Auth } from "./util/util";
 import { InviteApply } from "./classes/notice";
 import { homepage } from "./plugins/homepage"
-import { serverRequest } from "./classes/serverReq";
-import { $lookOnly } from "./plugins/lookOnly";
 
 window.onload = async () => {
   VK.init({ apiId: process.env.VK_INIT });

@@ -2,10 +2,9 @@
   "name": "queue-2",
   "version": "1.0.0",
   "description": "java-javaScript",
-  "main": "index.js",
   "scripts": {
-		"clean:output": "rimraf dist",
-    "serve": "parcel ./src/index.html --open --host 25.85.15.23",
+    "clean:output": "rimraf dist",
+    "serve": "parcel ./src/index.html",
     "build": "npm run clean:output && parcel build ./src/index.html --public-url ./"
   },
   "repository": {
@@ -34,7 +33,9 @@
     "sass": "^1.53.0"
   },
   "dependencies": {
+    "@parcel/transformer-sass": "^2.7.0",
     "dotenv": "^16.0.1",
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^10.1.0",
+    "parcel": "^2.7.0"
   }
 }

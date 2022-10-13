@@ -131,14 +131,20 @@ export const InviteLink = hash => {
 											</div>`
 	document.body.appendChild($modal)
 
-	var qrcode = new QRCode(document.getElementById("qrCode"), {
-    text: `http://studentq.ru/#${hash}`,
-    width: 230,
-    height: 230,
-    colorDark : "#7F7C82",
-    colorLight : "#EDFCF1",
-    correctLevel : QRCode.CorrectLevel.H
-	});
+	try {
+		new QRCode(document.getElementById("qrCode"), {
+			text: `http://studentq.ru/#${hash}`,
+			width: 230,
+			height: 230,
+			colorDark : "#7F7C82",
+			colorLight : "#EDFCF1",
+			correctLevel : QRCode.CorrectLevel.H
+		});
+	}
+	catch (e) {
+		document.getElementById("qrCode").innerHTML = "Ошибка"
+		console.error(e);
+	}
 
 	$modal.addEventListener('click', e => {
 		const action = e.target.dataset.action
@@ -153,4 +159,8 @@ export const InviteLink = hash => {
 			}
 		}
 	})
+}
+
+export const QueueSettings = idQueue => {
+	const $modal = document.createElement('div');
 }

@@ -2,7 +2,7 @@ import { QueueBlock } from "./queue";
 import { serverRequest } from "./serverReq";
 import { $Qmaker } from "./Qmaker";
 import { $notice, AcceptDelete } from "../classes/notice";
-import { createQinvite, createQueueText, createTeacherInvite, InviteLink } from "../util/util";
+import { createQinvite, createQueueText, createTeacherInvite, getTimeUnix, InviteLink } from "../util/util";
 import { copyToClipboard } from "../util/util";
 import { getId } from "../util/util";
 import { apply } from "../plugins/ApplyNotice";
@@ -25,13 +25,13 @@ export class QList {
       await Promise.all(
         values.map(async (item) => {
           const options = (await serverRequest.getQueuePropertyById(item.idQueue));
-          const { idQueue, positionStudent, hexCode } = item;
-					const { subjectName, type } = options
+          const { idQueue, positionStudent } = item;
+					const { subjectName, type, hexCode, idCreator } = options
 
           this.#list.push(
             new QueueBlock(
               { idQueue, subjectName, positionStudent, hexCode, type },
-              item.idStudent === +getId()
+              idCreator === +getId()
             ),
           );
         }),
@@ -216,13 +216,17 @@ export class QList {
                 break;
               }
               case "exit": {
-                serverRequest
-                  .leaveFromQueue(e.target.dataset.target, getId())
-                  .then(() => {
-										this.deleteQueueBlock(e.target.dataset.target);
-                    window.location.reload();
-                  })
-									break;
+								apply('Вы точно хотите выйти из очереди?').then(data => {
+									if (data) {
+										serverRequest
+										.leaveFromQueue(e.target.dataset.target, getId())
+										.then(() => {
+											this.deleteQueueBlock(e.target.dataset.target);
+											window.location.reload();
+										})
+									}
+								})
+								break;
               }
 							case "copyLink": {
 								InviteLink(e.target.dataset.target)
@@ -234,7 +238,30 @@ export class QList {
 								break;
 							}
 							case 'passed' : {
-								
+								apply('Перезаписать вас в очередь?', {
+									type : 'text',
+									id : 0,
+									html : "<span>Вы всегда сможете присоедениться к очереди через ссылку.<span>"
+								}).then(data => {
+									if (data) {
+										serverRequest
+										.leaveFromQueue(e.target.dataset.target, getId())
+										.then(() => {
+											serverRequest.appendQ(getId(), e.target.dataset.hash, e.target.dataset.app++)
+											.then(() => {
+												window.location.reload();
+											})
+										})
+									}
+									else {
+										serverRequest
+										.leaveFromQueue(e.target.dataset.target, getId())
+										.then(() => {
+											this.deleteQueueBlock(e.target.dataset.target);
+											window.location.reload();
+										})
+									}
+								})
 								break;
 							}
             }
