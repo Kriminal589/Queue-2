@@ -56,12 +56,15 @@ public class DisposableLinkController{
             Headman headman = new Headman();
             headman.setId(idStudent);
             headmanRepository.save(headman);
+            DisposableLink disposableLink = optionalDisposableLink.get();
+            disposableLinkRepository.delete(disposableLink);
         }else{
             return new JsonUtil().responseOfFindAndAdd("Not found", 404);
         }
         return new JsonUtil().responseOfFindAndAdd("Add new headman", 200);
     }
 
+    @GetMapping("/link/all")
     public @ResponseBody Iterable<DisposableLink> getAllLink(){
         return disposableLinkRepository.findAll();
     }

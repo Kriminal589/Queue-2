@@ -42,10 +42,6 @@ public class ListOfQueuesController {
 
         Optional<Queue> tryQueue = queueRepository.findByHexCode(hexCode);
         Optional<Student> tryStudent = studentRepository.findById(idStudent);
-        ListOfQueues listOfQueues = new ListOfQueues();
-
-        listOfQueues.setIdStudent(idStudent);
-        listOfQueues.setNumberOfAppStudent(numberOfAppStudent);
         if (tryQueue.isPresent() && tryStudent.isPresent()){
 
             Queue queue = tryQueue.get();
@@ -56,13 +52,14 @@ public class ListOfQueuesController {
 
                 Optional<ListOfQueues> pastConnection = listOfQueueRepository.findByIdStudentAndIdQueue(idStudent, queue.getId());
                 pastConnection.ifPresent(listOfQueueRepository::delete);
-
-                listOfQueues.setIdQueue(queue.getId());
-
                 int position = listOfQueueRepository.findAllByIdQueue(queue.getId()).size() + 1;
-                listOfQueues.setPositionStudent(position);
-                listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
-                listOfQueueRepository.save(listOfQueues);
+                listOfQueueRepository.save(ListOfQueues.newBuilder()
+                                .setIdStudent(idStudent)
+                                .setNumberOfAppStudent(numberOfAppStudent)
+                                .setIdQueue(queue.getId())
+                                .setPositionStudent(position)
+                                .setQueueEntryDate(Instant.now().getEpochSecond())
+                                .build());
             }
         }else{
             return util.responseOfFindAndAdd("Not found", 404);

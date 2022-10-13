@@ -1,12 +1,12 @@
 package com.webserver.webserver.controllers;
 
+import com.webserver.webserver.customTimer.CustomTimer;
 import com.webserver.webserver.hash.CRC32Hash;
 import com.webserver.webserver.jsonResponse.JsonUtil;
 import com.webserver.webserver.models.ListOfQueues;
 import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
-import com.webserver.webserver.repos.StudentRepository;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Controller
@@ -23,15 +22,15 @@ import java.util.Optional;
 @RequestMapping(path = "/queue")
 public class QueueController {
 
+    private ArrayList<CustomTimer> customTimers = new ArrayList<>();
+
     private final QueueRepository queueRepository;
 
     private final ListOfQueueRepository listOfQueueRepository;
-    //private final StudentRepository studentRepository;
 
-    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, StudentRepository studentRepository) {
+    public QueueController(QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository) {
         this.queueRepository = queueRepository;
         this.listOfQueueRepository = listOfQueueRepository;
-        //this.studentRepository = studentRepository;
     }
 
     @GetMapping("/add")
@@ -55,14 +54,25 @@ public class QueueController {
 
         queueRepository.save(queue);
 
-        ListOfQueues listOfQueues = new ListOfQueues();
-        listOfQueues.setIdQueue(queue.getId());
-        listOfQueues.setIdStudent(idStudent);
-        listOfQueues.setNumberOfAppStudent(1);
-        listOfQueues.setPositionStudent(1);
-        listOfQueues.setQueueEntryDate(Instant.now().getEpochSecond());
+        listOfQueueRepository.save(ListOfQueues.newBuilder()
+                .setIdQueue(queue.getId())
+                .setIdStudent(idStudent)
+                .setNumberOfAppStudent(1)
+                .setPositionStudent(1)
+                .setQueueEntryDate(Instant.now().getEpochSecond())
+                .build());
 
-        listOfQueueRepository.save(listOfQueues);
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                List<ListOfQueues> listOfQueuesList = listOfQueueRepository.findAllByIdQueue(queue.getId());
+                listOfQueueRepository.saveAll(sort(listOfQueuesList));
+            }
+        };
+
+        Timer timer = new Timer();
+        customTimers.add(new CustomTimer(timer, queue.getId()));
+        timer.schedule(timerTask, 60000, 60000); //604800000L
 
         return util.responseOfFindAndAdd(queue.getHexCode(), 200);
     }
@@ -117,5 +127,43 @@ public class QueueController {
         listOfQueueRepository.deleteAll();
 
         return util.responseOfFindAndAdd("Deleted all queues", 200);
+    }
+
+    public List<ListOfQueues> sort(List<ListOfQueues> list) {
+        List<ListOfQueues> current = new ArrayList<>();
+        List<ListOfQueues> late = new ArrayList<>();
+        List<ListOfQueues> hurrying = new ArrayList<>();
+        Optional<Queue> optionalQueue = queueRepository.findById(list.get(0).getIdQueue());
+        if (optionalQueue.isPresent()) {
+            Queue queue = optionalQueue.get();
+            for (ListOfQueues item : list) {
+                if (item.getQueueEntryDate() == 3)
+                    current.add(0, item);
+                else if (item.getNumberOfAppStudent() == queue.getCurrentApp())
+                    current.add(item);
+                else if (item.getNumberOfAppStudent() < queue.getCurrentApp())
+                    late.add(item);
+                else if (item.getNumberOfAppStudent() > queue.getCurrentApp())
+                    hurrying.add(item);
+            }
+        }
+
+        sortByEntryDate(current);
+        sortByEntryDate(late);
+        sortByEntryDate(hurrying);
+
+        current.addAll(late);
+        current.addAll(hurrying);
+
+        return current;
+    }
+    public void sortByEntryDate(List<ListOfQueues> list){
+        for (int i = 0; i < list.size()-1; i++){
+            for (int j = 0; j < list.size(); j++){
+                if (list.get(i).getQueueEntryDate() > list.get(j).getQueueEntryDate()){
+                    Collections.swap(list, i, j);
+                }
+            }
+        }
     }
 }
