@@ -8,11 +8,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class WebserverApplication extends SpringBootServletInitializer {
 
-//	@Override
-//	protected SpringApplicationBuilder configure(SpringApplicationBuilder springApplicationBuilder){
-//		return springApplicationBuilder.sources(WebserverApplication.class);
-//	}
-
 	public static void main(String[] args) {
 		SpringApplication.run(WebserverApplication.class, args);
 	}

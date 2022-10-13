@@ -7,10 +7,7 @@ import com.webserver.webserver.models.Queue;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +19,7 @@ import java.util.Optional;
 
 
 @Controller
+@CrossOrigin
 @RequestMapping(path = "/queue")
 public class QueueController {
 
@@ -53,15 +51,12 @@ public class QueueController {
         queue.setType(type);
         queue.setIdCreator(idStudent);
         queue.setSubjectName(subjectName);
-        queue.setHEXCode(new CRC32Hash().getHash(subjectName+idStudent+Instant.now().getEpochSecond()));
+        queue.setHexCode(new CRC32Hash().getHash(subjectName+idStudent+Instant.now().getEpochSecond()));
 
         queueRepository.save(queue);
 
         ListOfQueues listOfQueues = new ListOfQueues();
         listOfQueues.setIdQueue(queue.getId());
-        listOfQueues.setNameOfSubject(subjectName);
-        listOfQueues.setCurrentApp(1);
-        listOfQueues.setHexCode(queue.getHEXCode());
         listOfQueues.setIdStudent(idStudent);
         listOfQueues.setNumberOfAppStudent(1);
         listOfQueues.setPositionStudent(1);
@@ -69,7 +64,7 @@ public class QueueController {
 
         listOfQueueRepository.save(listOfQueues);
 
-        return util.responseOfFindAndAdd(queue.getHEXCode(), 200);
+        return util.responseOfFindAndAdd(queue.getHexCode(), 200);
     }
 
     @GetMapping("/test")
@@ -92,7 +87,7 @@ public class QueueController {
     @GetMapping("/getByHEX/{hexCode}")
     public @ResponseBody
     Optional<Queue> getQueueById(@PathVariable String hexCode){
-        return queueRepository.findByHEXCode(hexCode);
+        return queueRepository.findByHexCode(hexCode);
     }
 
     @DeleteMapping("/delete/{idQueue}")

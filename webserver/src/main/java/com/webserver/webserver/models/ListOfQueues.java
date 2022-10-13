@@ -11,22 +11,10 @@ public class ListOfQueues {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    private String nameOfSubject, hexCode;
-
-    private Long idStudent, idQueue, idCreator;
+    private Long idStudent, idQueue;
     private int positionStudent = 0;
     private int numberOfAppStudent;
-    private int currentApp;
     private Long queueEntryDate;
-
-    public java.lang.Long getIdCreator() {
-        return idCreator;
-    }
-
-    public void setIdCreator(java.lang.Long idCreator) {
-        this.idCreator = idCreator;
-    }
 
     public Long getQueueEntryDate() {
         return queueEntryDate;
@@ -34,14 +22,6 @@ public class ListOfQueues {
 
     public void setQueueEntryDate(Long queueEntryDate) {
         this.queueEntryDate = queueEntryDate;
-    }
-
-    public String getHexCode() {
-        return hexCode;
-    }
-
-    public void setHexCode(String hexCode) {
-        this.hexCode = hexCode;
     }
 
     public int getNumberOfAppStudent() {
@@ -54,14 +34,6 @@ public class ListOfQueues {
 
     public Long getIdStudent() {
         return idStudent;
-    }
-
-    public String getNameOfSubject() {
-        return nameOfSubject;
-    }
-
-    public void setNameOfSubject(String nameOfSubject) {
-        this.nameOfSubject = nameOfSubject;
     }
 
     public void setIdStudent(Long idStudent) {
@@ -86,14 +58,6 @@ public class ListOfQueues {
 
     public Long getId() {
         return id;
-    }
-
-    public int getCurrentApp() {
-        return currentApp;
-    }
-
-    public void setCurrentApp(int currentApp) {
-        this.currentApp = currentApp;
     }
 
     public ListOfQueues() {

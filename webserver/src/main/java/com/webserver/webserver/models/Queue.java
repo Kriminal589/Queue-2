@@ -11,7 +11,7 @@ public class Queue {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
-    private String SubjectName, HEXCode;
+    private String SubjectName, hexCode;
     private Long idCreator;
     private int countApps, dateToPass;
     private int currentApp = 1;
@@ -25,12 +25,12 @@ public class Queue {
         this.idCreator = idCreator;
     }
 
-    public String getHEXCode() {
-        return HEXCode;
+    public String getHexCode() {
+        return hexCode;
     }
 
-    public void setHEXCode(String HEXCode) {
-        this.HEXCode = HEXCode;
+    public void setHexCode(String HEXCode) {
+        this.hexCode = HEXCode;
     }
 
     public Long getId() {

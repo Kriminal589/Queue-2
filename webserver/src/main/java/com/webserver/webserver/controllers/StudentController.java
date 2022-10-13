@@ -9,18 +9,14 @@ import com.webserver.webserver.repos.HeadmanRepository;
 import com.webserver.webserver.repos.ListOfQueueRepository;
 import com.webserver.webserver.repos.QueueRepository;
 import com.webserver.webserver.repos.StudentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
-import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
 @Controller
+@CrossOrigin
 @RequestMapping(path = "/student")
 public class StudentController {
 
@@ -32,15 +28,14 @@ public class StudentController {
     private final ListOfQueueRepository listOfQueueRepository;
     private final HeadmanRepository headmanRepository;
     
-    public StudentController(StudentRepository studentRepository, QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, HeadmanRepository headmanRepository) {
+    public StudentController(StudentRepository studentRepository, QueueRepository queueRepository, ListOfQueueRepository listOfQueueRepository, HeadmanRepository headmanRepository, ListOfQueueRepository listOfQueueRepository1, HeadmanRepository headmanRepository1) {
         this.studentRepository = studentRepository;
         this.queueRepository = queueRepository;
-        this.listOfQueueRepository = listOfQueueRepository;
-        this.headmanRepository = headmanRepository;
+        this.listOfQueueRepository = listOfQueueRepository1;
+        this.headmanRepository = headmanRepository1;
     }
 
     @GetMapping("/add")
-    @WriteOperation
     public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id){
         Student student = new Student();
         student.setNameOfStudent(NameOfStudent);
@@ -119,15 +114,3 @@ public class StudentController {
         }
     }
 }
-
-//"id": 257557389,
-//        "nameOfStudent": "Максим_Сыров",
-//        "domain": "moximillian",
-//        "idHeadman": null
-//    },
-//    {
-//        "id": 296383509,
-//        "nameOfStudent": "Леша_Чижиков",
-//        "domain": "chizh1k",
-//        "idHeadman": null
-//    }
