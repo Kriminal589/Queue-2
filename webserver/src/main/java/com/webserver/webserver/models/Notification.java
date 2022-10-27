@@ -13,13 +13,16 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column
     private Long idSender;
+    @Column
     private Long idRecipient;
+    @Column
     private Long idQueue;
 
     public Notification() {}
 
-    public static Builder newBuilder(){
+    public static Builder newBuilder() {
         return new Notification().new Builder();
     }
 

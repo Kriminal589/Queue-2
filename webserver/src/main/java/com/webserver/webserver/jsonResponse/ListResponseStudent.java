@@ -7,7 +7,7 @@ import java.util.List;
 public class ListResponseStudent {
     private final List<ResponseAboutStudent> responseAboutStudentList;
 
-    public void add(ResponseAboutStudent responseAboutStudent){
+    public void add(ResponseAboutStudent responseAboutStudent) {
         responseAboutStudentList.add(responseAboutStudent);
     }
 

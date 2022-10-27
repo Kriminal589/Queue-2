@@ -20,12 +20,10 @@ public class JsonResponse {
         this.response = response;
     }
 
-    public JsonResponse() {
-    }
+    public JsonResponse() {}
 
-    public void response(String response, int code){
+    public void response(String response, int code) {
         setResponse(new StringBuilder(response));
         setCode(code);
     }
-
 }

@@ -19,12 +19,8 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping(path = "/student")
 public class StudentController {
-
     private final StudentRepository studentRepository;
-
     private final QueueRepository queueRepository;
-
-
     private final ListOfQueueRepository listOfQueueRepository;
     private final HeadmanRepository headmanRepository;
     
@@ -36,40 +32,40 @@ public class StudentController {
     }
 
     @GetMapping("/add")
-    public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id){
+    public @ResponseBody String addNewStudent(@RequestParam String NameOfStudent, @RequestParam Long id) {
         Student student = new Student();
+        JsonUtil util = new JsonUtil();
+        Optional<Headman> headman = headmanRepository.findById(id);
+
         student.setNameOfStudent(NameOfStudent);
         student.setId(id);
         studentRepository.save(student);
-        JsonUtil util = new JsonUtil();
-
-        Optional<Headman> headman = headmanRepository.findById(id);
-        if (headman.isPresent())
+        if (headman.isPresent()) {
             return util.responseOfFindAndAdd("1", 200);
-        else
+        } else {
             return util.responseOfFindAndAdd("0", 200);
+        }
     }
 
     @GetMapping("/all")
-    public @ResponseBody Iterable<Student> getAllStudent(){
+    public @ResponseBody Iterable<Student> getAllStudent() {
         return studentRepository.findAll();
     }
 
     @GetMapping("/getById/{idStudent}")
     public @ResponseBody
-    Optional<Student> getStudent(@PathVariable Long idStudent){
+    Optional<Student> getStudent(@PathVariable Long idStudent) {
         return studentRepository.findById(idStudent);
     }
 
     @GetMapping("/getByName/{NameOfStudent}")
     public @ResponseBody
-    Optional<Student> getStudentByName(@PathVariable String NameOfStudent){
+    Optional<Student> getStudentByName(@PathVariable String NameOfStudent) {
         return studentRepository.findByNameOfStudent(NameOfStudent);
     }
 
     @DeleteMapping("/delete/all")
-    public @ResponseBody String deleteAllStudents(){
-
+    public @ResponseBody String deleteAllStudents() {
         JsonUtil util = new JsonUtil();
 
         studentRepository.deleteAll();
@@ -79,37 +75,38 @@ public class StudentController {
     }
 
     @DeleteMapping("/delete/{idStudent}")
-    public @ResponseBody String deleteStudentById(@PathVariable Long idStudent){
-
+    public @ResponseBody String deleteStudentById(@PathVariable Long idStudent) {
         JsonUtil util = new JsonUtil();
-
         Optional<Student> student = studentRepository.findById(idStudent);
-        if (student.isPresent()){
-            Student s = student.get();
 
+        if (student.isPresent()) {
+            Student s = student.get();
             List<ListOfQueues> listOfQueues = listOfQueueRepository.findAllByIdStudent(s.getId());
-            if (!listOfQueues.isEmpty()){
-                for (ListOfQueues queue:listOfQueues){
+
+            if (!listOfQueues.isEmpty()) {
+                for (ListOfQueues queue:listOfQueues) {
                     List<ListOfQueues> listOfStudent = listOfQueueRepository.findAllByIdQueue(queue.getIdQueue());
-                    if (listOfStudent.size() == 1){
+
+                    if (listOfStudent.size() == 1) {
                         Optional<Queue> sub = queueRepository.findById(queue.getIdQueue());
                         if (sub.isPresent()) {
                             Queue subject = sub.get();
                             queueRepository.delete(subject);
                         }
-                    }else{
-                        //Смещение студентов в списке
-                        for (ListOfQueues stud:listOfStudent){
-                            if (stud.getPositionStudent() > queue.getPositionStudent())
+                    } else {
+                        for (ListOfQueues stud:listOfStudent) {
+                            if (stud.getPositionStudent() > queue.getPositionStudent()) {
                                 stud.setPositionStudent(stud.getPositionStudent() - 1);
+                            }
                         }
                     }
                     listOfQueueRepository.delete(queue);
                 }
             }
             studentRepository.delete(s);
+
             return util.responseOfFindAndAdd("Deleted student", 200);
-        }else{
+        } else {
             return util.responseOfFindAndAdd("Not found", 404);
         }
     }

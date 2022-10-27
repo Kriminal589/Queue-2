@@ -15,10 +15,24 @@ public class Queue {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
-    private String SubjectName, hexCode;
+    @Column
+    private String SubjectName;
+    @Column
+    private String hexCode;
+    @Column
     private Long idCreator;
-    private int countApps, dateToPass;
+    @Column
+    private int countApps;
+    @Column
+    private int dateToPass;
+    @Column
     private int currentApp = 1;
-    private short dependOnApps, dependOnDate, type;
+    @Column
+    private short dependOnApps;
+    @Column
+    private short dependOnDate;
+    @Column
+    private short type;
+    
     public Queue() {}
 }

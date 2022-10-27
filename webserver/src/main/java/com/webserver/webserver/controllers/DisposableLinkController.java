@@ -19,7 +19,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Controller
-public class DisposableLinkController{
+public class DisposableLinkController {
     private final DisposableLinkRepository disposableLinkRepository;
     private final HeadmanRepository headmanRepository;
     private final StudentRepository studentRepository;
@@ -31,7 +31,7 @@ public class DisposableLinkController{
     }
 
     @GetMapping("/link/getNew")
-    public @ResponseBody String getNewLink(@RequestParam Long idStudent){
+    public @ResponseBody String getNewLink(@RequestParam Long idStudent) {
         DisposableLink disposableLink = new DisposableLink();
         disposableLink.setExtension(new CRC32Hash().getHash(String.valueOf(idStudent+ Instant.now().getEpochSecond())));
         disposableLinkRepository.save(disposableLink);
@@ -49,23 +49,27 @@ public class DisposableLinkController{
     }
 
     @GetMapping("/link/addToHeadman")
-    public @ResponseBody String addToHeadman(@RequestParam String extension, @RequestParam Long idStudent){
+    public @ResponseBody String addToHeadman(@RequestParam String extension, @RequestParam Long idStudent) {
         Optional<DisposableLink> optionalDisposableLink = disposableLinkRepository.findByExtension(extension);
         Optional<Student> optionalStudent = studentRepository.findById(idStudent);
-        if (optionalDisposableLink.isPresent() && optionalStudent.isPresent()){
+
+        if (optionalDisposableLink.isPresent() && optionalStudent.isPresent()) {
             Headman headman = new Headman();
+
             headman.setId(idStudent);
             headmanRepository.save(headman);
+
             DisposableLink disposableLink = optionalDisposableLink.get();
+
             disposableLinkRepository.delete(disposableLink);
-        }else{
+        } else {
             return new JsonUtil().responseOfFindAndAdd("Not found", 404);
         }
         return new JsonUtil().responseOfFindAndAdd("Add new headman", 200);
     }
 
     @GetMapping("/link/all")
-    public @ResponseBody Iterable<DisposableLink> getAllLink(){
+    public @ResponseBody Iterable<DisposableLink> getAllLink() {
         return disposableLinkRepository.findAll();
     }
 }

@@ -14,9 +14,7 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping(path = "/notification")
 public class NotificationController {
-
     private final NotificationRepository notificationRepository;
-
     private final ListOfQueueRepository listOfQueueRepository;
 
     public NotificationController(NotificationRepository notificationRepository, ListOfQueueRepository listOfQueueRepository) {
@@ -26,7 +24,7 @@ public class NotificationController {
 
     @GetMapping("/swap")
     public @ResponseBody String requestToSwap(@RequestParam Long idSender, @RequestParam Long idRecipient,
-                                              @RequestParam Long idQueue){
+                                              @RequestParam Long idQueue) {
         Notification notification = Notification.newBuilder()
                 .setIdQueue(idQueue)
                 .setIdRecipient(idRecipient)
@@ -39,26 +37,22 @@ public class NotificationController {
     }
 
     @GetMapping("/check")
-    public @ResponseBody Iterable<Notification> checkNotification(@RequestParam Long idStudent){
+    public @ResponseBody Iterable<Notification> checkNotification(@RequestParam Long idStudent) {
         return notificationRepository.findAllByIdRecipient(idStudent);
     }
 
     @GetMapping("/answer")
-    public @ResponseBody String answer(@RequestParam short answer, @RequestParam Long idSender, @RequestParam Long idRecipient, @RequestParam Long idQueue){
+    public @ResponseBody String answer(@RequestParam short answer, @RequestParam Long idSender, @RequestParam Long idRecipient, @RequestParam Long idQueue) {
         if (answer == 1) {
             Optional<ListOfQueues> senderOptional = listOfQueueRepository.findByIdStudentAndIdQueue(idSender, idQueue);
-
             Optional<ListOfQueues> recipientOptional = listOfQueueRepository.findByIdStudentAndIdQueue(idRecipient, idQueue);
 
             if (senderOptional.isPresent() && recipientOptional.isPresent()) {
                 ListOfQueues sender = senderOptional.get();
-
                 ListOfQueues recipient = recipientOptional.get();
-
                 int position = sender.getPositionStudent();
 
                 sender.setPositionStudent(recipient.getPositionStudent());
-
                 recipient.setPositionStudent(position);
             }
         }

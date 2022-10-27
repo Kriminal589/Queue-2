@@ -9,8 +9,5 @@ import java.util.Optional;
 public interface ListOfQueueRepository extends CrudRepository<ListOfQueues, Long> {
     List<ListOfQueues> findAllByIdQueue(Long idQueue);
     List<ListOfQueues> findAllByIdStudent(Long idStudent);
-
     Optional<ListOfQueues> findByIdStudentAndIdQueue(Long idStudent, Long idQueue);
-
-
 }

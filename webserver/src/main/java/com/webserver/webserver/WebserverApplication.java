@@ -11,5 +11,4 @@ public class WebserverApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(WebserverApplication.class, args);
 	}
-
 }

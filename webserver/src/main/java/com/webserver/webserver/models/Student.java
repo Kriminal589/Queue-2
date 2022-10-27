@@ -13,7 +13,10 @@ import javax.persistence.Id;
 public class Student {
     @Id
     private Long id;
+    @Column
     private String nameOfStudent;
+    @Column
     private Long idHeadman;
+    
     public Student() {}
 }

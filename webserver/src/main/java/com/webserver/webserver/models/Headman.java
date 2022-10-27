@@ -11,6 +11,7 @@ import javax.persistence.Id;
 public class Headman {
     @Id
     private Long id;
+    
     public Headman() {
     }
 }
